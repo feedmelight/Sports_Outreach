@@ -21,9 +21,13 @@ export interface ChatterPost {
 }
 
 // Base URL for the internal Reddit proxy (server-side: absolute, client: relative)
-const REDDIT_PROXY_BASE = typeof window === 'undefined'
-  ? `http://localhost:${process.env.PORT || 3000}`
-  : ''
+function getProxyBase() {
+  if (typeof window !== 'undefined') return ''
+  const vercelUrl = process.env.VERCEL_URL
+  if (vercelUrl) return `https://${vercelUrl}`
+  return `http://localhost:${process.env.PORT || 3000}`
+}
+const REDDIT_PROXY_BASE = getProxyBase()
 
 async function fetchSubredditViaProxy(subreddit: string): Promise<any> {
   try {
