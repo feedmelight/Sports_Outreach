@@ -20,28 +20,26 @@ export interface ChatterPost {
   isRTL: boolean
 }
 
-const REDDIT_UA =
-  'web:FeedMeLight-FanIntel:v1.0 (by /u/feedmelight, contact ben.leyland@feedmelight.com)'
+// Fetch Reddit via the edge proxy route (edge IPs aren't blocked by Reddit)
+// In production, use the public alias; locally, use localhost
+function getRedditProxyBase(): string {
+  if (typeof window !== 'undefined') return ''
+  // VERCEL_PROJECT_PRODUCTION_URL is the stable production alias (e.g. fml-pitch.vercel.app)
+  // Unlike VERCEL_URL it has no deployment protection
+  const prodUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  if (prodUrl) return `https://${prodUrl}`
+  return `http://localhost:${process.env.PORT || 3000}`
+}
 
 async function fetchSubreddit(subreddit: string): Promise<any> {
-  for (const domain of ['old.reddit.com', 'www.reddit.com']) {
-    try {
-      const res = await fetch(
-        `https://${domain}/r/${subreddit}/new.json?limit=25&raw_json=1`,
-        {
-          headers: { 'User-Agent': REDDIT_UA, Accept: 'application/json' },
-          signal: AbortSignal.timeout(8000),
-        }
-      )
-      if (res.ok) {
-        const text = await res.text()
-        if (text.startsWith('{')) {
-          const data = JSON.parse(text)
-          if (data?.data?.children?.length > 0) return data
-        }
-      }
-    } catch {}
-  }
+  const base = getRedditProxyBase()
+  try {
+    const res = await fetch(
+      `${base}/api/reddit/${encodeURIComponent(subreddit)}`,
+      { signal: AbortSignal.timeout(12000) }
+    )
+    if (res.ok) return res.json()
+  } catch {}
   return { data: { children: [] } }
 }
 
