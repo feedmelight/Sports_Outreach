@@ -372,7 +372,7 @@ export default function GlobalChatterMap({
 
       fetch("/api/log-chatter", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ teamId: teamSlug, languageBreakdown: json.stats?.languageBreakdown || {}, platformBreakdown: { reddit: data.filter(p => p.platform === "reddit").length, bluesky: data.filter(p => p.platform === "bluesky").length, bilibili: data.filter(p => p.platform === "bilibili").length }, postCount: json.stats?.postCount || 0, geolocatedCount: geolocated.length }),
+        body: JSON.stringify({ teamId: teamSlug, languageBreakdown: json.stats?.languageBreakdown || {}, platformBreakdown: { reddit: data.filter(p => p.platform === "reddit").length, bluesky: data.filter(p => p.platform === "bluesky").length, bilibili: data.filter(p => p.platform === "bilibili").length, blog: data.filter(p => p.platform === "blog").length, news: data.filter(p => p.platform === "news").length, espn: data.filter(p => p.platform === "espn").length }, postCount: json.stats?.postCount || 0, geolocatedCount: geolocated.length }),
       }).catch(() => {});
     } catch (e) { console.error("Chatter fetch failed:", e); } finally { setIsLoading(false); }
   }, [teamSlug, teamName, cacheKey, homeLat, homeLng]);
@@ -396,6 +396,9 @@ export default function GlobalChatterMap({
     reddit: '#FF4500',
     bluesky: '#0085FF',
     bilibili: '#00A1D6',
+    blog: '#FF6719',
+    news: '#4285F4',
+    espn: '#D00000',
   };
 
   // Geolocated posts as pulsing rings
