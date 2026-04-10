@@ -24,3 +24,30 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Pitch page range slider styling */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--team-accent, #E31837);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+input[type="range"]:hover::-webkit-slider-thumb {
+  background: var(--team-accent, #FFB81C);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--team-accent, #E31837);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+input[type="range"]:hover::-moz-range-thumb {
+  background: var(--team-accent, #FFB81C);
+}

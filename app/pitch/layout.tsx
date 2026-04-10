@@ -1,0 +1,30 @@
+import { Bebas_Neue, DM_Sans, DM_Mono } from "next/font/google";
+
+const bebasNeue = Bebas_Neue({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-bebas",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  weight: ["300", "400", "500", "600"],
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
+  display: "swap",
+});
+
+const dmMono = DM_Mono({
+  weight: ["400", "500"],
+  subsets: ["latin"],
+  variable: "--font-dm-mono",
+  display: "swap",
+});
+
+export default function PitchLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className={`${bebasNeue.variable} ${dmSans.variable} ${dmMono.variable}`}>
+      {children}
+    </div>
+  );
+}
