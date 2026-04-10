@@ -20,26 +20,29 @@ export interface ChatterPost {
   isRTL: boolean
 }
 
-// Base URL for the internal Reddit proxy (server-side: absolute, client: relative)
-function getProxyBase() {
-  if (typeof window !== 'undefined') return ''
-  const vercelUrl = process.env.VERCEL_URL
-  if (vercelUrl) return `https://${vercelUrl}`
-  return `http://localhost:${process.env.PORT || 3000}`
-}
-const REDDIT_PROXY_BASE = getProxyBase()
+const REDDIT_UA =
+  'web:FeedMeLight-FanIntel:v1.0 (by /u/feedmelight, contact ben.leyland@feedmelight.com)'
 
-async function fetchSubredditViaProxy(subreddit: string): Promise<any> {
-  try {
-    const res = await fetch(
-      `${REDDIT_PROXY_BASE}/api/reddit/${encodeURIComponent(subreddit)}`,
-      { signal: AbortSignal.timeout(10000) }
-    )
-    if (!res.ok) return { data: { children: [] } }
-    return res.json()
-  } catch {
-    return { data: { children: [] } }
+async function fetchSubreddit(subreddit: string): Promise<any> {
+  for (const domain of ['old.reddit.com', 'www.reddit.com']) {
+    try {
+      const res = await fetch(
+        `https://${domain}/r/${subreddit}/new.json?limit=25&raw_json=1`,
+        {
+          headers: { 'User-Agent': REDDIT_UA, Accept: 'application/json' },
+          signal: AbortSignal.timeout(8000),
+        }
+      )
+      if (res.ok) {
+        const text = await res.text()
+        if (text.startsWith('{')) {
+          const data = JSON.parse(text)
+          if (data?.data?.children?.length > 0) return data
+        }
+      }
+    } catch {}
   }
+  return { data: { children: [] } }
 }
 
 function parseRedditChildren(
@@ -81,7 +84,7 @@ async function fetchReddit(teamSlug: string, translations: Record<string, string
   // Main subreddit(s) via proxy
   const subs = SUBREDDIT_MAP[teamSlug.toLowerCase()] || [teamSlug]
   const subResults = await Promise.allSettled(
-    subs.map((sub) => fetchSubredditViaProxy(sub))
+    subs.map((sub) => fetchSubreddit(sub))
   )
   for (const result of subResults) {
     if (result.status !== 'fulfilled') continue
@@ -93,7 +96,7 @@ async function fetchReddit(teamSlug: string, translations: Record<string, string
   // International subreddits via proxy
   const intlSubs = ['nflespanol', 'nflalemanha', 'nfl_france', 'nflbrasil', 'nfljapan', 'nba_es']
   const intlResults = await Promise.allSettled(
-    intlSubs.map((sub) => fetchSubredditViaProxy(sub))
+    intlSubs.map((sub) => fetchSubreddit(sub))
   )
   for (const result of intlResults) {
     if (result.status !== 'fulfilled') continue
