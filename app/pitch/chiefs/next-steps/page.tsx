@@ -20,38 +20,38 @@ const MARKETS = [
   {
     flag: "\u{1F1EC}\u{1F1E7}", name: "United Kingdom", mascot: "KC Wolf \u00B7 London-based costume",
     color: AMBER, key: "uk",
-    body: "Biggest NFL market outside the US. Three London games annually at Tottenham Hotspur Stadium and Wembley. The Chiefs added UK rights in 2025 and immediately identified the 12\u201324 demographic as the primary target. Strong crossover with Premier League fandom and music culture. Super Bowl watch parties, NFL game weeks, brand partnerships, and sports crossover events all viable.",
+    body: "Biggest NFL market outside the US. Three London games annually at Tottenham Hotspur Stadium and Wembley. The Chiefs added UK rights in 2025 and immediately identified the 12-24 demographic as the primary target. Strong crossover with Premier League fandom and music culture. Super Bowl watch parties, NFL game weeks, brand partnerships, and sports crossover events all viable.",
     tags: [{ t: "Game weeks", v: "hot" }, { t: "Super Bowl parties", v: "hot" }, { t: "NFL Draft watches", v: "" }, { t: "Brand activations", v: "" }, { t: "FLAG football", v: "" }],
   },
   {
     flag: "\u{1F1EE}\u{1F1EA}", name: "Ireland", mascot: "KC O\u2019Wolf \u00B7 Irish mascot introduced 2025",
     color: "#16a34a", key: "ireland",
-    body: "First ever NFL game at Croke Park in 2025. The Chiefs ran Chiefs House at Murray\u2019s Bar in Dublin for a full game weekend, featuring KC O\u2019Wolf with alumni appearances. The Irish market is small but extraordinarily engaged \u2014 the NFL described it as a \u201Ctrue city takeover.\u201D Year-round activation is currently underdeveloped, which is the opportunity. Dublin is 1hr 20min from London.",
+    body: "First ever NFL game at Croke Park in 2025. The Chiefs ran Chiefs House at Murray\u2019s Bar in Dublin for a full game weekend, featuring KC O\u2019Wolf with alumni appearances. The Irish market is small but extraordinarily engaged  - the NFL described it as a \u201Ctrue city takeover.\u201D Year-round activation is currently underdeveloped, which is the opportunity. Dublin is 1hr 20min from London.",
     tags: [{ t: "Croke Park history", v: "new" }, { t: "High fan density", v: "hot" }, { t: "Pub culture activation", v: "" }, { t: "Watch parties", v: "" }],
   },
   {
     flag: "\u{1F1E9}\u{1F1EA}", name: "Germany", mascot: "KC Wolf \u00B7 Frankfurt 2023 \u00B7 Berlin 2025",
     color: "#dc2626", key: "germany",
-    body: "The Chiefs hold DACH rights \u2014 Germany, Austria, and Switzerland. Eleven NFL teams have German market rights, making it the most competitive but also most developed European fanbase. KC Wolf was in Frankfurt in 2023 when the Chiefs beat the Dolphins. Berlin hosted a game in 2025. Munich\u2019s Allianz Arena returns in 2026, Berlin again in 2027. The game calendar gives natural activation anchors across two consecutive years.",
+    body: "The Chiefs hold DACH rights  - Germany, Austria, and Switzerland. Eleven NFL teams have German market rights, making it the most competitive but also most developed European fanbase. KC Wolf was in Frankfurt in 2023 when the Chiefs beat the Dolphins. Berlin hosted a game in 2025. Munich\u2019s Allianz Arena returns in 2026, Berlin again in 2027. The game calendar gives natural activation anchors across two consecutive years.",
     tags: [{ t: "Allianz Arena 2026", v: "hot" }, { t: "DACH region rights", v: "" }, { t: "Proven fanbase", v: "" }, { t: "Bundesliga crossover", v: "" }],
   },
   {
     flag: "\u{1F1EA}\u{1F1F8}", name: "Spain", mascot: "KC Lobazo \u00B7 Madrid \u00B7 La Liga opportunity",
     color: "#ea580c", key: "spain",
-    body: "The highest-upside market. KC Lobazo activated at Chiefs House in the Pestana CR7 Gran V\u00EDa during the 2025 Madrid game. The Chiefs are aggressively pushing for a 2026 regular season game at the Bernab\u00E9u. La Liga\u2019s mascot ecosystem \u2014 with 20 club characters across Spain \u2014 presents a unique cross-sport collaboration opportunity that no other NFL team could credibly pursue.",
+    body: "The highest-upside market. KC Lobazo activated at Chiefs House in the Pestana CR7 Gran V\u00EDa during the 2025 Madrid game. The Chiefs are aggressively pushing for a 2026 regular season game at the Bernab\u00E9u. La Liga\u2019s mascot ecosystem  - with 20 club characters across Spain  - presents a unique cross-sport collaboration opportunity that no other NFL team could credibly pursue.",
     tags: [{ t: "Bernab\u00E9u 2026?", v: "hot" }, { t: "La Liga crossover", v: "hot" }, { t: "Multi-year Madrid deal confirmed", v: "new" }, { t: "KC Lobazo live", v: "" }],
   },
 ];
 
 const CALENDAR = [
-  { month: "Apr", market: "UK \u00B7 Ireland", event: "NFL Draft watch parties", desc: " \u2014 pub takeovers in London and Dublin, KC Wolf appearances, live stream", type: "Watch", cls: "watch" },
-  { month: "May", market: "Spain", event: "La Liga season run-in", desc: " \u2014 KC Lobazo \u00D7 La Liga mascot crossover, El Cl\u00E1sico activation, social content", type: "Crossover", cls: "sport" },
-  { month: "Aug", market: "All markets", event: "NFL season kickoff", desc: " \u2014 launch events in all four markets, FLAG football clinics, brand partner activations", type: "Season launch", cls: "watch" },
-  { month: "Sep\u2013Oct", market: "Germany", event: "Munich game week", desc: " \u2014 Chiefs House at Allianz Arena, KC Wolf on ground, multi-day fan activation", type: "Game week", cls: "gamewk" },
-  { month: "Oct", market: "UK", event: "London game weeks", desc: " \u2014 Tottenham Hotspur Stadium / Wembley, Chiefs House, KC Wolf fan zone", type: "Game week", cls: "gamewk" },
-  { month: "TBC", market: "Spain", event: "Bernab\u00E9u game week (if confirmed)", desc: " \u2014 full Chiefs House operation, KC Lobazo + La Liga mascot collab, stadium content", type: "Game week", cls: "gamewk", highlight: true },
-  { month: "Nov", market: "Ireland", event: "Dublin activation", desc: " \u2014 KC O\u2019Wolf at Chiefs partner venue, Chiefs Kingdom fan night, social content shoot", type: "Brand", cls: "brand" },
-  { month: "Feb", market: "All markets", event: "Super Bowl LXI watch parties", desc: " \u2014 coordinated multi-market events, KC Wolf in London, local hosts in each territory", type: "Watch", cls: "watch" },
+  { month: "Apr", market: "UK \u00B7 Ireland", event: "NFL Draft watch parties", desc: "  - pub takeovers in London and Dublin, KC Wolf appearances, live stream", type: "Watch", cls: "watch" },
+  { month: "May", market: "Spain", event: "La Liga season run-in", desc: "  - KC Lobazo \u00D7 La Liga mascot crossover, El Cl\u00E1sico activation, social content", type: "Crossover", cls: "sport" },
+  { month: "Aug", market: "All markets", event: "NFL season kickoff", desc: "  - launch events in all four markets, FLAG football clinics, brand partner activations", type: "Season launch", cls: "watch" },
+  { month: "Sep-Oct", market: "Germany", event: "Munich game week", desc: "  - Chiefs House at Allianz Arena, KC Wolf on ground, multi-day fan activation", type: "Game week", cls: "gamewk" },
+  { month: "Oct", market: "UK", event: "London game weeks", desc: "  - Tottenham Hotspur Stadium / Wembley, Chiefs House, KC Wolf fan zone", type: "Game week", cls: "gamewk" },
+  { month: "TBC", market: "Spain", event: "Bernab\u00E9u game week (if confirmed)", desc: "  - full Chiefs House operation, KC Lobazo + La Liga mascot collab, stadium content", type: "Game week", cls: "gamewk", highlight: true },
+  { month: "Nov", market: "Ireland", event: "Dublin activation", desc: "  - KC O\u2019Wolf at Chiefs partner venue, Chiefs Kingdom fan night, social content shoot", type: "Brand", cls: "brand" },
+  { month: "Feb", market: "All markets", event: "Super Bowl LXI watch parties", desc: "  - coordinated multi-market events, KC Wolf in London, local hosts in each territory", type: "Watch", cls: "watch" },
 ];
 
 const LALIGA_METRICS = [
@@ -63,9 +63,9 @@ const LALIGA_METRICS = [
 ];
 
 const PROPOSITIONS = [
-  { num: "01", title: "Mascot Operations", body: "We manage KC Wolf. We hold the costume, the talent relationships, and the operational knowledge across multiple countries already. We are not pitching a new idea \u2014 we are proposing a coordinated calendar for what we already do." },
-  { num: "02", title: "Content at Every Activation", body: "Every appearance generates content. We shoot at every event \u2014 social cuts, BTS, fan moments \u2014 and deliver directly to the Chiefs\u2019 international social channels. This is the add-on value the Chiefs have been explicit about wanting from their European partners." },
-  { num: "03", title: "Third-Party Partnerships", body: "La Liga, Bundesliga clubs, Premier League fan events \u2014 we can broker the introductions and produce the cross-sport moments. These are the culturally resonant activations that standard sports marketing agencies can\u2019t credibly walk into." },
+  { num: "01", title: "Mascot Operations", body: "We manage KC Wolf. We hold the costume, the talent relationships, and the operational knowledge across multiple countries already. We are not pitching a new idea  - we are proposing a coordinated calendar for what we already do." },
+  { num: "02", title: "Content at Every Activation", body: "Every appearance generates content. We shoot at every event  - social cuts, BTS, fan moments  - and deliver directly to the Chiefs\u2019 international social channels. This is the add-on value the Chiefs have been explicit about wanting from their European partners." },
+  { num: "03", title: "Third-Party Partnerships", body: "La Liga, Bundesliga clubs, Premier League fan events  - we can broker the introductions and produce the cross-sport moments. These are the culturally resonant activations that standard sports marketing agencies can\u2019t credibly walk into." },
 ];
 
 const typeColors: Record<string, { bg: string; color: string; border: string }> = {
@@ -138,12 +138,12 @@ export default function NextStepsPage() {
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderLeft: `3px solid ${AMBER}`, borderRadius: 3, padding: "20px 24px", marginBottom: 24 }}>
             <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, lineHeight: 1.75 }}>
               <strong style={{ color: TEXT, fontWeight: 500 }}>&ldquo;We know mascots do really well in the markets, it becomes an ambassador.&rdquo;</strong>{" "}
-              KC Wolf was in Frankfurt when the Chiefs played there in 2023. The team&apos;s CMO confirmed they were actively looking for <strong style={{ color: TEXT, fontWeight: 500 }}>multiple European-based mascots</strong> to show up in markets more frequently &mdash; and in 2025 they unveiled four European mascots, one per market. In Dublin, KC O&apos;Wolf ran fan activations at Murray&apos;s Bar for an entire weekend. In Madrid, KC Lobazo held court at Chiefs House in the Pestana CR7. The infrastructure is there. The appetite is there. What&apos;s missing is a coordinated activation calendar and a production partner who can execute it consistently across all four markets.
+              KC Wolf was in Frankfurt when the Chiefs played there in 2023. The team&apos;s CMO confirmed they were actively looking for <strong style={{ color: TEXT, fontWeight: 500 }}>multiple European-based mascots</strong> to show up in markets more frequently - and in 2025 they unveiled four European mascots, one per market. In Dublin, KC O&apos;Wolf ran fan activations at Murray&apos;s Bar for an entire weekend. In Madrid, KC Lobazo held court at Chiefs House in the Pestana CR7. The infrastructure is there. The appetite is there. What&apos;s missing is a coordinated activation calendar and a production partner who can execute it consistently across all four markets.
             </p>
           </div>
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderLeft: `3px solid ${RED}`, borderRadius: 3, padding: "20px 24px" }}>
             <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, lineHeight: 1.75 }}>
-              The Chiefs are <strong style={{ color: TEXT, fontWeight: 500 }}>pushing hard for a 2026 game in Madrid at the Bernab&eacute;u</strong>. If that&apos;s confirmed, it becomes the biggest single activation opportunity in the current contract period &mdash; and every European market activates around it. We need to be on the calendar before that announcement drops.
+              The Chiefs are <strong style={{ color: TEXT, fontWeight: 500 }}>pushing hard for a 2026 game in Madrid at the Bernab&eacute;u</strong>. If that&apos;s confirmed, it becomes the biggest single activation opportunity in the current contract period - and every European market activates around it. We need to be on the calendar before that announcement drops.
             </p>
           </div>
         </section>
@@ -187,10 +187,10 @@ export default function NextStepsPage() {
             <div>
               <h3 style={{ fontFamily: BEBAS, fontSize: 32, letterSpacing: "0.03em", marginBottom: 14, lineHeight: 1 }}>KC Lobazo meets <span style={{ color: RED }}>La Liga</span></h3>
               <p style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", lineHeight: 1.75, marginBottom: 14 }}>
-                Henry visited La Liga&apos;s official mascot gallery. What he was looking at was an ecosystem of 20 club mascots with established fan relationships, stadium access, and social media reach &mdash; all in the Chiefs&apos; primary Spanish market.
+                Henry visited La Liga&apos;s official mascot gallery. What he was looking at was an ecosystem of 20 club mascots with established fan relationships, stadium access, and social media reach - all in the Chiefs&apos; primary Spanish market.
               </p>
               <p style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", lineHeight: 1.75, marginBottom: 14 }}>
-                A KC Lobazo appearance alongside Real Madrid&apos;s Marceline, Atl&eacute;tico&apos;s &Iacute;ndio, or Sevilla&apos;s Cachito at a high-profile fixture would be genuinely unprecedented cross-sport content. NFL wolf meets Spanish football. It is the kind of cultural moment that the Chiefs are explicitly chasing with their 12&ndash;24 European demographic &mdash; and it requires a production partner on the ground to make it happen.
+                A KC Lobazo appearance alongside Real Madrid&apos;s Marceline, Atl&eacute;tico&apos;s &Iacute;ndio, or Sevilla&apos;s Cachito at a high-profile fixture would be genuinely unprecedented cross-sport content. NFL wolf meets Spanish football. It is the kind of cultural moment that the Chiefs are explicitly chasing with their 12-24 European demographic - and it requires a production partner on the ground to make it happen.
               </p>
               <p style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", lineHeight: 1.75 }}>
                 La Liga has a global broadcast footprint and its own international expansion push. The shared agenda is obvious.
@@ -254,10 +254,10 @@ export default function NextStepsPage() {
         <div style={{ background: CARD, border: "1px solid rgba(255,184,28,0.2)", borderRadius: 3, padding: "32px 36px", display: "grid", gridTemplateColumns: "1fr auto", gap: 32, alignItems: "center" }}>
           <div>
             <h2 style={{ fontFamily: BEBAS, fontSize: 36, letterSpacing: "0.03em", lineHeight: 1, marginBottom: 12 }}>
-              One contract. Four markets.<br /><span style={{ color: AMBER }}>2026 calendar &mdash; now.</span>
+              One contract. Four markets.<br /><span style={{ color: AMBER }}>2026 calendar - now.</span>
             </h2>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, maxWidth: 520 }}>
-              The Chiefs are publicly committed to more mascot appearances in Europe. We have the contract, the operational infrastructure, and relationships in all four target markets. The Bernab&eacute;u game announcement &mdash; if it comes &mdash; changes the scale overnight. The time to get on the calendar is before that conversation happens.
+              The Chiefs are publicly committed to more mascot appearances in Europe. We have the contract, the operational infrastructure, and relationships in all four target markets. The Bernab&eacute;u game announcement - if it comes - changes the scale overnight. The time to get on the calendar is before that conversation happens.
             </p>
           </div>
           <div style={{ textAlign: "right" }}>
