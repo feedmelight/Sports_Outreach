@@ -40,8 +40,8 @@ function perDiemHours(h: number): number {
 }
 
 const SCENARIO_DEFS = [
-  { id: "ld", label: "London · Day", trav: "london" as TravMode, eng: "day" as EngMode },
-  { id: "lh", label: "London · Hourly", trav: "london" as TravMode, eng: "hourly" as EngMode },
+  { id: "ld", label: "Travelling · Day", trav: "london" as TravMode, eng: "day" as EngMode },
+  { id: "lh", label: "Travelling · Hourly", trav: "london" as TravMode, eng: "hourly" as EngMode },
   { id: "od", label: "Local · Day", trav: "local" as TravMode, eng: "day" as EngMode },
   { id: "oh", label: "Local · Hourly", trav: "local" as TravMode, eng: "hourly" as EngMode },
 ];
@@ -367,7 +367,7 @@ export default function BudgetCalculator() {
   // ─── XLS Export ───────────────────────────────────────────
   const exportXLS = useCallback(() => {
     const wb = XLSX.utils.book_new();
-    const modelTag = `${travMode === "london" ? "London" : "Local"} · ${engMode === "day" ? "Day rate" : "Hourly"}`;
+    const modelTag = `${travMode === "london" ? "Travelling" : "Local"} · ${engMode === "day" ? "Day rate" : "Hourly"}`;
     const tierLabel = `Tier ${tierIdx + 1} (${Math.round(tier.discount * 100)}% off)`;
 
     // ── Sheet 1: Summary ────────────────────────────────────
@@ -378,7 +378,7 @@ export default function BudgetCalculator() {
       [],
       ["CONFIGURATION"],
       ["Engagement mode", engMode === "day" ? "Day rate" : "Hourly"],
-      ["Talent location", travMode === "london" ? "London-based" : "Local talent"],
+      ["Talent location", travMode === "london" ? "Travelling talent" : "Local talent"],
       ["Volume", engMode === "day" ? `${daysYear} days/yr` : `${hoursMonth} hrs/mo`],
       ["Active tier", tierLabel],
       ["Effective performer rate", `$${Math.round(effPerf)}`],
@@ -578,7 +578,7 @@ export default function BudgetCalculator() {
     { label: "Annual saving", key: "annualSaving", saving: true, bold: true },
   ];
 
-  const modelTag = `${travMode === "london" ? "London" : "Local"} · ${engMode === "day" ? "Day rate" : "Hourly"}`;
+  const modelTag = `${travMode === "london" ? "Travelling" : "Local"} · ${engMode === "day" ? "Day rate" : "Hourly"}`;
   const tierRateDisplay = engMode === "hourly" ? `${fmt(Math.round(effPerf))}/hr` : fmt(Math.round(effPerf));
   const perfNote = tier.discount > 0
     ? `${tierRateDisplay} (tier ${tierIdx + 1}, ${Math.round(tier.discount * 100)}% off)`
@@ -639,7 +639,7 @@ export default function BudgetCalculator() {
             </div>
             <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
               <label style={{ fontSize: 13, color: GREY, marginRight: 4 }}>Talent</label>
-              {toggleBtn("London-based", travMode === "london", () => setTravMode("london"))}
+              {toggleBtn("Travelling talent", travMode === "london", () => setTravMode("london"))}
               {toggleBtn("Local talent", travMode === "local", () => setTravMode("local"))}
             </div>
           </div>
@@ -657,7 +657,7 @@ export default function BudgetCalculator() {
               const active = i === tierIdx;
               const rate = Math.round(basePerf * (1 - t.discount));
               // Midpoint for clicking: tier 1 midpoint=6, tier 2=18, tier 3=30 (day); tier 1=5, tier 2=17, tier 3=30 (hourly)
-              const midpoints = engMode === "day" ? [6, 18, 30] : [5, 17, 30];
+              const midpoints = engMode === "day" ? [6, 18, 30] : [20, 37, 50];
               return (
                 <button
                   key={t.label}
@@ -690,6 +690,12 @@ export default function BudgetCalculator() {
               );
             })}
           </div>
+
+          {engMode === "hourly" && (
+            <div style={{ fontFamily: mono, fontSize: 11, color: GREY, fontStyle: "italic", marginBottom: 10 }}>
+              Tier 1 requires a minimum commitment of 20 hrs/yr
+            </div>
+          )}
 
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
             {engMode === "day"
