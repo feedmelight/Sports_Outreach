@@ -115,6 +115,9 @@ export default function BudgetCalculator() {
   const [engMode, setEngMode] = useState<EngMode>("day");
   const [travMode, setTravMode] = useState<TravMode>("london");
 
+  // Base rates accordion
+  const [baseRatesOpen, setBaseRatesOpen] = useState(false);
+
   // Section 2: Day rate inputs
   const [perfDay, setPerfDay] = useState(1250);
   const [handlerDay, setHandlerDay] = useState(600);
@@ -641,64 +644,83 @@ export default function BudgetCalculator() {
           </div>
         </div>
 
-        {/* ─── 2. BASE RATES ──────────────────────────────────── */}
+        {/* ─── 2. VOLUME DISCOUNT ──────────────────────────────── */}
         <div style={{ background: MID, border: "1px solid rgba(255,255,255,0.06)", borderRadius: 4, padding: "16px 20px", marginBottom: 12 }}>
-          {sectionHeader("Base rates")}
-          <div style={{ fontSize: 12, color: GREY, marginBottom: 10, marginTop: -6 }}>Number of people auto-calculated: 2 unless handler rate is 0</div>
-
-          {engMode === "day" ? (
-            <>
-              {row("Performer day rate", perfDay, setPerfDay)}
-              {row("Handler day rate", handlerDay, setHandlerDay, { note: "set 0 to remove" })}
-              {row("Activation days per event", actDays, setActDays, { prefix: false, step: 0.5, note: "0.5 = half day" })}
-              {row("Travel days per event", travDays, setTravDays, { prefix: false, step: 0.5 })}
-              {row("Travel day rate (per person)", travDayRate, setTravDayRate)}
-            </>
-          ) : (
-            <>
-              {row("Performer base hourly rate", perfHourly, setPerfHourly, { note: "at lowest tier" })}
-              {row("Handler hourly rate", handlerHourly, setHandlerHourly, { note: "set 0 to remove" })}
-              {row("Activation hours per event", actHours, setActHours, { prefix: false, step: 0.5 })}
-              {row("Travel hours per event", travHours, setTravHours, { prefix: false, step: 0.5 })}
-              {row("Travel hour rate (per person)", travHourRate, setTravHourRate)}
-            </>
-          )}
-
-          <hr style={{ border: "none", borderTop: "1px solid rgba(255,255,255,0.06)", margin: "10px 0" }} />
-          {autoField("Number of people", String(people), "auto")}
-          {autoField("Per diem (per person, auto)", fmt(calc.pdPerPerson) + " / person", "$50 full / $25 half")}
-        </div>
-
-        {/* ─── 3. VOLUME ──────────────────────────────────────── */}
-        <div style={{ background: MID, border: "1px solid rgba(255,255,255,0.06)", borderRadius: 4, padding: "16px 20px", marginBottom: 12 }}>
-          {sectionHeader("Volume")}
-          <div style={{ fontSize: 12, color: GREY, marginBottom: 10, marginTop: -6 }}>
-            {engMode === "day" ? "Days per year — discount on performer day rate" : "Hours per month — discount on performer hourly rate"}
+          <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: GOLD, marginBottom: 4 }}>
+            {engMode === "day" ? "Annual commitment" : "Volume discount"}
           </div>
+          <div style={{ fontSize: 12, color: GREY, marginBottom: 14 }}>More {engMode === "day" ? "days" : "hours"} = lower performer rate</div>
 
-          {engMode === "day"
-            ? row("Days per year", daysYear, setDaysYear, { prefix: false })
-            : row("Hours per month", hoursMonth, setHoursMonth, { prefix: false })
-          }
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, margin: "12px 0 8px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 14 }}>
             {tiers.map((t, i) => {
               const active = i === tierIdx;
               const rate = Math.round(basePerf * (1 - t.discount));
+              // Midpoint for clicking: tier 1 midpoint=6, tier 2=18, tier 3=30 (day); tier 1=5, tier 2=17, tier 3=30 (hourly)
+              const midpoints = engMode === "day" ? [6, 18, 30] : [5, 17, 30];
               return (
-                <div key={t.label} style={{
-                  border: active ? `2px solid ${GOLD}` : "1px solid rgba(255,255,255,0.06)",
-                  borderRadius: 2, padding: "10px", textAlign: "center",
-                  background: active ? "rgba(255,184,28,0.08)" : "transparent",
-                }}>
-                  <div style={{ fontSize: 11, color: active ? GOLD : GREY, marginBottom: 3 }}>{t.label}</div>
-                  <div style={{ fontSize: 17, fontWeight: 500, fontFamily: mono, color: active ? GOLD : WHITE }}>
+                <button
+                  key={t.label}
+                  onClick={() => {
+                    if (engMode === "day") setDaysYear(midpoints[i]);
+                    else setHoursMonth(midpoints[i]);
+                  }}
+                  style={{
+                    border: active ? `2px solid ${GOLD}` : "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: 4, padding: "14px 10px", textAlign: "center",
+                    background: active ? "rgba(255,184,28,0.10)" : "rgba(255,255,255,0.02)",
+                    cursor: "pointer", transition: "all 0.15s", outline: "none",
+                  }}
+                >
+                  <div style={{ fontSize: 11, fontFamily: mono, letterSpacing: "0.08em", textTransform: "uppercase", color: active ? GOLD : GREY, marginBottom: 4 }}>{t.label}</div>
+                  <div style={{ fontSize: 22, fontWeight: 600, fontFamily: mono, color: active ? GOLD : WHITE, lineHeight: 1.2 }}>
                     {engMode === "hourly" ? fmt(rate) + "/hr" : fmt(rate)}
                   </div>
-                  <div style={{ fontSize: 11, color: active ? GOLD : GREY, marginTop: 2 }}>{t.range}</div>
-                </div>
+                  <div style={{ fontSize: 11, color: active ? GOLD : GREY, marginTop: 4 }}>{t.range}</div>
+                  {t.discount > 0 && (
+                    <div style={{
+                      display: "inline-block", fontSize: 10, fontFamily: mono, padding: "2px 6px", borderRadius: 2, marginTop: 6,
+                      background: active ? "rgba(255,184,28,0.15)" : "rgba(255,255,255,0.04)",
+                      color: active ? GOLD : GREY,
+                    }}>
+                      {Math.round(t.discount * 100)}% off
+                    </div>
+                  )}
+                </button>
               );
             })}
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
+            {engMode === "day"
+              ? (
+                <>
+                  <label style={{ fontSize: 13, color: WHITE, minWidth: 120 }}>Days per year</label>
+                  <input
+                    type="number"
+                    value={daysYear}
+                    onChange={(e) => setDaysYear(parseFloat(e.target.value) || 0)}
+                    style={{ width: 82, fontSize: 14, padding: "4px 8px", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 2, background: MUTED, color: WHITE, fontFamily: mono, outline: "none" }}
+                    onFocus={(e) => { e.target.style.borderColor = GOLD; }}
+                    onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.12)"; }}
+                  />
+                  <span style={{ fontSize: 12, color: GREY }}>→ {tier.label} ({Math.round(tier.discount * 100)}% off)</span>
+                </>
+              )
+              : (
+                <>
+                  <label style={{ fontSize: 13, color: WHITE, minWidth: 120 }}>Hours per month</label>
+                  <input
+                    type="number"
+                    value={hoursMonth}
+                    onChange={(e) => setHoursMonth(parseFloat(e.target.value) || 0)}
+                    style={{ width: 82, fontSize: 14, padding: "4px 8px", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 2, background: MUTED, color: WHITE, fontFamily: mono, outline: "none" }}
+                    onFocus={(e) => { e.target.style.borderColor = GOLD; }}
+                    onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.12)"; }}
+                  />
+                  <span style={{ fontSize: 12, color: GREY }}>→ {tier.label} ({Math.round(tier.discount * 100)}% off)</span>
+                </>
+              )
+            }
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 8, marginTop: 4 }}>
@@ -717,6 +739,64 @@ export default function BudgetCalculator() {
               <span style={{ fontSize: 17, fontWeight: 500, color: GREEN, fontFamily: mono }}>{fmt(calc.annualSaving)} / year</span>
             </div>
           )}
+        </div>
+
+        {/* ─── 3. BASE RATES (collapsible) ──────────────────────── */}
+        <div style={{ background: MID, border: "1px solid rgba(255,255,255,0.06)", borderRadius: 4, marginBottom: 12, overflow: "hidden" }}>
+          <button
+            onClick={() => setBaseRatesOpen((o) => !o)}
+            style={{
+              width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center",
+              padding: "16px 20px", background: "transparent", border: "none", cursor: "pointer", outline: "none",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: GOLD }}>Base rates</div>
+              {!baseRatesOpen && (
+                <span style={{ fontFamily: mono, fontSize: 14, fontWeight: 500, color: GOLD }}>
+                  {fmt(calc.talentTotal + calc.totalPerdiem)} / event
+                </span>
+              )}
+            </div>
+            <svg
+              width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={GREY} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              style={{ transition: "transform 0.2s ease", transform: baseRatesOpen ? "rotate(180deg)" : "rotate(0deg)" }}
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div style={{
+            maxHeight: baseRatesOpen ? 600 : 0,
+            opacity: baseRatesOpen ? 1 : 0,
+            overflow: "hidden",
+            transition: "max-height 0.3s ease, opacity 0.25s ease",
+          }}>
+            <div style={{ padding: "0 20px 16px" }}>
+              <div style={{ fontSize: 12, color: GREY, marginBottom: 10 }}>Number of people auto-calculated: 2 unless handler rate is 0</div>
+
+              {engMode === "day" ? (
+                <>
+                  {row("Performer day rate", perfDay, setPerfDay)}
+                  {row("Handler day rate", handlerDay, setHandlerDay, { note: "set 0 to remove" })}
+                  {row("Activation days per event", actDays, setActDays, { prefix: false, step: 0.5, note: "0.5 = half day" })}
+                  {row("Travel days per event", travDays, setTravDays, { prefix: false, step: 0.5 })}
+                  {row("Travel day rate (per person)", travDayRate, setTravDayRate)}
+                </>
+              ) : (
+                <>
+                  {row("Performer base hourly rate", perfHourly, setPerfHourly, { note: "at lowest tier" })}
+                  {row("Handler hourly rate", handlerHourly, setHandlerHourly, { note: "set 0 to remove" })}
+                  {row("Activation hours per event", actHours, setActHours, { prefix: false, step: 0.5 })}
+                  {row("Travel hours per event", travHours, setTravHours, { prefix: false, step: 0.5 })}
+                  {row("Travel hour rate (per person)", travHourRate, setTravHourRate)}
+                </>
+              )}
+
+              <hr style={{ border: "none", borderTop: "1px solid rgba(255,255,255,0.06)", margin: "10px 0" }} />
+              {autoField("Number of people", String(people), "auto")}
+              {autoField("Per diem (per person, auto)", fmt(calc.pdPerPerson) + " / person", "$50 full / $25 half")}
+            </div>
+          </div>
         </div>
 
         {/* ─── 4. TRAVEL & ACCOMMODATION ──────────────────────── */}
