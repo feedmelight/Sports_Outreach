@@ -46,15 +46,37 @@ const SCENARIO_DEFS = [
   { id: "oh", label: "Local · Hourly", trav: "local" as TravMode, eng: "hourly" as EngMode },
 ];
 
-const OVERRIDE_FIELDS = [
-  { key: "perf", label: "Performer rate" },
-  { key: "handler", label: "Handler rate" },
-  { key: "actUnits", label: "Activation days/hrs" },
-  { key: "travUnits", label: "Travel days/hrs" },
-  { key: "travRate", label: "Travel rate/person" },
-  { key: "flights", label: "Flights/person" },
-  { key: "hotel", label: "Hotel/room/night" },
-  { key: "taxis", label: "Taxis" },
+// Dropdown presets for scenario controls
+const DAY_PERF_PRESETS = [
+  { value: 1250, label: "$1,250 — standard" },
+  { value: 1063, label: "$1,063 — tier 2 (13–24 days)" },
+  { value: 900, label: "$900 — tier 3 (25+ days)" },
+  { value: -1, label: "Custom" },
+];
+const HR_PERF_PRESETS = [
+  { value: 120, label: "$120/hr — standard" },
+  { value: 100, label: "$100/hr — volume" },
+  { value: 80, label: "$80/hr — high volume" },
+  { value: -1, label: "Custom" },
+];
+const DAY_ACT_PRESETS = [
+  { value: 1, label: "1 day" },
+  { value: 0.5, label: "0.5 day" },
+  { value: 2, label: "2 days" },
+  { value: -1, label: "Custom" },
+];
+const HR_ACT_PRESETS = [
+  { value: 4, label: "4 hrs (min guaranteed)" },
+  { value: 3, label: "3 hrs" },
+  { value: 6, label: "6 hrs" },
+  { value: 8, label: "8 hrs (full day equiv)" },
+  { value: -1, label: "Custom" },
+];
+const TRAVEL_PRESETS = [
+  { value: "international", label: "International (flights + hotel)" },
+  { value: "regional", label: "Regional (no flights)" },
+  { value: "local", label: "Local (no travel costs)" },
+  { value: "custom", label: "Custom" },
 ];
 
 function fmt(n: number): string {
@@ -63,9 +85,16 @@ function fmt(n: number): string {
 
 interface ScenarioResult {
   talentTotal: number;
+  talentFee: number;
+  handlerCost: number;
   totalPerdiem: number;
   travelTotal: number;
+  travDayCost: number;
+  flightCost: number;
+  localCost: number;
   accomTotal: number;
+  hotelCost: number;
+  taxiCost: number;
   grandTotal: number;
   annualTotal: number;
   savingPerEvent: number;
@@ -110,17 +139,82 @@ export default function BudgetCalculator() {
   const [hotelRate, setHotelRate] = useState(150);
   const [taxis, setTaxis] = useState(60);
 
-  // Overrides
-  const [overrides, setOverrides] = useState<Record<string, Record<string, number | undefined>>>({
-    ld: {}, lh: {}, od: {}, oh: {},
-  });
+  // Scenario dropdown controls
+  interface ScenarioControls {
+    perfPreset: number; // preset value or -1 for custom
+    perfCustom: number;
+    actPreset: number; // preset value or -1 for custom
+    actCustom: number;
+    travelPreset: string; // "international" | "regional" | "local" | "custom"
+    travelFlights: number;
+    travelHotel: number;
+    travelTaxis: number;
+  }
 
-  const setOv = useCallback((scId: string, key: string, val: number | undefined) => {
-    setOverrides((prev) => ({ ...prev, [scId]: { ...prev[scId], [key]: val } }));
+  const makeDefaultControls = useCallback((eng: EngMode): ScenarioControls => ({
+    perfPreset: eng === "day" ? perfDay : perfHourly,
+    perfCustom: eng === "day" ? perfDay : perfHourly,
+    actPreset: eng === "day" ? actDays : actHours,
+    actCustom: eng === "day" ? actDays : actHours,
+    travelPreset: "international",
+    travelFlights: flights,
+    travelHotel: hotelRate,
+    travelTaxis: taxis,
+  }), [perfDay, perfHourly, actDays, actHours, flights, hotelRate, taxis]);
+
+  const [scControls, setScControls] = useState<Record<string, ScenarioControls>>(() => ({
+    ld: { perfPreset: 1250, perfCustom: 1250, actPreset: 1, actCustom: 1, travelPreset: "international", travelFlights: 300, travelHotel: 150, travelTaxis: 60 },
+    lh: { perfPreset: 120, perfCustom: 120, actPreset: 4, actCustom: 4, travelPreset: "international", travelFlights: 300, travelHotel: 150, travelTaxis: 60 },
+    od: { perfPreset: 1250, perfCustom: 1250, actPreset: 1, actCustom: 1, travelPreset: "local", travelFlights: 0, travelHotel: 0, travelTaxis: 0 },
+    oh: { perfPreset: 120, perfCustom: 120, actPreset: 4, actCustom: 4, travelPreset: "local", travelFlights: 0, travelHotel: 0, travelTaxis: 0 },
+  }));
+
+  const updateScControl = useCallback((scId: string, updates: Partial<ScenarioControls>) => {
+    setScControls((prev) => ({ ...prev, [scId]: { ...prev[scId], ...updates } }));
   }, []);
-  const resetOv = useCallback((scId: string) => {
-    setOverrides((prev) => ({ ...prev, [scId]: {} }));
-  }, []);
+
+  // Derive override values from dropdown controls
+  const overrides = useMemo(() => {
+    const result: Record<string, Record<string, number | undefined>> = { ld: {}, lh: {}, od: {}, oh: {} };
+    for (const sc of SCENARIO_DEFS) {
+      const ctrl = scControls[sc.id];
+      if (!ctrl) continue;
+      const base = sc.eng === "day" ? perfDay : perfHourly;
+      const baseAct = sc.eng === "day" ? actDays : actHours;
+      const ov: Record<string, number | undefined> = {};
+
+      // Performer rate override
+      const perfVal = ctrl.perfPreset === -1 ? ctrl.perfCustom : ctrl.perfPreset;
+      if (perfVal !== base) ov.perf = perfVal;
+
+      // Activation length override
+      const actVal = ctrl.actPreset === -1 ? ctrl.actCustom : ctrl.actPreset;
+      if (actVal !== baseAct) ov.actUnits = actVal;
+
+      // Travel override
+      if (ctrl.travelPreset === "international") {
+        if (ctrl.travelFlights !== flights) ov.flights = ctrl.travelFlights;
+        if (ctrl.travelHotel !== hotelRate) ov.hotel = ctrl.travelHotel;
+        if (ctrl.travelTaxis !== taxis) ov.taxis = ctrl.travelTaxis;
+      } else if (ctrl.travelPreset === "regional") {
+        ov.flights = 0;
+        if (ctrl.travelHotel !== hotelRate) ov.hotel = ctrl.travelHotel;
+        if (ctrl.travelTaxis !== taxis) ov.taxis = ctrl.travelTaxis;
+      } else if (ctrl.travelPreset === "local") {
+        ov.flights = 0;
+        ov.hotel = 0;
+        ov.taxis = 0;
+      } else {
+        // custom
+        ov.flights = ctrl.travelFlights;
+        ov.hotel = ctrl.travelHotel;
+        ov.taxis = ctrl.travelTaxis;
+      }
+
+      result[sc.id] = ov;
+    }
+    return result;
+  }, [scControls, perfDay, perfHourly, actDays, actHours, flights, hotelRate, taxis]);
 
   // ─── Current-mode derived values ─────────────────────────
   const basePerf = engMode === "day" ? perfDay : perfHourly;
@@ -219,19 +313,21 @@ export default function BudgetCalculator() {
       const hasH = handler > 0;
       const ppl = hasH ? 2 : 1;
 
-      let perfCost: number, handlerCost: number, travCost: number, pdPerPerson: number, scNights: number;
+      let talentFee: number, handlerCost: number, travDayCost: number, pdPerPerson: number, scNights: number;
       if (sc.eng === "day") {
-        perfCost = scEffPerf * actUnits;
+        talentFee = scEffPerf * actUnits;
         handlerCost = handler * actUnits;
-        travCost = travRate * ppl * travUnits;
+        travDayCost = travRate * ppl * travUnits;
         pdPerPerson = perDiemDays(actUnits + travUnits);
         scNights = Math.ceil(travUnits + Math.max(actUnits - 1, 0));
       } else {
-        perfCost = scEffPerf * actUnits;
+        // Hourly mode: talent fee = guaranteed hours × hourly rate
+        talentFee = scEffPerf * actUnits;
         handlerCost = handler * actUnits;
-        travCost = travRate * ppl * travUnits;
-        pdPerPerson = perDiemHours(actUnits + travUnits);
-        scNights = Math.ceil((travUnits + actUnits) / 8);
+        // Travel days always billed at travel DAY rate from global base rates
+        travDayCost = travDayRate * ppl * travDays;
+        pdPerPerson = perDiemHours(actUnits + travHours);
+        scNights = Math.ceil((travHours + actUnits) / 8);
       }
 
       const totalPerdiem = pdPerPerson * ppl;
@@ -242,8 +338,8 @@ export default function BudgetCalculator() {
       if (sc.trav === "london") flightCost = flightsRaw * ppl;
       else localCost = ov.flights ?? base.localTransport;
 
-      const talentTotal = perfCost + handlerCost;
-      const travelTotal = travCost + flightCost + localCost;
+      const talentTotal = talentFee + handlerCost;
+      const travelTotal = travDayCost + flightCost + localCost;
       const accomTotal = hotelCost + taxiCost;
       const grandTotal = talentTotal + totalPerdiem + travelTotal + accomTotal;
 
@@ -256,7 +352,8 @@ export default function BudgetCalculator() {
         talentTotal, totalPerdiem, travelTotal, accomTotal, grandTotal,
         annualTotal, savingPerEvent, annualSaving,
         effPerf: scEffPerf, discount: scDiscount, tierIdx: scTierIdx, people: ppl, nights: scNights,
-      } as ScenarioResult;
+        talentFee, handlerCost, travDayCost, flightCost, localCost, hotelCost, taxiCost,
+      };
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [overrides, perfDay, perfHourly, handlerDay, handlerHourly, actDays, actHours, travDays, travHours, travDayRate, travHourRate, flights, localTransport, hotelRate, taxis, daysYear, hoursMonth]);
@@ -460,11 +557,17 @@ export default function BudgetCalculator() {
   );
 
   // ─── Comparison table rows ────────────────────────────────
-  const CMP_ROWS: { label: string; key: keyof ScenarioResult; section?: string; bold?: boolean; best?: boolean; saving?: boolean }[] = [
-    { label: "Talent fees", key: "talentTotal" },
+  const CMP_ROWS: { label: string; key: keyof ScenarioResult; section?: string; bold?: boolean; best?: boolean; saving?: boolean; sub?: boolean }[] = [
+    { label: "Performer fee", key: "talentFee", sub: true },
+    { label: "Handler fee", key: "handlerCost", sub: true },
+    { label: "Talent fees", key: "talentTotal", bold: true },
     { label: "Per diems", key: "totalPerdiem" },
-    { label: "Travel", key: "travelTotal" },
-    { label: "Accommodation", key: "accomTotal" },
+    { label: "Travel day costs", key: "travDayCost", section: "Travel & accommodation", sub: true },
+    { label: "Flights", key: "flightCost", sub: true },
+    { label: "Hotel", key: "hotelCost", sub: true },
+    { label: "Taxis", key: "taxiCost", sub: true },
+    { label: "Travel total", key: "travelTotal", bold: true },
+    { label: "Accommodation total", key: "accomTotal", bold: true },
     { label: "Total per event", key: "grandTotal", section: "Per event", bold: true, best: true },
     { label: "Annual total", key: "annualTotal", section: "Annual", bold: true },
     { label: `Saving vs. ${fmt(BASELINE)} (per event)`, key: "savingPerEvent", section: "vs. baseline", saving: true },
@@ -676,7 +779,7 @@ export default function BudgetCalculator() {
         {/* ─── 6. SCENARIO COMPARISON ─────────────────────────── */}
         <div style={{ background: MID, border: "1px solid rgba(255,255,255,0.06)", borderRadius: 4, padding: "16px 20px", marginBottom: 12 }}>
           {sectionHeader("Scenario comparison")}
-          <div style={{ fontSize: 12, color: GREY, marginBottom: 10, marginTop: -6 }}>All 4 scenarios use your current inputs. Override individual fields per scenario below the table.</div>
+          <div style={{ fontSize: 12, color: GREY, marginBottom: 10, marginTop: -6 }}>All 4 scenarios use your current inputs. Adjust individual scenarios using the controls below.</div>
 
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: mono, fontSize: 13, minWidth: 520 }}>
@@ -723,7 +826,7 @@ export default function BudgetCalculator() {
                         </tr>
                       ),
                       <tr key={r.key} style={r.bold ? { fontWeight: 500 } : undefined}>
-                        <td style={{ padding: "6px 10px", borderBottom: "1px solid rgba(255,255,255,0.04)", color: r.bold ? WHITE : GREY, fontWeight: r.bold ? 500 : 400 }}>
+                        <td style={{ padding: r.sub ? "4px 10px 4px 22px" : "6px 10px", borderBottom: "1px solid rgba(255,255,255,0.04)", color: r.bold ? WHITE : GREY, fontWeight: r.bold ? 500 : 400, fontSize: r.sub ? 12 : undefined }}>
                           {r.label}
                         </td>
                         {vals.map((val, i) => {
@@ -756,54 +859,154 @@ export default function BudgetCalculator() {
             </table>
           </div>
 
-          {/* Override panels */}
-          <div style={{ marginTop: 14 }}>
-            <div style={{ fontSize: 12, fontWeight: 500, color: GREY, marginBottom: 8 }}>Override fields per scenario</div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
-              {SCENARIO_DEFS.map((sc) => {
-                const ov = overrides[sc.id];
-                const hasOv = Object.values(ov).some((v) => v !== undefined);
-                return (
-                  <div key={sc.id} style={{ background: MUTED, border: "1px solid rgba(255,255,255,0.06)", borderRadius: 2, padding: "10px 12px" }}>
-                    <div style={{ fontSize: 12, fontWeight: 500, color: WHITE, marginBottom: 8 }}>{sc.label}</div>
-                    {OVERRIDE_FIELDS.map((f) => (
-                      <div key={f.key} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                        <label style={{ fontSize: 12, color: GREY, flex: 1 }}>{f.label}</label>
-                        {f.key !== "actUnits" && f.key !== "travUnits" && <span style={{ fontSize: 13, color: GREY }}>$</span>}
-                        <input
-                          type="number"
-                          placeholder="auto"
-                          step="any"
-                          value={ov[f.key] ?? ""}
-                          onChange={(e) => {
-                            const val = e.target.value.trim();
-                            setOv(sc.id, f.key, val === "" ? undefined : parseFloat(val));
-                          }}
-                          style={{
-                            width: 70, fontSize: 13, padding: "4px 8px",
-                            border: `1px solid ${ov[f.key] !== undefined ? GOLD : "rgba(255,255,255,0.08)"}`,
-                            borderRadius: 2, background: MID,
-                            color: ov[f.key] !== undefined ? GOLD : "rgba(255,255,255,0.4)",
-                            fontFamily: mono, outline: "none",
-                          }}
-                        />
-                      </div>
-                    ))}
-                    {hasOv && (
-                      <button
-                        onClick={() => resetOv(sc.id)}
-                        style={{
-                          fontSize: 11, padding: "2px 8px", border: "1px solid rgba(255,255,255,0.12)",
-                          borderRadius: 2, background: "transparent", color: GREY, cursor: "pointer", marginTop: 4,
-                        }}
-                      >
-                        Reset to auto
-                      </button>
-                    )}
+        </div>
+
+        {/* ─── SCENARIO CONTROLS ────────────────────────────────── */}
+        <div style={{ background: MID, border: "1px solid rgba(255,255,255,0.07)", borderRadius: 4, padding: "16px 20px", marginBottom: 12 }}>
+          <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: GOLD, marginBottom: 16 }}>Scenario controls</div>
+          <div style={{ fontSize: 12, color: GREY, marginBottom: 14, marginTop: -6 }}>Override individual scenario inputs. Presets defer to global base rates.</div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+            {SCENARIO_DEFS.map((sc) => {
+              const ctrl = scControls[sc.id];
+              const isLocal = sc.trav === "local";
+              const isHourly = sc.eng === "hourly";
+              const perfPresets = isHourly ? HR_PERF_PRESETS : DAY_PERF_PRESETS;
+              const actPresets = isHourly ? HR_ACT_PRESETS : DAY_ACT_PRESETS;
+
+              const selectStyle: React.CSSProperties = {
+                width: "100%", fontSize: 12, padding: "5px 8px",
+                border: "1px solid rgba(255,255,255,0.07)", borderRadius: 2,
+                background: MUTED, color: WHITE, fontFamily: mono, outline: "none",
+                cursor: "pointer", appearance: "none" as const,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E")`,
+                backgroundRepeat: "no-repeat", backgroundPosition: "right 8px center",
+                paddingRight: 24,
+              };
+              const customInputStyle: React.CSSProperties = {
+                width: "100%", fontSize: 12, padding: "4px 8px", marginTop: 4,
+                border: `1px solid ${GOLD}`, borderRadius: 2,
+                background: MID, color: GOLD, fontFamily: mono, outline: "none",
+              };
+              const fieldLabelStyle: React.CSSProperties = {
+                fontFamily: mono, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase" as const,
+                color: GREY, marginBottom: 4, marginTop: 10,
+              };
+
+              return (
+                <div key={sc.id} style={{
+                  background: MID, border: "1px solid rgba(255,255,255,0.07)", borderRadius: 2, padding: "12px 14px",
+                }}>
+                  {/* Scenario label */}
+                  <div style={{
+                    display: "inline-block", fontSize: 10, padding: "2px 6px", borderRadius: 2, marginBottom: 10,
+                    background: isLocal ? "rgba(34,197,94,0.12)" : "rgba(255,184,28,0.12)",
+                    color: isLocal ? GREEN : GOLD,
+                    fontFamily: mono, letterSpacing: "0.08em", textTransform: "uppercase" as const,
+                  }}>
+                    {sc.label}
                   </div>
-                );
-              })}
-            </div>
+
+                  {/* Field 1: Performer rate */}
+                  <div style={fieldLabelStyle}>Performer rate</div>
+                  <select
+                    value={ctrl.perfPreset}
+                    onChange={(e) => {
+                      const v = parseFloat(e.target.value);
+                      updateScControl(sc.id, { perfPreset: v, ...(v !== -1 ? { perfCustom: v } : {}) });
+                    }}
+                    style={selectStyle}
+                  >
+                    {perfPresets.map((p) => (
+                      <option key={p.value} value={p.value}>{p.label}</option>
+                    ))}
+                  </select>
+                  {ctrl.perfPreset === -1 && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 4 }}>
+                      <span style={{ fontSize: 11, color: GREY }}>$</span>
+                      <input
+                        type="number"
+                        value={ctrl.perfCustom}
+                        onChange={(e) => updateScControl(sc.id, { perfCustom: parseFloat(e.target.value) || 0 })}
+                        style={customInputStyle}
+                      />
+                    </div>
+                  )}
+
+                  {/* Field 2: Activation length */}
+                  <div style={fieldLabelStyle}>{isHourly ? "Min. guaranteed hrs" : "Activation days"}</div>
+                  <select
+                    value={ctrl.actPreset}
+                    onChange={(e) => {
+                      const v = parseFloat(e.target.value);
+                      updateScControl(sc.id, { actPreset: v, ...(v !== -1 ? { actCustom: v } : {}) });
+                    }}
+                    style={selectStyle}
+                  >
+                    {actPresets.map((p) => (
+                      <option key={p.value} value={p.value}>{p.label}</option>
+                    ))}
+                  </select>
+                  {ctrl.actPreset === -1 && (
+                    <input
+                      type="number"
+                      value={ctrl.actCustom}
+                      step="0.5"
+                      onChange={(e) => updateScControl(sc.id, { actCustom: parseFloat(e.target.value) || 0 })}
+                      style={customInputStyle}
+                    />
+                  )}
+
+                  {/* Field 3: Travel & accommodation */}
+                  <div style={fieldLabelStyle}>Travel & accommodation</div>
+                  <select
+                    value={ctrl.travelPreset}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      const updates: Partial<ScenarioControls> = { travelPreset: v };
+                      if (v === "international") {
+                        updates.travelFlights = flights;
+                        updates.travelHotel = hotelRate;
+                        updates.travelTaxis = taxis;
+                      } else if (v === "regional") {
+                        updates.travelFlights = 0;
+                        updates.travelHotel = hotelRate;
+                        updates.travelTaxis = taxis;
+                      } else if (v === "local") {
+                        updates.travelFlights = 0;
+                        updates.travelHotel = 0;
+                        updates.travelTaxis = 0;
+                      }
+                      updateScControl(sc.id, updates);
+                    }}
+                    style={selectStyle}
+                  >
+                    {TRAVEL_PRESETS.map((p) => (
+                      <option key={p.value} value={p.value}>{p.label}</option>
+                    ))}
+                  </select>
+                  {ctrl.travelPreset === "custom" && (
+                    <div style={{ marginTop: 6, display: "flex", flexDirection: "column", gap: 4 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <label style={{ fontSize: 11, color: GREY, width: 50 }}>Flights</label>
+                        <span style={{ fontSize: 11, color: GREY }}>$</span>
+                        <input type="number" value={ctrl.travelFlights} onChange={(e) => updateScControl(sc.id, { travelFlights: parseFloat(e.target.value) || 0 })} style={{ ...customInputStyle, marginTop: 0 }} />
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <label style={{ fontSize: 11, color: GREY, width: 50 }}>Hotel</label>
+                        <span style={{ fontSize: 11, color: GREY }}>$</span>
+                        <input type="number" value={ctrl.travelHotel} onChange={(e) => updateScControl(sc.id, { travelHotel: parseFloat(e.target.value) || 0 })} style={{ ...customInputStyle, marginTop: 0 }} />
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <label style={{ fontSize: 11, color: GREY, width: 50 }}>Taxis</label>
+                        <span style={{ fontSize: 11, color: GREY }}>$</span>
+                        <input type="number" value={ctrl.travelTaxis} onChange={(e) => updateScControl(sc.id, { travelTaxis: parseFloat(e.target.value) || 0 })} style={{ ...customInputStyle, marginTop: 0 }} />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
