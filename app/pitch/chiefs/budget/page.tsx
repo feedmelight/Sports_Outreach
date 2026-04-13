@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import * as XLSX from "xlsx";
+// xlsx import removed — Export XLS now downloads a static file
 
 // ─── Design tokens ──────────────────────────────────────────
 const RED = "#E31837";
@@ -291,136 +291,6 @@ export default function BudgetCalculator() {
 
   const cheapestIdx = scenarioResults.reduce((best, s, i) => (s.grandTotal < scenarioResults[best].grandTotal ? i : best), 0);
 
-  // ─── XLS Export ───────────────────────────────────────────
-  const exportXLS = useCallback(() => {
-    const wb = XLSX.utils.book_new();
-    const modelTag = `${travMode === "london" ? "Travelling" : "Local"} · ${engMode === "day" ? "Day rate" : "Hourly"}`;
-    const tierLabel = `Tier ${tierIdx + 1} (${Math.round(tier.discount * 100)}% off)`;
-
-    // ── Sheet 1: Summary ────────────────────────────────────
-    const summaryData = [
-      ["KANSAS CITY CHIEFS — CONTENT PARTNERSHIP BUDGET"],
-      ["Prepared by Feed Me Light", "", "", `Date: ${new Date().toLocaleDateString("en-US")}`],
-      ["Confidential"],
-      [],
-      ["CONFIGURATION"],
-      ["Engagement mode", engMode === "day" ? "Day rate" : "Hourly"],
-      ["Talent location", travMode === "london" ? "Travelling talent" : "Local talent"],
-      ["Volume", engMode === "day" ? `${daysYear} days/yr` : `${hoursMonth} hrs/mo`],
-      ["Active tier", tierLabel],
-      ["Effective performer rate", fmt(Math.round(effPerf))],
-      ["People", people],
-      [],
-      ["COST SUMMARY — PER EVENT"],
-      ["", "Amount"],
-      ["Performer fee", calc.perfCost],
-      ["Handler fee", calc.handlerCost],
-      ["Travel day/hour costs", calc.travCost],
-      ["Per diems", calc.totalPerdiem],
-      ["Flights", calc.flightCost],
-      travMode === "local" ? ["Local transport", calc.localCost] : null,
-      ["Hotel", calc.hotelCost],
-      ["Taxis / transfers", calc.taxiCost],
-      [],
-      ["TOTAL PER EVENT", calc.grandTotal],
-      ["Saving vs. Tier 1 day rate (" + fmt(BASELINE) + ")", calc.savingPerEvent],
-      [],
-      ["ANNUAL"],
-      ["Annual total", calc.annualTotal],
-      ["Annual saving", calc.annualSaving],
-    ].filter(Boolean) as (string | number | null)[][];
-
-    const ws1 = XLSX.utils.aoa_to_sheet(summaryData);
-    // Column widths
-    ws1["!cols"] = [{ wch: 30 }, { wch: 18 }, { wch: 14 }, { wch: 20 }];
-    XLSX.utils.book_append_sheet(wb, ws1, "Summary");
-
-    // ── Sheet 2: Scenario Comparison ────────────────────────
-    const scenarioHeader = ["", ...SCENARIO_DEFS.map((sc) => sc.label)];
-    const scenarioRows = [
-      ["SCENARIO COMPARISON"],
-      [],
-      scenarioHeader,
-      ["Eff. performer rate", ...scenarioResults.map((s) => fmt(Math.round(s.effPerf)))],
-      [],
-      ["PER EVENT"],
-      ["Talent fees", ...scenarioResults.map((s) => s.talentTotal)],
-      ["Per diems", ...scenarioResults.map((s) => s.totalPerdiem)],
-      ["Travel", ...scenarioResults.map((s) => s.travelTotal)],
-      ["Accommodation", ...scenarioResults.map((s) => s.accomTotal)],
-      ["Total per event", ...scenarioResults.map((s) => s.grandTotal)],
-      [],
-      ["ANNUAL"],
-      ["Annual total", ...scenarioResults.map((s) => s.annualTotal)],
-      [],
-      ["VS. TIER 1 DAY RATE (" + fmt(BASELINE) + ")"],
-      ["Saving per event", ...scenarioResults.map((s) => s.savingPerEvent)],
-      ["Annual saving", ...scenarioResults.map((s) => s.annualSaving)],
-      [],
-      ["✓ = lowest cost per event", "", SCENARIO_DEFS[cheapestIdx].label],
-    ];
-
-    const ws2 = XLSX.utils.aoa_to_sheet(scenarioRows);
-    ws2["!cols"] = [{ wch: 24 }, { wch: 16 }, { wch: 16 }, { wch: 16 }, { wch: 16 }];
-    XLSX.utils.book_append_sheet(wb, ws2, "Scenarios");
-
-    // ── Sheet 3: Inputs ─────────────────────────────────────
-    const inputRows = [
-      ["ALL INPUTS"],
-      [],
-      ["BASE RATES — DAY MODE"],
-      ["Performer day rate", perfDay],
-      ["Handler day rate", handlerDay],
-      ["Activation days / event", actDays],
-      ["Travel days / event", travDays],
-      ["Travel day rate / person", travDayRate],
-      [],
-      ["BASE RATES — HOURLY MODE"],
-      ["Performer hourly rate", perfHourly],
-      ["Handler hourly rate", handlerHourly],
-      ["Activation hours / event", actHours],
-      ["Travel hours / event", travHours],
-      ["Travel hour rate / person", travHourRate],
-      [],
-      ["VOLUME"],
-      ["Days per year", daysYear],
-      ["Hours per month", hoursMonth],
-      [],
-      ["TRAVEL & ACCOMMODATION"],
-      ["Flights return / person", flights],
-      ["Local transport (total)", localTransport],
-      ["Hotel / room / night", hotelRate],
-      ["Taxis / transfers", taxis],
-      [],
-      ["DERIVED"],
-      ["People", people],
-      ["Per diem / person", calc.pdPerPerson],
-      ["Rooms", calc.rooms],
-      ["Nights", calc.nights],
-    ];
-
-    const ws3 = XLSX.utils.aoa_to_sheet(inputRows);
-    ws3["!cols"] = [{ wch: 28 }, { wch: 14 }];
-    XLSX.utils.book_append_sheet(wb, ws3, "Inputs");
-
-    // Format currency cells in Summary sheet
-    const currencyFmt = currency === "gbp" ? "£#,##0" : "$#,##0";
-    for (let r = 14; r <= summaryData.length; r++) {
-      const cell = ws1[XLSX.utils.encode_cell({ r: r - 1, c: 1 })];
-      if (cell && typeof cell.v === "number") cell.z = currencyFmt;
-    }
-    // Format currency cells in Scenarios sheet
-    for (let r = 6; r <= scenarioRows.length; r++) {
-      for (let c = 1; c <= 4; c++) {
-        const cell = ws2[XLSX.utils.encode_cell({ r: r - 1, c })];
-        if (cell && typeof cell.v === "number") cell.z = currencyFmt;
-      }
-    }
-
-    const date = new Date().toISOString().slice(0, 10);
-    XLSX.writeFile(wb, `KC_Chiefs_Budget_${modelTag.replace(/[^a-zA-Z]/g, "_")}_${date}.xlsx`);
-  }, [engMode, travMode, tierIdx, tier, effPerf, people, daysYear, hoursMonth, calc, scenarioResults, cheapestIdx, perfDay, handlerDay, actDays, travDays, travDayRate, perfHourly, handlerHourly, actHours, travHours, travHourRate, flights, localTransport, hotelRate, taxis, fmt, currency]);
-
   // ─── Reusable UI helpers ──────────────────────────────────
   const sectionHeader = (label: string) => (
     <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: GOLD, marginBottom: 16 }}>{label}</div>
@@ -559,7 +429,12 @@ export default function BudgetCalculator() {
             />
           </div>
           <button
-            onClick={exportXLS}
+            onClick={() => {
+              const link = document.createElement('a');
+              link.href = '/XLS/kc_wolf_cost_model.xlsx';
+              link.download = 'kc_wolf_cost_model.xlsx';
+              link.click();
+            }}
             style={{
               display: "flex", alignItems: "center", gap: 8,
               padding: "8px 18px", background: GOLD, color: DARK, border: "none",
