@@ -18,7 +18,7 @@ const CHIEFS_LOGO = "https://a.espncdn.com/i/teamlogos/nfl/500/kc.png";
 
 // ─── Calculation logic (matching ref exactly) ───────────────
 const BASELINE = 1950;
-const GBP_TO_USD = 1.27;
+const DEFAULT_GBP_TO_USD = 1.35;
 type EngMode = "day" | "hourly";
 type TravMode = "london" | "local";
 type Currency = "gbp" | "usd";
@@ -52,11 +52,8 @@ const SCENARIO_DEFS = [
 function fmtGBP(n: number): string {
   return "£" + Math.round(n).toLocaleString("en-US");
 }
-function fmtUSD(n: number): string {
-  return "$" + Math.round(n * GBP_TO_USD).toLocaleString("en-US");
-}
-function fmtCurrency(n: number, currency: Currency): string {
-  return currency === "gbp" ? fmtGBP(n) : fmtUSD(n);
+function fmtUSD(n: number, rate: number): string {
+  return "$" + Math.round(n * rate).toLocaleString("en-US");
 }
 
 interface ScenarioResult {
@@ -89,7 +86,8 @@ export default function BudgetCalculator() {
 
   // Currency
   const [currency, setCurrency] = useState<Currency>("gbp");
-  const fmt = useCallback((n: number) => fmtCurrency(n, currency), [currency]);
+  const [fxRate, setFxRate] = useState(DEFAULT_GBP_TO_USD);
+  const fmt = useCallback((n: number) => currency === "gbp" ? fmtGBP(n) : fmtUSD(n, fxRate), [currency, fxRate]);
 
   // Section 1: Toggles
   const [engMode, setEngMode] = useState<EngMode>("day");
@@ -520,6 +518,23 @@ export default function BudgetCalculator() {
           >
             {currency === "gbp" ? "View in $" : "View in £"}
           </button>
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <span style={{ fontFamily: mono, fontSize: 10, color: GREY }}>£1 =</span>
+            <span style={{ fontFamily: mono, fontSize: 10, color: GREY }}>$</span>
+            <input
+              type="number"
+              step="0.01"
+              value={fxRate}
+              onChange={(e) => setFxRate(parseFloat(e.target.value) || 1)}
+              style={{
+                width: 52, fontSize: 12, padding: "4px 6px",
+                border: "1px solid rgba(255,255,255,0.12)", borderRadius: 2,
+                background: MUTED, color: WHITE, fontFamily: mono, outline: "none", textAlign: "center",
+              }}
+              onFocus={(e) => { e.target.style.borderColor = GOLD; }}
+              onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.12)"; }}
+            />
+          </div>
           <button
             onClick={exportXLS}
             style={{
@@ -927,7 +942,7 @@ export default function BudgetCalculator() {
             <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: "0.1em", color: "rgba(255,255,255,0.2)" }}>Confidential · April 2026 · feedmelight.com</div>
           </div>
           <div style={{ fontFamily: mono, fontSize: 9, color: "rgba(255,255,255,0.25)", marginTop: 8, textAlign: "right" }}>
-            £1 = ${GBP_TO_USD.toFixed(2)} — rate for indicative purposes only
+            £1 = ${fxRate.toFixed(2)} — rate for indicative purposes only
           </div>
         </footer>
       </div>
