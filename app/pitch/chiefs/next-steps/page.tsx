@@ -19,25 +19,25 @@ const FML_LOGO = "https://fml-craft.files.svdcdn.com/production/FeedMeLight_Logo
 const MARKETS = [
   {
     flag: "\u{1F1EC}\u{1F1E7}", name: "United Kingdom", mascot: "KC Wolfington \u00B7 London-based costume",
-    color: AMBER, key: "uk",
+    color: AMBER, key: "uk", img: "/mascots/kc-wolf.png", imgAlt: "KC Wolfington",
     body: "Biggest NFL market outside the US. Three London games annually at Tottenham Hotspur Stadium and Wembley. The Chiefs added UK rights in 2025 and immediately identified the 12-24 demographic as the primary target. Strong crossover with Premier League fandom and music culture. Super Bowl watch parties, NFL game weeks, brand partnerships, and sports crossover events all viable.",
     tags: [{ t: "Game weeks", v: "hot" }, { t: "Super Bowl parties", v: "hot" }, { t: "NFL Draft watches", v: "" }, { t: "Brand activations", v: "" }, { t: "FLAG football", v: "" }],
   },
   {
     flag: "\u{1F1EE}\u{1F1EA}", name: "Ireland", mascot: "KC O\u2019Wolf \u00B7 Irish mascot introduced 2025",
-    color: "#16a34a", key: "ireland",
+    color: "#16a34a", key: "ireland", img: "/mascots/kc-owolf.png", imgAlt: "KC O'Wolf",
     body: "First ever NFL game at Croke Park in 2025. The Chiefs ran Chiefs House at Murray\u2019s Bar in Dublin for a full game weekend, featuring KC O\u2019Wolf with alumni appearances. The Irish market is small but extraordinarily engaged  - the NFL described it as a \u201Ctrue city takeover.\u201D Year-round activation is currently underdeveloped, which is the opportunity. Dublin is 1hr 20min from London.",
     tags: [{ t: "Croke Park history", v: "new" }, { t: "High fan density", v: "hot" }, { t: "Pub culture activation", v: "" }, { t: "Watch parties", v: "" }],
   },
   {
     flag: "\u{1F1E9}\u{1F1EA}", name: "Germany", mascot: "KC Wolfgang \u00B7 Frankfurt 2023 \u00B7 Berlin 2025",
-    color: "#dc2626", key: "germany",
+    color: "#dc2626", key: "germany", img: "/mascots/kc-germany.png", imgAlt: "KC Wolfgang",
     body: "The Chiefs hold DACH rights  - Germany, Austria, and Switzerland. Eleven NFL teams have German market rights, making it the most competitive but also most developed European fanbase. KC Wolf was in Frankfurt in 2023 when the Chiefs beat the Dolphins. Berlin hosted a game in 2025. Munich\u2019s Allianz Arena returns in 2026, Berlin again in 2027. The game calendar gives natural activation anchors across two consecutive years.",
     tags: [{ t: "Allianz Arena 2026", v: "hot" }, { t: "DACH region rights", v: "" }, { t: "Proven fanbase", v: "" }, { t: "Bundesliga crossover", v: "" }],
   },
   {
     flag: "\u{1F1EA}\u{1F1F8}", name: "Spain", mascot: "KC Lobazo \u00B7 Madrid \u00B7 La Liga opportunity",
-    color: "#ea580c", key: "spain",
+    color: "#ea580c", key: "spain", img: "/mascots/kc-lobazo.png", imgAlt: "KC Lobazo",
     body: "The highest-upside market. KC Lobazo activated at Chiefs House in the Pestana CR7 Gran V\u00EDa during the 2025 Madrid game. The Chiefs are aggressively pushing for a 2026 regular season game at the Bernab\u00E9u. La Liga\u2019s mascot ecosystem  - with 20 club characters across Spain  - presents a unique cross-sport collaboration opportunity that no other NFL team could credibly pursue.",
     tags: [{ t: "Bernab\u00E9u 2026?", v: "hot" }, { t: "La Liga crossover", v: "hot" }, { t: "Multi-year Madrid deal confirmed", v: "new" }, { t: "KC Lobazo live", v: "" }],
   },
@@ -158,6 +158,7 @@ export default function NextStepsPage() {
             {MARKETS.map((m) => (
               <div key={m.key} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 3, padding: "20px 22px", position: "relative", overflow: "hidden" }}>
                 <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: m.color }} />
+                <img src={m.img} alt={m.imgAlt} style={{ position: "absolute", top: 12, right: 12, width: 72, height: 72, objectFit: "contain", opacity: 0.9 }} />
                 <div style={{ fontSize: 28, marginBottom: 10 }}>{m.flag}</div>
                 <div style={{ fontFamily: BEBAS, fontSize: 28, letterSpacing: "0.04em", marginBottom: 4 }}>{m.name}</div>
                 <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: AMBER, marginBottom: 14 }}>{m.mascot}</div>
