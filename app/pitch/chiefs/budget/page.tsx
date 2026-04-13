@@ -17,7 +17,7 @@ const FML_LOGO = "https://fml-craft.files.svdcdn.com/production/FeedMeLight_Logo
 const CHIEFS_LOGO = "https://a.espncdn.com/i/teamlogos/nfl/500/kc.png";
 
 // ─── Calculation logic (matching ref exactly) ───────────────
-const BASELINE = 1950;
+// BASELINE is now calculated dynamically inside the component
 const DEFAULT_GBP_TO_USD = 1.35;
 type EngMode = "day" | "hourly";
 type TravMode = "london" | "local";
@@ -34,11 +34,13 @@ const HR_TIERS = [
   { max: 9999, discount: 0.292, label: "Tier 3", range: "45+ hrs/yr" },
 ];
 
-function perDiemDays(t: number): number {
-  return Math.floor(t) * 50 + (t % 1 >= 0.5 ? 25 : 0);
-}
-function perDiemHours(h: number): number {
-  return h >= 5 ? 50 : h >= 2 ? 25 : 0;
+// Per diem: £50/person/full day, £25/person/half day
+// Applies for every activation day + every travel day
+// Travel days always count as full days (£50)
+function calcPerDiem(actDays: number, travDays: number): number {
+  const actPerDiem = actDays % 1 >= 0.5 && actDays < 1 ? 25 : Math.ceil(actDays) * 50;
+  const travPerDiem = travDays * 50;
+  return actPerDiem + travPerDiem;
 }
 
 const SCENARIO_DEFS = [
@@ -135,6 +137,21 @@ export default function BudgetCalculator() {
   const tier = tiers[tierIdx >= 0 ? tierIdx : 2];
   const effPerf = basePerf * (1 - tier.discount);
 
+  // Dynamic baseline: Tier 1 travelling talent day rate full per-event cost
+  const BASELINE = useMemo(() => {
+    const bPerf = perfDay; // Tier 1 = no discount
+    const bHandler = handlerDay;
+    const bPpl = bHandler > 0 ? 2 : 1;
+    const bTalent = bPerf * actDays + bHandler * actDays;
+    const bTravDay = travDayRate * bPpl * travDays;
+    const bPerDiem = calcPerDiem(actDays, travDays) * bPpl;
+    const bNights = Math.ceil(travDays + Math.max(actDays - 1, 0));
+    const bFlights = flights * bPpl;
+    const bHotel = hotelRate * bPpl * Math.max(bNights, 0);
+    const bTaxis = taxis;
+    return bTalent + bPerDiem + bTravDay + bFlights + bHotel + bTaxis;
+  }, [perfDay, handlerDay, actDays, travDays, travDayRate, flights, hotelRate, taxis]);
+
   // Main calc
   const calc = useMemo(() => {
     let perfCost: number, handlerCost: number, travCost: number, pdPerPerson: number, nights: number;
@@ -142,14 +159,15 @@ export default function BudgetCalculator() {
       perfCost = effPerf * actDays;
       handlerCost = handlerDay * actDays;
       travCost = travDayRate * people * travDays;
-      pdPerPerson = perDiemDays(actDays + travDays);
-      nights = Math.ceil(travDays + Math.max(actDays - 1, 0));
+      pdPerPerson = travMode === "local" ? calcPerDiem(actDays, 0) : calcPerDiem(actDays, travDays);
+      nights = travMode === "local" ? 0 : Math.ceil(travDays + Math.max(actDays - 1, 0));
     } else {
       perfCost = effPerf * actHours;
       handlerCost = handlerHourly * actHours;
       travCost = travHourRate * people * travHours;
-      pdPerPerson = perDiemHours(actHours + travHours);
-      nights = Math.ceil((travHours + actHours) / 8);
+      // Hourly mode: per diems based on travel days from global inputs
+      pdPerPerson = travMode === "local" ? calcPerDiem(1, 0) : calcPerDiem(1, travDays);
+      nights = travMode === "local" ? 0 : Math.ceil((travHours + actHours) / 8);
     }
 
     const totalPerdiem = pdPerPerson * people;
@@ -168,7 +186,7 @@ export default function BudgetCalculator() {
     const actUnits = engMode === "day" ? actDays : actHours;
     const volMult = engMode === "day" ? daysYear : Math.round(hoursMonth * 12 / Math.max(actUnits, 1));
     const annualTotal = grandTotal * Math.max(Math.round(volMult), 1);
-    const savingPerEvent = BASELINE - (talentTotal + totalPerdiem);
+    const savingPerEvent = BASELINE - grandTotal;
     const annualSaving = savingPerEvent * Math.max(Math.round(volMult), 1);
 
     // Talent-only saving (discount vs full rate)
@@ -227,17 +245,15 @@ export default function BudgetCalculator() {
       if (sc.eng === "day") {
         talentFee = scEffPerf * actUnits;
         handlerCost = handler * actUnits;
-        // Bug 2 fix: local talent has no travel day costs
         travDayCost = isLocal ? 0 : travRate * ppl * travUnits;
-        pdPerPerson = perDiemDays(actUnits + (isLocal ? 0 : travUnits));
+        pdPerPerson = isLocal ? calcPerDiem(actUnits, 0) : calcPerDiem(actUnits, travUnits);
         scNights = isLocal ? 0 : Math.ceil(travUnits + Math.max(actUnits - 1, 0));
       } else {
-        // Hourly mode: talent fee = guaranteed hours × hourly rate
         talentFee = scEffPerf * actUnits;
         handlerCost = handler * actUnits;
-        // Bug 2 fix: local talent has no travel day costs
         travDayCost = isLocal ? 0 : travDayRate * ppl * travDays;
-        pdPerPerson = perDiemHours(actUnits + (isLocal ? 0 : travHours));
+        // Hourly: per diems based on travel days from global inputs
+        pdPerPerson = isLocal ? calcPerDiem(1, 0) : calcPerDiem(1, travDays);
         scNights = isLocal ? 0 : Math.ceil((travHours + actUnits) / 8);
       }
 
@@ -307,7 +323,7 @@ export default function BudgetCalculator() {
       ["Taxis / transfers", calc.taxiCost],
       [],
       ["TOTAL PER EVENT", calc.grandTotal],
-      ["Saving vs. " + fmt(BASELINE) + " baseline", calc.savingPerEvent],
+      ["Saving vs. Tier 1 day rate (" + fmt(BASELINE) + ")", calc.savingPerEvent],
       [],
       ["ANNUAL"],
       ["Annual total", calc.annualTotal],
@@ -337,7 +353,7 @@ export default function BudgetCalculator() {
       ["ANNUAL"],
       ["Annual total", ...scenarioResults.map((s) => s.annualTotal)],
       [],
-      ["VS. BASELINE (" + fmt(BASELINE) + ")"],
+      ["VS. TIER 1 DAY RATE (" + fmt(BASELINE) + ")"],
       ["Saving per event", ...scenarioResults.map((s) => s.savingPerEvent)],
       ["Annual saving", ...scenarioResults.map((s) => s.annualSaving)],
       [],
@@ -485,7 +501,7 @@ export default function BudgetCalculator() {
     { label: "Accommodation total", key: "accomTotal", bold: true },
     { label: "Total per event", key: "grandTotal", section: "Per event", bold: true, best: true },
     { label: "Annual total", key: "annualTotal", section: "Annual", bold: true },
-    { label: `vs. ${fmt(BASELINE)} baseline`, key: "savingPerEvent", section: "vs. baseline", saving: true },
+    { label: `vs. Tier 1 day rate (${fmt(BASELINE)})`, key: "savingPerEvent", section: "vs. baseline", saving: true },
     { label: "Annual saving", key: "annualSaving", saving: true, bold: true },
   ];
 
@@ -703,7 +719,7 @@ export default function BudgetCalculator() {
               background: "rgba(34,197,94,0.08)", border: `1px solid ${GREEN}`, borderRadius: 2,
               padding: "10px 14px", marginTop: 10, display: "flex", justifyContent: "space-between", alignItems: "center",
             }}>
-              <span style={{ fontSize: 13, color: GREEN }}>Annual saving vs. {fmt(BASELINE)} baseline</span>
+              <span style={{ fontSize: 13, color: GREEN }}>Annual saving vs. Tier 1 day rate ({fmt(BASELINE)})</span>
               <span style={{ fontSize: 17, fontWeight: 500, color: GREEN, fontFamily: mono }}>{fmt(calc.annualSaving)} / year</span>
             </div>
           )}
