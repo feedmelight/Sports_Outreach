@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import Link from "next/link";
 
 // ─── Design tokens ──────────────────────────────────────────
 const RED = "#E31837";
@@ -398,17 +397,6 @@ export default function BudgetCalculator() {
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <Link
-            href="/pitch/chiefs/next-steps"
-            style={{
-              display: "flex", alignItems: "center", gap: 6,
-              padding: "8px 18px", background: "transparent", color: GOLD, border: `1px solid ${GOLD}`,
-              fontFamily: mono, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase",
-              fontWeight: 700, borderRadius: 2, textDecoration: "none", transition: "all 0.15s",
-            }}
-          >
-            Next Steps &rarr;
-          </Link>
           <button
             onClick={() => setCurrency((c) => (c === "gbp" ? "usd" : "gbp"))}
             style={{
