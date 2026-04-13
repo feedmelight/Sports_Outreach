@@ -29,9 +29,9 @@ const DAY_TIERS = [
   { max: 9999, discount: 0.28, label: "Tier 3", range: "45+ days/yr" },
 ];
 const HR_TIERS = [
-  { max: 10, discount: 0, label: "Tier 1", range: "0–10 hrs/mo" },
-  { max: 25, discount: 0.167, label: "Tier 2", range: "10–25 hrs/mo" },
-  { max: 9999, discount: 0.292, label: "Tier 3", range: "25+ hrs/mo" },
+  { max: 19, discount: 0, label: "Tier 1", range: "0–19 hrs/yr" },
+  { max: 44, discount: 0.167, label: "Tier 2", range: "20–44 hrs/yr" },
+  { max: 9999, discount: 0.292, label: "Tier 3", range: "45+ hrs/yr" },
 ];
 
 function perDiemDays(t: number): number {
@@ -679,10 +679,30 @@ export default function BudgetCalculator() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 14 }}>
             {tiers.map((t, i) => {
-              const active = i === tierIdx;
+              const isHrTier1Disabled = engMode === "hourly" && i === 0;
+              const active = !isHrTier1Disabled && i === tierIdx;
               const rate = Math.round(basePerf * (1 - t.discount));
-              // Midpoint for clicking: tier 1 midpoint=6, tier 2=18, tier 3=30 (day); tier 1=5, tier 2=17, tier 3=30 (hourly)
               const midpoints = engMode === "day" ? [10, 32, 50] : [20, 37, 50];
+
+              if (isHrTier1Disabled) {
+                return (
+                  <div
+                    key={t.label}
+                    style={{
+                      border: `1px solid rgba(227,24,55,0.3)`,
+                      borderRadius: 4, padding: "14px 10px", textAlign: "center",
+                      background: "rgba(227,24,55,0.08)", cursor: "default",
+                    }}
+                  >
+                    <div style={{ fontSize: 11, fontFamily: mono, letterSpacing: "0.08em", textTransform: "uppercase", color: RED, marginBottom: 4 }}>Below minimum</div>
+                    <div style={{ fontSize: 22, fontWeight: 600, fontFamily: mono, color: "rgba(227,24,55,0.5)", lineHeight: 1.2 }}>
+                      {fmt(rate)}/hr
+                    </div>
+                    <div style={{ fontSize: 11, color: "rgba(227,24,55,0.6)", marginTop: 4 }}>{t.range}</div>
+                  </div>
+                );
+              }
+
               return (
                 <button
                   key={t.label}
