@@ -221,40 +221,47 @@ export default function BudgetCalculator() {
       const hasH = handler > 0;
       const ppl = hasH ? 2 : 1;
 
+      const isLocal = sc.trav === "local";
+
       let talentFee: number, handlerCost: number, travDayCost: number, pdPerPerson: number, scNights: number;
       if (sc.eng === "day") {
         talentFee = scEffPerf * actUnits;
         handlerCost = handler * actUnits;
-        travDayCost = travRate * ppl * travUnits;
-        pdPerPerson = perDiemDays(actUnits + travUnits);
-        scNights = Math.ceil(travUnits + Math.max(actUnits - 1, 0));
+        // Bug 2 fix: local talent has no travel day costs
+        travDayCost = isLocal ? 0 : travRate * ppl * travUnits;
+        pdPerPerson = perDiemDays(actUnits + (isLocal ? 0 : travUnits));
+        scNights = isLocal ? 0 : Math.ceil(travUnits + Math.max(actUnits - 1, 0));
       } else {
         // Hourly mode: talent fee = guaranteed hours × hourly rate
         talentFee = scEffPerf * actUnits;
         handlerCost = handler * actUnits;
-        // Travel days always billed at travel DAY rate from global base rates
-        travDayCost = travDayRate * ppl * travDays;
-        pdPerPerson = perDiemHours(actUnits + travHours);
-        scNights = Math.ceil((travHours + actUnits) / 8);
+        // Bug 2 fix: local talent has no travel day costs
+        travDayCost = isLocal ? 0 : travDayRate * ppl * travDays;
+        pdPerPerson = perDiemHours(actUnits + (isLocal ? 0 : travHours));
+        scNights = isLocal ? 0 : Math.ceil((travHours + actUnits) / 8);
       }
 
       const totalPerdiem = pdPerPerson * ppl;
       const rooms = ppl;
-      const hotelCost = hotel * rooms * Math.max(scNights, 0);
+      const hotelCost = isLocal ? 0 : hotel * rooms * Math.max(scNights, 0);
       const taxiCost = taxisVal;
       let flightCost = 0, localCost = 0;
-      if (sc.trav === "london") flightCost = flightsRaw * ppl;
-      else localCost = ov.flights ?? base.localTransport;
+      if (!isLocal) flightCost = flightsRaw * ppl;
 
       const talentTotal = talentFee + handlerCost;
       const travelTotal = travDayCost + flightCost + localCost;
       const accomTotal = hotelCost + taxiCost;
       const grandTotal = talentTotal + totalPerdiem + travelTotal + accomTotal;
 
-      const volMult = sc.eng === "day" ? base.volUnit : Math.round(base.volUnit * 12 / Math.max(actUnits, 1));
-      const annualTotal = grandTotal * Math.max(Math.round(volMult), 1);
-      const savingPerEvent = BASELINE - (talentTotal + totalPerdiem);
-      const annualSaving = savingPerEvent * Math.max(Math.round(volMult), 1);
+      // Bug 1 fix: events/yr = volume ÷ activation units (e.g. 20 hrs/yr ÷ 4 hrs = 5 events)
+      const eventsPerYear = sc.eng === "day"
+        ? base.volUnit
+        : Math.max(Math.round(base.volUnit / Math.max(actUnits, 1)), 1);
+      const annualTotal = grandTotal * eventsPerYear;
+
+      // Bug 4 fix: saving = baseline minus full per-event cost (positive = cheaper than baseline)
+      const savingPerEvent = BASELINE - grandTotal;
+      const annualSaving = savingPerEvent * eventsPerYear;
 
       return {
         talentTotal, totalPerdiem, travelTotal, accomTotal, grandTotal,
@@ -478,7 +485,7 @@ export default function BudgetCalculator() {
     { label: "Accommodation total", key: "accomTotal", bold: true },
     { label: "Total per event", key: "grandTotal", section: "Per event", bold: true, best: true },
     { label: "Annual total", key: "annualTotal", section: "Annual", bold: true },
-    { label: `Saving vs. ${fmt(BASELINE)} (per event)`, key: "savingPerEvent", section: "vs. baseline", saving: true },
+    { label: `vs. ${fmt(BASELINE)} baseline`, key: "savingPerEvent", section: "vs. baseline", saving: true },
     { label: "Annual saving", key: "annualSaving", saving: true, bold: true },
   ];
 
