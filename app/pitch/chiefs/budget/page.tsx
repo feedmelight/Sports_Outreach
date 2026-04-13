@@ -115,8 +115,9 @@ export default function BudgetCalculator() {
   const [engMode, setEngMode] = useState<EngMode>("day");
   const [travMode, setTravMode] = useState<TravMode>("london");
 
-  // Base rates accordion
+  // Accordion states
   const [baseRatesOpen, setBaseRatesOpen] = useState(false);
+  const [travelOpen, setTravelOpen] = useState(false);
 
   // Section 2: Day rate inputs
   const [perfDay, setPerfDay] = useState(1250);
@@ -799,20 +800,49 @@ export default function BudgetCalculator() {
           </div>
         </div>
 
-        {/* ─── 4. TRAVEL & ACCOMMODATION ──────────────────────── */}
-        <div style={{ background: MID, border: "1px solid rgba(255,255,255,0.06)", borderRadius: 4, padding: "16px 20px", marginBottom: 12 }}>
-          {sectionHeader("Travel & accommodation")}
-
-          {travMode === "london"
-            ? row("Flights (return, per person)", flights, setFlights)
-            : row("Local transport (total)", localTransport, setLocalTransport)
-          }
-          {row("Hotel (per room / night)", hotelRate, setHotelRate)}
-          <div style={{ paddingLeft: 14, borderLeft: "1px solid rgba(255,255,255,0.06)", marginLeft: 4, marginBottom: 4 }}>
-            {autoField("Rooms (auto)", calc.rooms + (calc.rooms === 1 ? " room" : " rooms"), "1 per person")}
-            {autoField("Nights (auto)", calc.nights + (calc.nights === 1 ? " night" : " nights"), "based on travel + activation")}
+        {/* ─── 4. TRAVEL & ACCOMMODATION (collapsible) ──────────── */}
+        <div style={{ background: MID, border: "1px solid rgba(255,255,255,0.06)", borderRadius: 4, marginBottom: 12, overflow: "hidden" }}>
+          <button
+            onClick={() => setTravelOpen((o) => !o)}
+            style={{
+              width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center",
+              padding: "16px 20px", background: "transparent", border: "none", cursor: "pointer", outline: "none",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: GOLD }}>Travel & accommodation</div>
+              {!travelOpen && (
+                <span style={{ fontFamily: mono, fontSize: 14, fontWeight: 500, color: GOLD }}>
+                  {fmt(calc.travelTotal + calc.accomTotal)} / event
+                </span>
+              )}
+            </div>
+            <svg
+              width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={GREY} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              style={{ transition: "transform 0.2s ease", transform: travelOpen ? "rotate(180deg)" : "rotate(0deg)" }}
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div style={{
+            maxHeight: travelOpen ? 400 : 0,
+            opacity: travelOpen ? 1 : 0,
+            overflow: "hidden",
+            transition: "max-height 0.3s ease, opacity 0.25s ease",
+          }}>
+            <div style={{ padding: "0 20px 16px" }}>
+              {travMode === "london"
+                ? row("Flights (return, per person)", flights, setFlights)
+                : row("Local transport (total)", localTransport, setLocalTransport)
+              }
+              {row("Hotel (per room / night)", hotelRate, setHotelRate)}
+              <div style={{ paddingLeft: 14, borderLeft: "1px solid rgba(255,255,255,0.06)", marginLeft: 4, marginBottom: 4 }}>
+                {autoField("Rooms (auto)", calc.rooms + (calc.rooms === 1 ? " room" : " rooms"), "1 per person")}
+                {autoField("Nights (auto)", calc.nights + (calc.nights === 1 ? " night" : " nights"), "based on travel + activation")}
+              </div>
+              {row("Taxis / transfers (total)", taxis, setTaxis)}
+            </div>
           </div>
-          {row("Taxis / transfers (total)", taxis, setTaxis)}
         </div>
 
         {/* ─── 5. FULL COST SUMMARY ──────────────────────────── */}
