@@ -158,7 +158,7 @@ export default function NextStepsPage() {
             {MARKETS.map((m) => (
               <div key={m.key} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 3, padding: "20px 22px", position: "relative", overflow: "hidden" }}>
                 <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: m.color }} />
-                <img src={m.img} alt={m.imgAlt} style={{ position: "absolute", top: 12, right: 12, width: 216, height: 216, objectFit: "contain", opacity: 0.9 }} />
+                <img src={m.img} alt={m.imgAlt} style={{ float: "right", width: 216, height: 216, objectFit: "contain", opacity: 0.9, marginLeft: 16, marginBottom: 8 }} />
                 <div style={{ fontSize: 28, marginBottom: 10 }}>{m.flag}</div>
                 <div style={{ fontFamily: BEBAS, fontSize: 28, letterSpacing: "0.04em", marginBottom: 4 }}>{m.name}</div>
                 <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: AMBER, marginBottom: 14 }}>{m.mascot}</div>
