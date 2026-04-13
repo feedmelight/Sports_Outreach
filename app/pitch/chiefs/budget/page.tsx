@@ -18,13 +18,15 @@ const CHIEFS_LOGO = "https://a.espncdn.com/i/teamlogos/nfl/500/kc.png";
 
 // ─── Calculation logic (matching ref exactly) ───────────────
 const BASELINE = 1950;
+const GBP_TO_USD = 1.27;
 type EngMode = "day" | "hourly";
 type TravMode = "london" | "local";
+type Currency = "gbp" | "usd";
 
 const DAY_TIERS = [
-  { max: 12, discount: 0, label: "Tier 1", range: "1–12 days/yr" },
-  { max: 24, discount: 0.15, label: "Tier 2", range: "13–24 days/yr" },
-  { max: 9999, discount: 0.28, label: "Tier 3", range: "25+ days/yr" },
+  { max: 20, discount: 0, label: "Tier 1", range: "1–20 days/yr" },
+  { max: 44, discount: 0.15, label: "Tier 2", range: "21–44 days/yr" },
+  { max: 9999, discount: 0.28, label: "Tier 3", range: "45+ days/yr" },
 ];
 const HR_TIERS = [
   { max: 10, discount: 0, label: "Tier 1", range: "0–10 hrs/mo" },
@@ -48,16 +50,16 @@ const SCENARIO_DEFS = [
 
 // Dropdown presets for scenario controls
 const DAY_PERF_PRESETS = [
-  { value: 1250, label: "$1,250 — standard" },
-  { value: 1063, label: "$1,063 — tier 2 (13–24 days)" },
-  { value: 900, label: "$900 — tier 3 (25+ days)" },
-  { value: -1, label: "Custom" },
+  { value: 1250, suffix: " — standard" },
+  { value: 1063, suffix: " — tier 2 (21–44 days)" },
+  { value: 900, suffix: " — tier 3 (45+ days)" },
+  { value: -1, suffix: "" },
 ];
 const HR_PERF_PRESETS = [
-  { value: 120, label: "$120/hr — standard" },
-  { value: 100, label: "$100/hr — volume" },
-  { value: 80, label: "$80/hr — high volume" },
-  { value: -1, label: "Custom" },
+  { value: 120, suffix: "/hr — standard" },
+  { value: 100, suffix: "/hr — volume" },
+  { value: 80, suffix: "/hr — high volume" },
+  { value: -1, suffix: "" },
 ];
 const DAY_ACT_PRESETS = [
   { value: 1, label: "1 day" },
@@ -79,8 +81,14 @@ const TRAVEL_PRESETS = [
   { value: "custom", label: "Custom" },
 ];
 
-function fmt(n: number): string {
-  return "$" + Math.round(n).toLocaleString("en-US");
+function fmtGBP(n: number): string {
+  return "£" + Math.round(n).toLocaleString("en-US");
+}
+function fmtUSD(n: number): string {
+  return "$" + Math.round(n * GBP_TO_USD).toLocaleString("en-US");
+}
+function fmtCurrency(n: number, currency: Currency): string {
+  return currency === "gbp" ? fmtGBP(n) : fmtUSD(n);
 }
 
 interface ScenarioResult {
@@ -110,6 +118,10 @@ interface ScenarioResult {
 export default function BudgetCalculator() {
   const mono = "var(--font-dm-mono), 'DM Mono', monospace";
   const bebas = "var(--font-bebas), 'Bebas Neue', sans-serif";
+
+  // Currency
+  const [currency, setCurrency] = useState<Currency>("gbp");
+  const fmt = useCallback((n: number) => fmtCurrency(n, currency), [currency]);
 
   // Section 1: Toggles
   const [engMode, setEngMode] = useState<EngMode>("day");
@@ -381,7 +393,7 @@ export default function BudgetCalculator() {
       ["Talent location", travMode === "london" ? "Travelling talent" : "Local talent"],
       ["Volume", engMode === "day" ? `${daysYear} days/yr` : `${hoursMonth} hrs/mo`],
       ["Active tier", tierLabel],
-      ["Effective performer rate", `$${Math.round(effPerf)}`],
+      ["Effective performer rate", fmt(Math.round(effPerf))],
       ["People", people],
       [],
       ["COST SUMMARY — PER EVENT"],
@@ -396,7 +408,7 @@ export default function BudgetCalculator() {
       ["Taxis / transfers", calc.taxiCost],
       [],
       ["TOTAL PER EVENT", calc.grandTotal],
-      ["Saving vs. $1,950 baseline", calc.savingPerEvent],
+      ["Saving vs. " + fmt(BASELINE) + " baseline", calc.savingPerEvent],
       [],
       ["ANNUAL"],
       ["Annual total", calc.annualTotal],
@@ -414,7 +426,7 @@ export default function BudgetCalculator() {
       ["SCENARIO COMPARISON"],
       [],
       scenarioHeader,
-      ["Eff. performer rate", ...scenarioResults.map((s) => `$${Math.round(s.effPerf)}`)],
+      ["Eff. performer rate", ...scenarioResults.map((s) => fmt(Math.round(s.effPerf)))],
       [],
       ["PER EVENT"],
       ["Talent fees", ...scenarioResults.map((s) => s.talentTotal)],
@@ -426,7 +438,7 @@ export default function BudgetCalculator() {
       ["ANNUAL"],
       ["Annual total", ...scenarioResults.map((s) => s.annualTotal)],
       [],
-      ["VS. BASELINE ($1,950)"],
+      ["VS. BASELINE (" + fmt(BASELINE) + ")"],
       ["Saving per event", ...scenarioResults.map((s) => s.savingPerEvent)],
       ["Annual saving", ...scenarioResults.map((s) => s.annualSaving)],
       [],
@@ -477,7 +489,7 @@ export default function BudgetCalculator() {
     XLSX.utils.book_append_sheet(wb, ws3, "Inputs");
 
     // Format currency cells in Summary sheet
-    const currencyFmt = "$#,##0";
+    const currencyFmt = currency === "gbp" ? "£#,##0" : "$#,##0";
     for (let r = 14; r <= summaryData.length; r++) {
       const cell = ws1[XLSX.utils.encode_cell({ r: r - 1, c: 1 })];
       if (cell && typeof cell.v === "number") cell.z = currencyFmt;
@@ -492,7 +504,7 @@ export default function BudgetCalculator() {
 
     const date = new Date().toISOString().slice(0, 10);
     XLSX.writeFile(wb, `KC_Chiefs_Budget_${modelTag.replace(/[^a-zA-Z]/g, "_")}_${date}.xlsx`);
-  }, [engMode, travMode, tierIdx, tier, effPerf, people, daysYear, hoursMonth, calc, scenarioResults, cheapestIdx, perfDay, handlerDay, actDays, travDays, travDayRate, perfHourly, handlerHourly, actHours, travHours, travHourRate, flights, localTransport, hotelRate, taxis]);
+  }, [engMode, travMode, tierIdx, tier, effPerf, people, daysYear, hoursMonth, calc, scenarioResults, cheapestIdx, perfDay, handlerDay, actDays, travDays, travDayRate, perfHourly, handlerHourly, actHours, travHours, travHourRate, flights, localTransport, hotelRate, taxis, fmt, currency]);
 
   // ─── Reusable UI helpers ──────────────────────────────────
   const sectionHeader = (label: string) => (
@@ -503,7 +515,7 @@ export default function BudgetCalculator() {
     <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, flexWrap: "wrap" }}>
       <label style={{ flex: 1, minWidth: 180, fontSize: 14, color: WHITE }}>{label}</label>
       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-        {opts?.prefix !== false && <span style={{ fontSize: 14, color: GREY }}>$</span>}
+        {opts?.prefix !== false && <span style={{ fontSize: 14, color: GREY }}>{currency === "gbp" ? "£" : "$"}</span>}
         <input
           type="number"
           value={value}
@@ -602,6 +614,19 @@ export default function BudgetCalculator() {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
           <button
+            onClick={() => setCurrency((c) => (c === "gbp" ? "usd" : "gbp"))}
+            style={{
+              display: "flex", alignItems: "center", gap: 6,
+              padding: "8px 18px", background: "transparent", color: GOLD, border: `1px solid ${GOLD}`,
+              fontFamily: mono, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase",
+              fontWeight: 700, cursor: "pointer", borderRadius: 2, transition: "all 0.15s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,184,28,0.1)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+          >
+            {currency === "gbp" ? "View in $" : "View in £"}
+          </button>
+          <button
             onClick={exportXLS}
             style={{
               display: "flex", alignItems: "center", gap: 8,
@@ -657,7 +682,7 @@ export default function BudgetCalculator() {
               const active = i === tierIdx;
               const rate = Math.round(basePerf * (1 - t.discount));
               // Midpoint for clicking: tier 1 midpoint=6, tier 2=18, tier 3=30 (day); tier 1=5, tier 2=17, tier 3=30 (hourly)
-              const midpoints = engMode === "day" ? [6, 18, 30] : [20, 37, 50];
+              const midpoints = engMode === "day" ? [10, 32, 50] : [20, 37, 50];
               return (
                 <button
                   key={t.label}
@@ -801,7 +826,7 @@ export default function BudgetCalculator() {
 
               <hr style={{ border: "none", borderTop: "1px solid rgba(255,255,255,0.06)", margin: "10px 0" }} />
               {autoField("Number of people", String(people), "auto")}
-              {autoField("Per diem (per person, auto)", fmt(calc.pdPerPerson) + " / person", "$50 full / $25 half")}
+              {autoField("Per diem (per person, auto)", fmt(calc.pdPerPerson) + " / person", fmt(50) + " full / " + fmt(25) + " half")}
             </div>
           </div>
         </div>
@@ -1034,12 +1059,12 @@ export default function BudgetCalculator() {
                     style={selectStyle}
                   >
                     {perfPresets.map((p) => (
-                      <option key={p.value} value={p.value}>{p.label}</option>
+                      <option key={p.value} value={p.value}>{p.value === -1 ? "Custom" : fmt(p.value) + p.suffix}</option>
                     ))}
                   </select>
                   {ctrl.perfPreset === -1 && (
                     <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 4 }}>
-                      <span style={{ fontSize: 11, color: GREY }}>$</span>
+                      <span style={{ fontSize: 11, color: GREY }}>{currency === "gbp" ? "£" : "$"}</span>
                       <input
                         type="number"
                         value={ctrl.perfCustom}
@@ -1105,17 +1130,17 @@ export default function BudgetCalculator() {
                     <div style={{ marginTop: 6, display: "flex", flexDirection: "column", gap: 4 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <label style={{ fontSize: 11, color: GREY, width: 50 }}>Flights</label>
-                        <span style={{ fontSize: 11, color: GREY }}>$</span>
+                        <span style={{ fontSize: 11, color: GREY }}>{currency === "gbp" ? "£" : "$"}</span>
                         <input type="number" value={ctrl.travelFlights} onChange={(e) => updateScControl(sc.id, { travelFlights: parseFloat(e.target.value) || 0 })} style={{ ...customInputStyle, marginTop: 0 }} />
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <label style={{ fontSize: 11, color: GREY, width: 50 }}>Hotel</label>
-                        <span style={{ fontSize: 11, color: GREY }}>$</span>
+                        <span style={{ fontSize: 11, color: GREY }}>{currency === "gbp" ? "£" : "$"}</span>
                         <input type="number" value={ctrl.travelHotel} onChange={(e) => updateScControl(sc.id, { travelHotel: parseFloat(e.target.value) || 0 })} style={{ ...customInputStyle, marginTop: 0 }} />
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <label style={{ fontSize: 11, color: GREY, width: 50 }}>Taxis</label>
-                        <span style={{ fontSize: 11, color: GREY }}>$</span>
+                        <span style={{ fontSize: 11, color: GREY }}>{currency === "gbp" ? "£" : "$"}</span>
                         <input type="number" value={ctrl.travelTaxis} onChange={(e) => updateScControl(sc.id, { travelTaxis: parseFloat(e.target.value) || 0 })} style={{ ...customInputStyle, marginTop: 0 }} />
                       </div>
                     </div>
@@ -1127,13 +1152,18 @@ export default function BudgetCalculator() {
         </div>
 
         {/* Footer */}
-        <footer style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "24px 0", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <img src={FML_LOGO} alt="FeedMeLight" style={{ height: 18, filter: "brightness(0) invert(1)", opacity: 0.3 }} />
-            <span style={{ color: "rgba(255,255,255,0.15)", fontFamily: mono, fontSize: 10 }}>×</span>
-            <img src={CHIEFS_LOGO} alt="Chiefs" style={{ height: 24, opacity: 0.4 }} />
+        <footer style={{ padding: "24px 0", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <img src={FML_LOGO} alt="FeedMeLight" style={{ height: 18, filter: "brightness(0) invert(1)", opacity: 0.3 }} />
+              <span style={{ color: "rgba(255,255,255,0.15)", fontFamily: mono, fontSize: 10 }}>×</span>
+              <img src={CHIEFS_LOGO} alt="Chiefs" style={{ height: 24, opacity: 0.4 }} />
+            </div>
+            <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: "0.1em", color: "rgba(255,255,255,0.2)" }}>Confidential · April 2026 · feedmelight.com</div>
           </div>
-          <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: "0.1em", color: "rgba(255,255,255,0.2)" }}>Confidential · April 2026 · feedmelight.com</div>
+          <div style={{ fontFamily: mono, fontSize: 9, color: "rgba(255,255,255,0.25)", marginTop: 8, textAlign: "right" }}>
+            £1 = ${GBP_TO_USD.toFixed(2)} — rate for indicative purposes only
+          </div>
         </footer>
       </div>
     </div>
