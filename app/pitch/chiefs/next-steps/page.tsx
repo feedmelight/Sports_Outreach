@@ -18,7 +18,7 @@ const FML_LOGO = "https://fml-craft.files.svdcdn.com/production/FeedMeLight_Logo
 
 const MARKETS = [
   {
-    flag: "\u{1F1EC}\u{1F1E7}", name: "United Kingdom", mascot: "KC Wolf \u00B7 London-based costume",
+    flag: "\u{1F1EC}\u{1F1E7}", name: "United Kingdom", mascot: "KC Wolfington \u00B7 London-based costume",
     color: AMBER, key: "uk",
     body: "Biggest NFL market outside the US. Three London games annually at Tottenham Hotspur Stadium and Wembley. The Chiefs added UK rights in 2025 and immediately identified the 12-24 demographic as the primary target. Strong crossover with Premier League fandom and music culture. Super Bowl watch parties, NFL game weeks, brand partnerships, and sports crossover events all viable.",
     tags: [{ t: "Game weeks", v: "hot" }, { t: "Super Bowl parties", v: "hot" }, { t: "NFL Draft watches", v: "" }, { t: "Brand activations", v: "" }, { t: "FLAG football", v: "" }],
@@ -30,7 +30,7 @@ const MARKETS = [
     tags: [{ t: "Croke Park history", v: "new" }, { t: "High fan density", v: "hot" }, { t: "Pub culture activation", v: "" }, { t: "Watch parties", v: "" }],
   },
   {
-    flag: "\u{1F1E9}\u{1F1EA}", name: "Germany", mascot: "KC Wolf \u00B7 Frankfurt 2023 \u00B7 Berlin 2025",
+    flag: "\u{1F1E9}\u{1F1EA}", name: "Germany", mascot: "KC Wolfgang \u00B7 Frankfurt 2023 \u00B7 Berlin 2025",
     color: "#dc2626", key: "germany",
     body: "The Chiefs hold DACH rights  - Germany, Austria, and Switzerland. Eleven NFL teams have German market rights, making it the most competitive but also most developed European fanbase. KC Wolf was in Frankfurt in 2023 when the Chiefs beat the Dolphins. Berlin hosted a game in 2025. Munich\u2019s Allianz Arena returns in 2026, Berlin again in 2027. The game calendar gives natural activation anchors across two consecutive years.",
     tags: [{ t: "Allianz Arena 2026", v: "hot" }, { t: "DACH region rights", v: "" }, { t: "Proven fanbase", v: "" }, { t: "Bundesliga crossover", v: "" }],
