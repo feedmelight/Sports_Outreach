@@ -699,9 +699,9 @@ export default async function TeamPitch({ params }: Props) {
       <section className="pitch-section">
         <div className="section-label">What we&apos;ve already built</div>
         <h2 className="section-title">
-          Built for You on the
+          Built for Fans on the
           <br />
-          Worlds Biggest Stages
+          World&apos;s Biggest Stages
         </h2>
         <div className="proof-grid">
           <FadeUp className="proof-card">
