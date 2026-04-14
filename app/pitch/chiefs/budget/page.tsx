@@ -704,7 +704,7 @@ export default function BudgetCalculator() {
 
         {/* ─── 5. FULL COST SUMMARY ──────────────────────────── */}
         <div style={{ background: MUTED, border: "1px solid rgba(255,255,255,0.06)", borderRadius: 4, padding: "16px 20px", marginBottom: 12 }}>
-          {sectionHeader("Full cost summary — per event")}
+          {sectionHeader("Full cost summary: per event")}
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 8, marginBottom: 12 }}>
             {summaryCard("Talent (at volume rate)", fmt(calc.talentTotal))}
@@ -839,7 +839,7 @@ export default function BudgetCalculator() {
             <div style={{ fontFamily: mono, fontSize: 9, letterSpacing: "0.1em", color: "rgba(255,255,255,0.2)" }}>Confidential · April 2026 · feedmelight.com</div>
           </div>
           <div style={{ fontFamily: mono, fontSize: 9, color: "rgba(255,255,255,0.25)", marginTop: 8, textAlign: "right" }}>
-            £1 = ${fxRate.toFixed(2)} — rate for indicative purposes only
+            £1 = ${fxRate.toFixed(2)}, rate for indicative purposes only
           </div>
         </footer>
       </div>

@@ -122,7 +122,7 @@ export default async function TeamPitch({ params }: Props) {
     {
       num: "02",
       title: "The soft fan is becoming real",
-      body: `The fastest growing segment isn't the hardcore. It's the collector — someone with a portfolio of allegiances at different temperatures. They discovered the ${fullName} through a moment, a player, a feeling. The flame is lit. Most teams have no idea how to serve them.`,
+      body: `The fastest growing segment isn't the hardcore. It's the collector, someone with a portfolio of allegiances at different temperatures. They discovered the ${fullName} through a moment, a player, a feeling. The flame is lit. Most teams have no idea how to serve them.`,
     },
     {
       num: "03",
@@ -740,7 +740,7 @@ export default async function TeamPitch({ params }: Props) {
             </div>
             <div className="proof-body">
               3D anamorphic and large-format screen content at landmark locations
-              globally. We understand how to make a moment feel enormous — on the
+              globally. We understand how to make a moment feel enormous. On the
               biggest screens in the world.
             </div>
           </FadeUp>

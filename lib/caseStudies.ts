@@ -46,7 +46,7 @@ export const caseStudies: CaseStudy[] = [
     client: "Asian Football Confederation",
     year: 2023,
     description:
-      "Two major creative umbrellas for one of the world's largest football tournaments: anime-inspired mascot films with anamorphic OOH, and an original IP featuring 28 national animals for the opening ceremony — designed as an enduring story world.",
+      "Two major creative umbrellas for one of the world's largest football tournaments: anime-inspired mascot films with anamorphic OOH, and an original IP featuring 28 national animals for the opening ceremony, designed as an enduring story world.",
     categories: ["Event", "3D"],
     tags: ["sport", "global-event"],
     stats: [
@@ -93,7 +93,7 @@ export const caseStudies: CaseStudy[] = [
     client: "FIFA / Katara Studios",
     year: 2025,
     description:
-      "Animated mascot activations for the FIFA U-17 World Cup Qatar 2025, centred on 'BOMA' — a Desert Owl character inspired by legendary coach Velibor Milutinovic. Dynamic character animation with flashback vignettes from the real coach's career.",
+      "Animated mascot activations for the FIFA U-17 World Cup Qatar 2025, centred on 'BOMA': a Desert Owl character inspired by legendary coach Velibor Milutinovic. Dynamic character animation with flashback vignettes from the real coach's career.",
     categories: ["Advertising", "3D"],
     tags: ["sport", "global-event"],
     stats: [
@@ -116,7 +116,7 @@ export const caseStudies: CaseStudy[] = [
     client: "Katara Studios / AFC",
     year: 2023,
     description:
-      "12 anthropomorphic animal characters for the Asian Cup opening ceremony — 7 CG head replacements on live-action performers, 5 full CG characters. Adapted from an ancient fable celebrating Asia's diversity. Pushed FML's creature/CG pipeline significantly.",
+      "12 anthropomorphic animal characters for the Asian Cup opening ceremony: 7 CG head replacements on live-action performers, 5 full CG characters. Adapted from an ancient fable celebrating Asia's diversity. Pushed FML's creature/CG pipeline significantly.",
     categories: ["3D", "Live Action"],
     tags: ["sport", "global-event", "tech"],
     stats: [
@@ -139,7 +139,7 @@ export const caseStudies: CaseStudy[] = [
     client: "ESPN / Taco Bell",
     year: 2023,
     description:
-      "Energetic animation for the Live Mas Student Section campaign — dynamic 3D camera movements with seamless 2D animation introducing college football celebrations. American football, fireworks, and tacos in a vibrant aesthetic.",
+      "Energetic animation for the Live Mas Student Section campaign. Dynamic 3D camera movements with seamless 2D animation introducing college football celebrations. American football, fireworks, and tacos in a vibrant aesthetic.",
     categories: ["Advertising", "3D"],
     tags: ["sport", "us-market", "advertising", "entertainment"],
     stats: [
@@ -187,7 +187,7 @@ export const caseStudies: CaseStudy[] = [
     client: "Riot Games",
     year: 2020,
     description:
-      "Teaser for Valorant — one of Riot Games' first releases outside League of Legends. First official collaboration between Elastic and Feed Me Light, combining cinematic direction with high-end CG production.",
+      "Teaser for Valorant, one of Riot Games' first releases outside League of Legends. First official collaboration between Elastic and Feed Me Light, combining cinematic direction with high-end CG production.",
     categories: ["Gaming", "Studio Work"],
     tags: ["gaming", "entertainment", "us-market"],
     credits: [
@@ -243,7 +243,7 @@ export const caseStudies: CaseStudy[] = [
     client: "Netflix",
     year: 2019,
     description:
-      "Animated segments for Netflix's educational children's series StoryBots — character design, 3D modelling, rigging, and animation for the second season covering grammar and science topics.",
+      "Animated segments for Netflix's educational children's series StoryBots, covering character design, 3D modelling, rigging, and animation for the second season covering grammar and science topics.",
     categories: ["TV Series", "3D"],
     tags: ["entertainment", "us-market"],
     credits: [
@@ -262,7 +262,7 @@ export const caseStudies: CaseStudy[] = [
     client: "Disney / FX",
     year: 2022,
     description:
-      "Opening title sequence for the 'X' episode — dark, stylish and gory, designed to establish an unsettling tone. Joint Elastic × FML production.",
+      "Opening title sequence for the 'X' episode. Dark, stylish and gory, designed to establish an unsettling tone. Joint Elastic × FML production.",
     categories: ["Title Sequence", "3D"],
     tags: ["entertainment", "us-market"],
     credits: [
@@ -341,7 +341,7 @@ export const caseStudies: CaseStudy[] = [
     client: "Multiple",
     year: 2024,
     description:
-      "3D anamorphic and large-format screen content at landmark locations globally. We understand how to make a moment feel enormous — on the biggest screens in the world.",
+      "3D anamorphic and large-format screen content at landmark locations globally. We understand how to make a moment feel enormous. On the biggest screens in the world.",
     categories: ["DOOH", "3D"],
     tags: ["brand", "global-event", "advertising", "tech"],
     stats: [

@@ -370,7 +370,7 @@ export default function FanMap({
         <div className="fanmap-panel">
           <div className="fanmap-panel-header">
             <div className="fanmap-live-dot" />
-            Fan Network — Live
+            Fan Network: Live
           </div>
           <div className="fanmap-list">
             {visitedClubs.map((fc) => (

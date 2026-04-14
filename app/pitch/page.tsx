@@ -2,7 +2,7 @@ import { supabase, Team } from "@/lib/supabase";
 import { getTeamLogoUrl, getFullTeamName } from "@/lib/teamColors";
 
 export const metadata = {
-  title: "FeedMeLight — Pitch Index",
+  title: "FeedMeLight: Pitch Index",
 };
 
 export default async function PitchIndex() {
