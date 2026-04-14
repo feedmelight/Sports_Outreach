@@ -1,6 +1,5 @@
 import { supabase, Team } from "@/lib/supabase";
 import { getTeamLogoUrl, getFullTeamName } from "@/lib/teamColors";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
@@ -100,9 +99,9 @@ export default async function LeagueIndex({ params }: Props) {
             const logoUrl = getTeamLogoUrl(t.league, t.name);
             const displayName = getFullTeamName(t.name, t.metadata?.city ?? "");
             return (
-              <Link
+              <a
                 key={t.id}
-                href={`https://${league}.feedmelight.com/${slug}`}
+                href={`/${slug}`}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -124,7 +123,7 @@ export default async function LeagueIndex({ params }: Props) {
                 <span style={{ fontSize: 14, fontWeight: 400 }}>
                   {displayName}
                 </span>
-              </Link>
+              </a>
             );
           })}
         </div>

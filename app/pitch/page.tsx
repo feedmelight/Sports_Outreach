@@ -1,6 +1,5 @@
 import { supabase, Team } from "@/lib/supabase";
 import { getTeamLogoUrl, getFullTeamName } from "@/lib/teamColors";
-import Link from "next/link";
 
 export const metadata = {
   title: "FeedMeLight — Pitch Index",
@@ -92,7 +91,7 @@ export default async function PitchIndex() {
                   team.metadata?.city ?? ""
                 );
                 return (
-                  <Link
+                  <a
                     key={team.id}
                     href={`https://${league}.feedmelight.com/${slug}`}
                     style={{
@@ -116,7 +115,7 @@ export default async function PitchIndex() {
                     <span style={{ fontSize: 14, fontWeight: 400 }}>
                       {displayName}
                     </span>
-                  </Link>
+                  </a>
                 );
               })}
             </div>
