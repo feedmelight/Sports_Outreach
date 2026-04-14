@@ -34,15 +34,20 @@ export default function FanGlobe({
   const [hovered, setHovered] = useState<FanMarker | null>(null);
   const [ready, setReady] = useState(false);
 
-  // Point to stadium on load
+  // Start over UK, then animate to stadium
   useEffect(() => {
     if (!globeRef.current || !ready) return;
     const globe = globeRef.current;
 
-    // Set initial view
-    if (stadiumLat && stadiumLng) {
-      globe.pointOfView({ lat: stadiumLat, lng: stadiumLng, altitude: 2.2 }, 0);
-    }
+    // Start centred on UK
+    globe.pointOfView({ lat: 52, lng: -1, altitude: 2.5 }, 0);
+
+    // After a beat, animate across to the stadium
+    const timer = setTimeout(() => {
+      if (stadiumLat && stadiumLng) {
+        globe.pointOfView({ lat: stadiumLat, lng: stadiumLng, altitude: 2.2 }, 3000);
+      }
+    }, 2000);
 
     // Slow auto-rotate
     const controls = globe.controls();
@@ -53,6 +58,8 @@ export default function FanGlobe({
       controls.minDistance = 120;
       controls.maxDistance = 500;
     }
+
+    return () => clearTimeout(timer);
   }, [ready, stadiumLat, stadiumLng]);
 
   const pointColor = useCallback(
