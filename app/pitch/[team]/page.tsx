@@ -699,9 +699,9 @@ export default async function TeamPitch({ params }: Props) {
       <section className="pitch-section">
         <div className="section-label">What we&apos;ve already built</div>
         <h2 className="section-title">
-          Proof at the
+          Built for You on the
           <br />
-          Biggest Scale on Earth
+          Worlds Biggest Stages
         </h2>
         <div className="proof-grid">
           <FadeUp className="proof-card">
