@@ -603,7 +603,7 @@ export default async function TeamPitch({ params }: Props) {
           </div>
         </div>
         <div className="hero-label">
-          A Proposal for the {fullName} · March 2026
+          A Proposal for the {fullName} · {new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}
         </div>
         <h1 className="hero-headline">
           We Know
