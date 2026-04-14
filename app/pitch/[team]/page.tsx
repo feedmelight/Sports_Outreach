@@ -684,13 +684,14 @@ export default async function TeamPitch({ params }: Props) {
       <FadeUp className="insight-strip">
         <blockquote>
           &ldquo;The moment a fan becomes a real one isn&apos;t accidental.
-          It&apos;s created. A bar in Austin at 6am watching Liverpool. A full
-          stadium that crackles. A piece of content that makes someone feel like
-          they belong. We understand how to build those moments - because
-          we&apos;ve lived them on both sides.&rdquo;
+          It&apos;s created, shared and nurtured. Watching your team in a bar
+          far from home at 6am, with a bunch of strangers who are also family.
+          A full stadium that crackles. A piece of content that makes someone
+          feel like they belong. Feed Me Light was built for those moments,
+          because we&apos;ve lived them on both sides.&rdquo;
         </blockquote>
         <cite>
-          Ben Leyland, EP &amp; Technology Director, FeedMeLight
+          Kiri Haggart, Co-Founder, Feed Me Light
         </cite>
       </FadeUp>
 
