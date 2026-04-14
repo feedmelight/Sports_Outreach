@@ -423,40 +423,23 @@ export default async function TeamPitch({ params }: Props) {
         }
 
         .insight-strip {
+          background: var(--team-primary);
           padding: 60px;
         }
-        .insight-strip .quote-mark {
+        .insight-strip blockquote {
+          font-family: var(--font-bebas), 'Bebas Neue', sans-serif;
+          font-size: clamp(28px, 4vw, 52px);
+          line-height: 1.15;
+          letter-spacing: 0.02em;
+          max-width: 900px;
+        }
+        .insight-strip cite {
           display: block;
-          font-size: 80px;
-          line-height: 0;
-          margin-bottom: 16px;
-          color: var(--team-primary);
-          opacity: 0.4;
-          font-family: Georgia, serif;
-        }
-        .insight-strip .quote-text {
-          color: #f5f4f0;
-          font-size: 17px;
-          line-height: 1.75;
-          font-style: italic;
-          max-width: 640px;
-          font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
-        }
-        .insight-strip .quote-attr {
-          margin-top: 20px;
-        }
-        .insight-strip .quote-name {
-          color: #f5f4f0;
-          font-size: 13px;
-          font-weight: 500;
-          font-style: normal;
-          font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
-        }
-        .insight-strip .quote-role {
-          color: rgba(255,255,255,0.5);
-          font-size: 12px;
-          font-style: normal;
-          font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
+          font-family: var(--font-dm-mono), 'DM Mono', monospace;
+          font-size: 11px;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.6);
           margin-top: 24px;
           font-style: normal;
         }
@@ -699,14 +682,17 @@ export default async function TeamPitch({ params }: Props) {
 
       {/* INSIGHT STRIP */}
       <FadeUp className="insight-strip">
-        <span className="quote-mark">&ldquo;</span>
-        <div className="quote-text">
-          Feed Me Light was built around one insight: the moment a fan becomes a real one isn&apos;t accidental. It&apos;s created. A bar in Austin at 6am watching Liverpool. A full stadium that crackles. A piece of content that makes someone feel like they belong. We understand how to build those moments, because we&apos;ve lived them on both sides.
-        </div>
-        <div className="quote-attr">
-          <span className="quote-name">Kiri Haggart</span><br />
-          <span className="quote-role">Co-Founder, Feed Me Light</span>
-        </div>
+        <blockquote>
+          &ldquo;The moment a fan becomes a real one isn&apos;t accidental.
+          It&apos;s created. A bar in Austin at 6am watching Liverpool. A full
+          stadium that crackles. A piece of content that makes someone feel like
+          they belong. We understand how to build those moments — because
+          we&apos;ve lived them on both sides.&rdquo;
+        </blockquote>
+        <cite>
+          Ben Leyland, EP &amp; Technology Director, FeedMeLight · From
+          firsthand observation, NE USA &amp; Austin, 2025/26
+        </cite>
       </FadeUp>
 
       {/* PROOF */}
