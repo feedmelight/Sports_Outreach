@@ -8,7 +8,6 @@ import TeamLogo from "./TeamLogo";
 import CaseStudies from "./CaseStudies";
 import { getRelevantCaseStudies } from "@/lib/caseStudies";
 import GlobalChatterMap from "./GlobalChatterMap";
-import ProofCards from "@/components/ProofCards";
 
 interface Props {
   params: Promise<{ team: string }>;
@@ -698,7 +697,54 @@ export default async function TeamPitch({ params }: Props) {
 
       {/* PROOF */}
       <section className="pitch-section">
-        <ProofCards primaryColor={primary} secondaryColor={secondary} />
+        <div className="section-label">What we&apos;ve already built</div>
+        <h2 className="section-title">
+          Proof at the
+          <br />
+          Biggest Scale on Earth
+        </h2>
+        <div className="proof-grid">
+          <FadeUp className="proof-card">
+            <div className="proof-tag">Event · 2022</div>
+            <div className="proof-title">FIFA World Cup Qatar</div>
+            <div className="proof-body">
+              Full creative content portfolio across the entire tournament.
+              Ceremonies, activations, stadium screens, broadcast. Not a
+              supplier. The team running it.
+            </div>
+          </FadeUp>
+          <FadeUp className="proof-card">
+            <div className="proof-tag">Event · 2023</div>
+            <div className="proof-title">AFC Asian Cup &amp; Arab Cup</div>
+            <div className="proof-body">
+              Mascot creation, ceremony design, broadcast packages and social
+              content for two consecutive major FIFA-sanctioned tournaments
+              across the Middle East and Asia.
+            </div>
+          </FadeUp>
+          <FadeUp className="proof-card">
+            <div className="proof-tag">Live · Ongoing</div>
+            <div className="proof-title">
+              {fullName} Fan Intelligence Portal
+            </div>
+            <div className="proof-body">
+              Real-time fan map, global signal tracking, live stats, regional
+              filters across EU, US, APAC, MENA, LATAM. Built on your existing
+              relationship. Already running.
+            </div>
+          </FadeUp>
+          <FadeUp className="proof-card">
+            <div className="proof-tag">DOOH · Landmark</div>
+            <div className="proof-title">
+              Piccadilly Lights &amp; Global OOH
+            </div>
+            <div className="proof-body">
+              3D anamorphic and large-format screen content at landmark locations
+              globally. We understand how to make a moment feel enormous — on the
+              biggest screens in the world.
+            </div>
+          </FadeUp>
+        </div>
       </section>
 
       {/* CLIENT LOGOS */}
