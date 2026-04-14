@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import dynamic from "next/dynamic";
 import type { FanMarker } from "@/lib/fanData";
+import { getArcColor } from "@/lib/arcColors";
 
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
@@ -100,6 +101,58 @@ export default function FanGlobe({
         .reduce((sum, m) => sum + (m.memberCount || 0), 0),
     [markers]
   );
+
+  // Build arcs from stadium to each fan club
+  interface ArcPoint {
+    startLat: number;
+    startLng: number;
+    endLat: number;
+    endLng: number;
+    idx: number;
+  }
+
+  const allArcs = useMemo(() => {
+    if (!stadiumLat || !stadiumLng) return [];
+    return markers
+      .filter((m) => m.kind === "fan_club")
+      .map((m, i) => ({
+        startLat: stadiumLat,
+        startLng: stadiumLng,
+        endLat: m.lat,
+        endLng: m.lng,
+        idx: i,
+      }));
+  }, [markers, stadiumLat, stadiumLng]);
+
+  // Staggered accumulation: add arcs one at a time over ~8 seconds
+  const [visibleArcs, setVisibleArcs] = useState<ArcPoint[]>([]);
+
+  useEffect(() => {
+    if (!allArcs.length) return;
+    setVisibleArcs([]);
+    let i = 0;
+    const interval = setInterval(() => {
+      setVisibleArcs((prev) => [...prev, allArcs[i]]);
+      i++;
+      if (i >= allArcs.length) clearInterval(interval);
+    }, Math.min(180, 8000 / allArcs.length));
+    return () => clearInterval(interval);
+  }, [allArcs]);
+
+  // Arc color callback using team palette
+  const arcColor = useCallback(
+    (d: object) => {
+      const arc = d as ArcPoint;
+      return getArcColor(primaryColor, accentColor, arc.idx, 0.75);
+    },
+    [primaryColor, accentColor]
+  );
+
+  // Per-arc dash offset for visual stagger
+  const arcDashOffset = useCallback((d: object) => {
+    const arc = d as ArcPoint;
+    return (arc.idx % 8) * 0.12;
+  }, []);
 
   return (
     <div style={{ position: "relative" }}>
@@ -253,6 +306,19 @@ export default function FanGlobe({
           onPointHover={(d: object | null) =>
             setHovered(d ? (d as FanMarker) : null)
           }
+          arcsData={visibleArcs}
+          arcStartLat={(d: object) => (d as ArcPoint).startLat}
+          arcStartLng={(d: object) => (d as ArcPoint).startLng}
+          arcEndLat={(d: object) => (d as ArcPoint).endLat}
+          arcEndLng={(d: object) => (d as ArcPoint).endLng}
+          arcColor={arcColor}
+          arcDashLength={0.35}
+          arcDashGap={0.65}
+          arcDashAnimateTime={1800}
+          arcStroke={0.5}
+          arcAltitude={0.18}
+          arcAltitudeAutoScale={0.4}
+          arcDashInitialGap={arcDashOffset}
           onGlobeReady={() => setReady(true)}
           width={typeof window !== "undefined" ? Math.min(window.innerWidth - 120, 1200) : 1200}
           height={600}
