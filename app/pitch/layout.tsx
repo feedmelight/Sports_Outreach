@@ -1,4 +1,5 @@
 import { Bebas_Neue, DM_Sans, DM_Mono } from "next/font/google";
+import { headers } from "next/headers";
 
 const bebasNeue = Bebas_Neue({
   weight: "400",
@@ -21,9 +22,15 @@ const dmMono = DM_Mono({
   display: "swap",
 });
 
-export default function PitchLayout({ children }: { children: React.ReactNode }) {
+export default async function PitchLayout({ children }: { children: React.ReactNode }) {
+  const h = await headers();
+  const league = h.get("x-league") || "";
+
   return (
     <div className={`${bebasNeue.variable} ${dmSans.variable} ${dmMono.variable}`}>
+      {league && (
+        <link rel="icon" href={`/api/favicon?league=${league}`} type="image/png" />
+      )}
       {children}
     </div>
   );

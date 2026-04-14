@@ -50,21 +50,31 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  // Determine league for favicon
+  let league = ''
+  if (LEAGUES.has(subdomain)) {
+    league = subdomain
+  } else if (TEAM_LEAGUE[subdomain]) {
+    league = TEAM_LEAGUE[subdomain]
+  }
+
+  const headers = new Headers()
+  if (league) headers.set('x-league', league)
+
   if (LEAGUES.has(subdomain)) {
     // League subdomain: nfl.feedmelight.com/chiefs -> /pitch/chiefs
     const segments = path.split('/').filter(Boolean)
     if (segments.length === 0) {
-      // nfl.feedmelight.com/ -> show league-specific index
       url.pathname = `/pitch/league/${subdomain}`
-      return NextResponse.rewrite(url)
+      return NextResponse.rewrite(url, { headers })
     }
     const [teamSlug, ...rest] = segments
     url.pathname = `/pitch/${teamSlug}${rest.length ? '/' + rest.join('/') : ''}`
-    return NextResponse.rewrite(url)
+    return NextResponse.rewrite(url, { headers })
   } else {
     // Team subdomain: chiefs.feedmelight.com/budget -> /pitch/chiefs/budget
     url.pathname = `/pitch/${subdomain}${path === '/' ? '' : path}`
-    return NextResponse.rewrite(url)
+    return NextResponse.rewrite(url, { headers })
   }
 }
 
