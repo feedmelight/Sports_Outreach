@@ -94,7 +94,7 @@ export default async function PitchIndex() {
                 return (
                   <Link
                     key={team.id}
-                    href={`/pitch/${slug}`}
+                    href={`https://${league}.feedmelight.com/${slug}`}
                     style={{
                       display: "flex",
                       alignItems: "center",

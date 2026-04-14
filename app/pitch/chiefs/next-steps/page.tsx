@@ -90,7 +90,7 @@ export default function NextStepsPage() {
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <Link href="/pitch/chiefs/budget" style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 18px", background: "transparent", color: AMBER, border: `1px solid ${AMBER}`, fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 700, borderRadius: 2, textDecoration: "none", transition: "all 0.15s" }}>
+          <Link href="https://nfl.feedmelight.com/chiefs/budget" style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 18px", background: "transparent", color: AMBER, border: `1px solid ${AMBER}`, fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 700, borderRadius: 2, textDecoration: "none", transition: "all 0.15s" }}>
             &larr; Budget
           </Link>
           <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.1em", color: "rgba(255,255,255,0.3)", textAlign: "right", lineHeight: 1.6 }}>Confidential<br />Prepared by Feed Me Light</div>
