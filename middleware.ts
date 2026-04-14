@@ -54,8 +54,8 @@ export function middleware(request: NextRequest) {
     // League subdomain: nfl.feedmelight.com/chiefs -> /pitch/chiefs
     const segments = path.split('/').filter(Boolean)
     if (segments.length === 0) {
-      // nfl.feedmelight.com/ -> show pitch index
-      url.pathname = '/pitch'
+      // nfl.feedmelight.com/ -> show league-specific index
+      url.pathname = `/pitch/league/${subdomain}`
       return NextResponse.rewrite(url)
     }
     const [teamSlug, ...rest] = segments
