@@ -278,7 +278,8 @@ export default function GlobalChatterMap({
       controls.autoRotateSpeed = 0.4;
       controls.enableZoom = false;
     }
-    globe.pointOfView({ lat: 35, lng: -95, altitude: 1.2 }, 0);
+    // Start over UK, auto-rotate will carry it westward
+    globe.pointOfView({ lat: 52, lng: -1, altitude: 1.2 }, 0);
   }, [ready]);
 
   // Pause rotation on hover
