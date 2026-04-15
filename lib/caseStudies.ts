@@ -26,7 +26,7 @@ export const caseStudies: CaseStudy[] = [
     categories: ["Partnership", "Experiential"],
     tags: ["sport", "us-market", "global-event", "brand"],
     stats: [
-      { label: "Partner", value: "FML" },
+      { label: "Partner", value: "Kansas City Chiefs" },
       { label: "Sport", value: "NFL" },
       { label: "Platform", value: "Experiential + Social" },
     ],
