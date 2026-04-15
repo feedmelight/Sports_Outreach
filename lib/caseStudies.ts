@@ -20,9 +20,9 @@ export const caseStudies: CaseStudy[] = [
     id: "kc-wolfpack",
     title: "Kansas City Chiefs: The Wolf Pack",
     client: "Kansas City Chiefs",
-    year: 2024,
+    year: 2026,
     description:
-      "We helped the Chiefs expand KC Wolf into a full Wolf Pack for Europe. Four new characters — KC O'Wolf, KC Wolfington, KC Wolfgang and KC Lobazo — each tailored to connect with fans in Ireland, England, Germany and Spain. From character design and fabrication to performer casting, international logistics and content capture, we delivered four activations across four countries in three months.",
+      "We helped the Chiefs expand KC Wolf into a full Wolf Pack for Europe. Four new characters - KC O'Wolf, KC Wolfington, KC Wolfgang and KC Lobazo - each tailored to connect with fans in Ireland, England, Germany and Spain. From character design and fabrication to performer casting, international logistics and content capture, we delivered four activations across four countries in three months.",
     categories: ["Partnership", "Experiential"],
     tags: ["sport", "us-market", "global-event", "brand"],
     stats: [
@@ -33,7 +33,7 @@ export const caseStudies: CaseStudy[] = [
     credits: [
       { role: "Executive Producer", name: "Ben Leyland" },
     ],
-    thumbnail: "/images/KCC_Thumbnail_v001.png",
+    thumbnail: "/images/KCC_Thumbnail_v001.avif",
   },
   {
     id: "fifa-wc-2022",
