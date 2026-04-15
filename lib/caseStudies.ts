@@ -17,6 +17,25 @@ export interface CaseStudy {
 
 export const caseStudies: CaseStudy[] = [
   {
+    id: "kc-wolfpack",
+    title: "Kansas City Chiefs: The Wolf Pack",
+    client: "Kansas City Chiefs",
+    year: 2024,
+    description:
+      "We helped the Chiefs expand KC Wolf into a full Wolf Pack for Europe. Four new characters — KC O'Wolf, KC Wolfington, KC Wolfgang and KC Lobazo — each tailored to connect with fans in Ireland, England, Germany and Spain. From character design and fabrication to performer casting, international logistics and content capture, we delivered four activations across four countries in three months.",
+    categories: ["Partnership", "Experiential"],
+    tags: ["sport", "us-market", "global-event", "brand"],
+    stats: [
+      { label: "Partner", value: "FML" },
+      { label: "Sport", value: "NFL" },
+      { label: "Platform", value: "Experiential + Social" },
+    ],
+    credits: [
+      { role: "Executive Producer", name: "Ben Leyland" },
+    ],
+    thumbnail: "/images/KCC_Thumbnail_v001.png",
+  },
+  {
     id: "fifa-wc-2022",
     title: "FIFA World Cup Qatar 2022",
     client: "FIFA",
@@ -350,6 +369,38 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
 ];
+
+/** Per-team override: hand-curated case study order by team slug */
+const TEAM_CASE_STUDY_ORDER: Record<string, string[]> = {
+  chiefs: [
+    "kc-wolfpack",
+    "fifa-wc-2022",
+    "afc-mascots",
+    "afc-asian-cup-ceremony",
+    "fifa-u17",
+    "taco-bell-espn",
+  ],
+};
+
+/**
+ * Returns curated case studies for a specific team slug.
+ * Falls back to getRelevantCaseStudies if no override exists.
+ */
+export function getCaseStudiesForTeam(
+  teamSlug: string,
+  league: string,
+  count: number = 6
+): CaseStudy[] {
+  const order = TEAM_CASE_STUDY_ORDER[teamSlug];
+  if (order) {
+    const byId = new Map(caseStudies.map((cs) => [cs.id, cs]));
+    return order
+      .map((id) => byId.get(id))
+      .filter((cs): cs is CaseStudy => cs !== undefined)
+      .slice(0, count);
+  }
+  return getRelevantCaseStudies(league, count);
+}
 
 /** Sport/league to tag relevance mapping */
 const LEAGUE_TAG_PRIORITY: Record<string, string[]> = {

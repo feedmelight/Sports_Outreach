@@ -6,7 +6,7 @@ import Calculator from "./Calculator";
 import FadeUp from "./FadeUp";
 import TeamLogo from "./TeamLogo";
 import CaseStudies from "./CaseStudies";
-import { getRelevantCaseStudies } from "@/lib/caseStudies";
+import { getCaseStudiesForTeam } from "@/lib/caseStudies";
 import GlobalChatterMap from "./GlobalChatterMap";
 
 interface Props {
@@ -803,7 +803,7 @@ export default async function TeamPitch({ params }: Props) {
           <br />
           For Brands Like Yours
         </h2>
-        <CaseStudies studies={getRelevantCaseStudies(team.league, 4)} />
+        <CaseStudies studies={getCaseStudiesForTeam(slug, team.league, 6)} />
       </section>
 
       {/* CALCULATOR */}
