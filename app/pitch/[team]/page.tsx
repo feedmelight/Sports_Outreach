@@ -775,6 +775,7 @@ export default async function TeamPitch({ params }: Props) {
             { src: "/FML Tournament & Partner Logos/FIFA_WC_26.webp.png", alt: "FIFA World Cup 2026" },
             { src: "/FML Tournament & Partner Logos/AFC_2024.webp", alt: "AFC Asian Cup 2024" },
             { src: "/FML Tournament & Partner Logos/KCC_Logo.webp", alt: "Kansas City Chiefs" },
+            { src: "/FML Tournament & Partner Logos/NHL.webp", alt: "NHL" },
             { src: "/FML Tournament & Partner Logos/SAFF.webp", alt: "SAFF" },
             { src: "/FML Tournament & Partner Logos/Saudi2034.webp", alt: "Saudi 2034" },
           ].map((logo) => (
