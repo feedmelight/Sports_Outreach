@@ -33,7 +33,7 @@ export const caseStudies: CaseStudy[] = [
     credits: [
       { role: "Executive Producer", name: "Ben Leyland" },
     ],
-    thumbnail: "/images/KCC_Thumbnail_v001.avif",
+    thumbnail: "/images/KCC_Thumbnail_v002.avif",
   },
   {
     id: "fifa-wc-2022",
