@@ -408,6 +408,7 @@ const LEAGUE_TAG_PRIORITY: Record<string, string[]> = {
   nba: ["sport", "us-market", "global-event", "entertainment", "gaming"],
   mls: ["sport", "global-event", "us-market", "brand"],
   wnba: ["sport", "us-market", "entertainment", "brand"],
+  wsoccer: ["sport", "global-event", "brand", "entertainment"],
   college: ["sport", "us-market", "advertising", "entertainment"],
 };
 

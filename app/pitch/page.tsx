@@ -13,7 +13,7 @@ export default async function PitchIndex() {
     .order("name");
 
   // Filter out sponsors/colleges, group by league
-  const sportLeagues = ["nfl", "nba", "mls", "wnba"];
+  const sportLeagues = ["nfl", "nba", "mls", "wnba", "wsoccer"];
   const grouped: Record<string, Team[]> = {};
   for (const t of teams ?? []) {
     const league = t.league || "other";

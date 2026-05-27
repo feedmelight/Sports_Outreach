@@ -8,6 +8,7 @@ const LEAGUE_NAMES: Record<string, string> = {
   nba: "NBA",
   mls: "MLS",
   wnba: "WNBA",
+  wsoccer: "Women's Soccer",
 };
 
 interface Props {

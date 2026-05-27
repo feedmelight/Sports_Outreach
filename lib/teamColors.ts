@@ -83,6 +83,10 @@ const TEAM_COLORS: Record<string, [string, string]> = {
   "Portland Fire": ["#C8102E", "#FF6720"],
   "Toronto Tempo": ["#CE1141", "#A5ACAF"],
 
+  // Women's Soccer (European)
+  "Montpellier HSC": ["#F47920", "#1B3C6B"],
+  "FC Rosengård": ["#003DA5", "#FFFFFF"],
+
   // MLS
   "Inter Miami": ["#F7B5CD", "#231F20"],
   "LA Galaxy": ["#00245D", "#FFD200"],
@@ -192,6 +196,8 @@ const ESPN_ABBR: Record<string, string> = {
   "Toronto FC": "tor",
   "Vancouver Whitecaps": "van",
 
+  // Women's Soccer — no ESPN abbr, using wiki logos
+
   // WNBA
   Dream: "atl",
   Mercury: "phx",
@@ -272,6 +278,9 @@ const FULL_NAMES: Record<string, string> = {
   Blazers: "Portland Trail Blazers",
   Jazz: "Utah Jazz",
   Clippers: "Los Angeles Clippers",
+  // Women's Soccer (European)
+  "Montpellier HSC": "Montpellier HSC Féminines",
+  "FC Rosengård": "FC Rosengård Women",
   // MLS - these use full names in DB already
   // WNBA
   Dream: "Atlanta Dream",
@@ -323,6 +332,9 @@ const WIKI_LOGOS: Record<string, string> = {
   "St Louis City": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Logo_of_St._Louis_City_SC.svg",
   "Toronto FC": "https://upload.wikimedia.org/wikipedia/en/7/7c/Toronto_FC_Logo.svg",
   "Vancouver Whitecaps": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Vancouver_Whitecaps_logo.svg",
+  // Women's Soccer (European)
+  "Montpellier HSC": "https://upload.wikimedia.org/wikipedia/commons/9/99/Montpellier_HSC_logo.svg",
+  "FC Rosengård": "https://upload.wikimedia.org/wikipedia/en/1/19/FC_Roseng%C3%A5rd_logo.svg",
   // WNBA expansion
   "Portland Fire": "https://upload.wikimedia.org/wikipedia/en/c/cf/Portland_Fire_logo.svg",
   "Toronto Tempo": "https://upload.wikimedia.org/wikipedia/en/1/1b/Toronto_Tempo_logo.svg",

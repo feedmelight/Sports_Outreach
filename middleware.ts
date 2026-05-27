@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const LEAGUES = new Set(['nfl', 'nba', 'mls', 'wnba'])
+const LEAGUES = new Set(['nfl', 'nba', 'mls', 'wnba', 'wsoccer'])
 
 // Map team slugs to their league for redirects
 const TEAM_LEAGUE: Record<string, string> = {
@@ -17,6 +17,7 @@ const TEAM_LEAGUE: Record<string, string> = {
   mavericks: 'nba', cavaliers: 'nba', thunder: 'nba', timberwolves: 'nba',
   'inter-miami': 'mls', lafc: 'mls', galaxy: 'mls', sounders: 'mls',
   timbers: 'mls', atlanta: 'mls', austin: 'mls', columbus: 'mls',
+  'montpellier-hsc': 'wsoccer', 'fc-rosengard': 'wsoccer',
 }
 
 export function middleware(request: NextRequest) {

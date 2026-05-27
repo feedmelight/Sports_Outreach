@@ -113,28 +113,53 @@ export default async function TeamPitch({ params }: Props) {
     member_count: fc.member_count || 0,
   }));
 
-  const painPoints = [
-    {
-      num: "01",
-      title: `Your European fanbase is invisible`,
-      body: `The ${fullName} have fans in Dublin, London, Berlin, and beyond. You know they exist. You don't know who they are, where they gather, what they feel, or how to speak to them in a way that deepens allegiance rather than just broadcasting at them.`,
-    },
-    {
-      num: "02",
-      title: "The soft fan is becoming real",
-      body: `The fastest growing segment isn't the hardcore. It's the collector, someone with a portfolio of allegiances at different temperatures. They discovered the ${fullName} through a moment, a player, a feeling. The flame is lit. Most teams have no idea how to serve them.`,
-    },
-    {
-      num: "03",
-      title: "Content doesn't keep up with the signal",
-      body: `Your fans are generating real-time sentiment, conversation, and energy across every platform. Your content team is on a production cycle. There's a gap between what your fans are feeling now and what you're able to say to them.`,
-    },
-    {
-      num: "04",
-      title: `${m.city} activations are one-and-done`,
-      body: `${team.league.toUpperCase()} games. Sponsor activations. A fan event in ${m.city}. They land well and then disappear. There's no system that converts a one-night experience into a permanent deepening of the relationship. The flame lights, then goes out.`,
-    },
-  ];
+  const isEuropean = ["wsoccer"].includes(team.league);
+
+  const painPoints = isEuropean
+    ? [
+        {
+          num: "01",
+          title: `Your global fanbase is untapped`,
+          body: `${fullName} have followers across the US, Asia, the Middle East, and beyond. Women's football is the fastest growing sport on Earth. You know the interest is there. You don't know who these fans are, where they gather, what they feel, or how to speak to them in a way that converts curiosity into lasting allegiance.`,
+        },
+        {
+          num: "02",
+          title: "The new fan is choosing now",
+          body: `Women's football is minting fans every week — through a World Cup moment, a viral clip, a player they admire. These fans don't have generational loyalty yet. They're choosing who to follow right now. ${fullName} can capture them, but only if you can see the signal and act on it before they drift.`,
+        },
+        {
+          num: "03",
+          title: "Content doesn't keep up with the signal",
+          body: `Your fans are generating real-time sentiment, conversation, and energy across every platform. Your content team is on a production cycle. There's a gap between what your fans are feeling now and what you're able to say to them.`,
+        },
+        {
+          num: "04",
+          title: `${m.city} is the home, not the ceiling`,
+          body: `Match days. Sponsor activations. A fan event in ${m.city}. They land well and then disappear. Women's football is building a global audience in real time — there's no system that converts a one-night experience into a permanent deepening of the relationship across borders. The flame lights, then goes out.`,
+        },
+      ]
+    : [
+        {
+          num: "01",
+          title: `Your European fanbase is invisible`,
+          body: `The ${fullName} have fans in Dublin, London, Berlin, and beyond. You know they exist. You don't know who they are, where they gather, what they feel, or how to speak to them in a way that deepens allegiance rather than just broadcasting at them.`,
+        },
+        {
+          num: "02",
+          title: "The soft fan is becoming real",
+          body: `The fastest growing segment isn't the hardcore. It's the collector, someone with a portfolio of allegiances at different temperatures. They discovered the ${fullName} through a moment, a player, a feeling. The flame is lit. Most teams have no idea how to serve them.`,
+        },
+        {
+          num: "03",
+          title: "Content doesn't keep up with the signal",
+          body: `Your fans are generating real-time sentiment, conversation, and energy across every platform. Your content team is on a production cycle. There's a gap between what your fans are feeling now and what you're able to say to them.`,
+        },
+        {
+          num: "04",
+          title: `${m.city} activations are one-and-done`,
+          body: `${team.league.toUpperCase()} games. Sponsor activations. A fan event in ${m.city}. They land well and then disappear. There's no system that converts a one-night experience into a permanent deepening of the relationship. The flame lights, then goes out.`,
+        },
+      ];
 
   return (
     <div style={cssVars}>
@@ -613,9 +638,9 @@ export default async function TeamPitch({ params }: Props) {
           <span className="secondary-text">Fans Are.</span>
         </h1>
         <p className="hero-sub">
-          We built a real-time fan intelligence system for your franchise. Here
-          is what that looks like when deployed at full scale, globally, across
-          Europe, MENA, APAC, and everywhere the {fullName} are growing.
+          {isEuropean
+            ? `We built a real-time fan intelligence system for your club. Here is what that looks like when deployed at full scale — across the US, Asia, MENA, and everywhere ${fullName} are growing.`
+            : `We built a real-time fan intelligence system for your franchise. Here is what that looks like when deployed at full scale, globally, across Europe, MENA, APAC, and everywhere the ${fullName} are growing.`}
         </p>
         <div className="hero-stats">
           <div>
@@ -637,9 +662,9 @@ export default async function TeamPitch({ params }: Props) {
           <div>
             <div className="hero-stat-num">{m.conference}</div>
             <div className="hero-stat-label">
-              Conference
+              {isEuropean ? "League" : "Conference"}
               <br />
-              {m.division} Division
+              {isEuropean ? m.division : `${m.division} Division`}
             </div>
           </div>
         </div>
