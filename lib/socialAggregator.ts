@@ -89,8 +89,11 @@ async function fetchReddit(teamSlug: string, translations: Record<string, string
     for (const p of parsed) if (p.status === 'fulfilled') posts.push(p.value)
   }
 
-  // International subreddits via proxy
-  const intlSubs = ['nflespanol', 'nflalemanha', 'nfl_france', 'nflbrasil', 'nfljapan', 'nba_es']
+  // International subreddits via proxy — pick sport-relevant subs
+  const isSoccer = subs.some((s) => ['Ligue1', 'Allsvenskan', 'WomensSoccer', 'NWSL', 'MLS'].includes(s))
+  const intlSubs = isSoccer
+    ? ['WomensSoccer', 'womensfootball', 'soccer', 'NWSL', 'WomensSoccerGifs']
+    : ['nflespanol', 'nflalemanha', 'nfl_france', 'nflbrasil', 'nfljapan', 'nba_es']
   const intlResults = await Promise.allSettled(
     intlSubs.map((sub) => fetchSubreddit(sub))
   )

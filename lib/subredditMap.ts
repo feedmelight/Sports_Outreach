@@ -98,4 +98,8 @@ export const SUBREDDIT_MAP: Record<string, string[]> = {
   'toronto-fc': ['tfc'],
   'vancouver-whitecaps': ['whitecapsfc'],
   'new-england-revolution': ['newenglandrevolution'],
+
+  // ── Women's Soccer ─────────────────────────────────
+  'montpellier-hsc': ['Ligue1', 'WomensSoccer', 'NWSL'],
+  'fc-rosengard': ['Allsvenskan', 'WomensSoccer', 'NWSL'],
 }

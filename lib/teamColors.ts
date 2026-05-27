@@ -333,8 +333,8 @@ const WIKI_LOGOS: Record<string, string> = {
   "Toronto FC": "https://upload.wikimedia.org/wikipedia/en/7/7c/Toronto_FC_Logo.svg",
   "Vancouver Whitecaps": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Vancouver_Whitecaps_logo.svg",
   // Women's Soccer (European)
-  "Montpellier HSC": "https://upload.wikimedia.org/wikipedia/commons/9/99/Montpellier_HSC_logo.svg",
-  "FC Rosengård": "https://upload.wikimedia.org/wikipedia/en/1/19/FC_Roseng%C3%A5rd_logo.svg",
+  "Montpellier HSC": "https://upload.wikimedia.org/wikipedia/en/a/a8/Montpellier_HSC_logo.svg",
+  "FC Rosengård": "https://upload.wikimedia.org/wikipedia/en/7/7a/FC_Rosengård_logo.svg",
   // WNBA expansion
   "Portland Fire": "https://upload.wikimedia.org/wikipedia/en/c/cf/Portland_Fire_logo.svg",
   "Toronto Tempo": "https://upload.wikimedia.org/wikipedia/en/1/1b/Toronto_Tempo_logo.svg",

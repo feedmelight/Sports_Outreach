@@ -27,6 +27,7 @@ export const cityCoordinates: Record<string, { lat: number; lng: number }> = {
   lyon: { lat: 45.764, lng: 4.8357 },
   marseille: { lat: 43.2965, lng: 5.3698 },
   toulouse: { lat: 43.6047, lng: 1.4442 },
+  montpellier: { lat: 43.6108, lng: 3.8767 },
   nice: { lat: 43.7102, lng: 7.262 },
   bordeaux: { lat: 44.8378, lng: -0.5792 },
   strasbourg: { lat: 48.5734, lng: 7.7521 },
