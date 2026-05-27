@@ -13,6 +13,11 @@ interface Props {
   params: Promise<{ team: string }>;
 }
 
+/** Strip diacritics: å→a, é→e, etc. */
+function toAscii(s: string): string {
+  return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 async function getTeam(slug: string): Promise<Team | null> {
   // DB stores short names like "Chiefs", "Eagles", "Lakers"
   // Slugs come in as "chiefs", "49ers", "inter-miami" etc.
@@ -23,6 +28,7 @@ async function getTeam(slug: string): Promise<Team | null> {
   if (!teams) return null;
 
   const normalized = slug.toLowerCase().replace(/-/g, " ");
+  const normalizedAscii = toAscii(normalized);
 
   // Direct match: slug "chiefs" === name "Chiefs"
   const match = teams.find(
@@ -37,11 +43,19 @@ async function getTeam(slug: string): Promise<Team | null> {
   });
   if (hyphenated) return hyphenated as Team;
 
+  // ASCII-normalized match: slug "fc-rosengard" === name "FC Rosengård"
+  const asciiMatch = teams.find((t: Team) => {
+    const nameAscii = toAscii(t.name.toLowerCase());
+    return nameAscii === normalizedAscii ||
+      nameAscii.replace(/\s+/g, "-") === toAscii(slug.toLowerCase());
+  });
+  if (asciiMatch) return asciiMatch as Team;
+
   // Partial match: slug contains team name or vice versa
   const partial = teams.find(
     (t: Team) =>
-      t.name.toLowerCase().includes(normalized) ||
-      normalized.includes(t.name.toLowerCase())
+      toAscii(t.name.toLowerCase()).includes(normalizedAscii) ||
+      normalizedAscii.includes(toAscii(t.name.toLowerCase()))
   );
   return (partial as Team) ?? null;
 }
