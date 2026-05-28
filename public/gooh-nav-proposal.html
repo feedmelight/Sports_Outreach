@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GOOH navigation proposal</title>
+<title>GOOH navigation · Final structure</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
 <style>
   :root {
@@ -22,6 +22,10 @@
     --accent: #ec4899;
     --accent-soft: rgba(236,72,153,0.12);
     --accent-line: rgba(236,72,153,0.3);
+    --good: #4ade80;
+    --good-soft: rgba(74,222,128,0.1);
+    --bad: #f87171;
+    --bad-soft: rgba(248,113,113,0.1);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -34,12 +38,71 @@
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
+  ::selection { background: var(--accent); color: white; }
+  img { max-width: 100%; display: block; }
+
   .container { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+  .narrow { max-width: 880px; margin: 0 auto; padding: 0 48px; }
+  .wide { max-width: 1440px; margin: 0 auto; padding: 0 48px; }
   .serif { font-family: 'Instrument Serif', serif; font-weight: 400; letter-spacing: -0.01em; }
   .italic { font-style: italic; }
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
 
+  /* TAB NAV */
+  .tabnav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(10,10,11,0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .tabnav-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+  }
+  .tabnav-logo {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .tabnav-tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .tab {
+    background: none;
+    border: 0.5px solid transparent;
+    color: var(--text-3);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    padding: 10px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .tab:hover { color: var(--text-2); }
+  .tab.active {
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-color: var(--accent-line);
+  }
+  .tabpanel { display: none; }
+  .tabpanel.active { display: block; }
+
+  /* HERO */
   header.hero {
-    padding: 96px 0 64px;
+    padding: 96px 0 80px;
     border-bottom: 0.5px solid var(--border);
     position: relative;
   }
@@ -51,436 +114,605 @@
     background: linear-gradient(90deg, transparent, var(--accent-line), transparent);
   }
   .eyebrow {
-    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.18em;
     color: var(--accent);
-    margin-bottom: 24px;
+    margin-bottom: 32px;
     font-weight: 500;
   }
   h1 {
     font-family: 'Instrument Serif', serif;
     font-weight: 400;
-    font-size: clamp(48px, 6vw, 84px);
-    line-height: 1.02;
-    letter-spacing: -0.02em;
-    margin-bottom: 32px;
-    max-width: 900px;
+    font-size: clamp(56px, 7vw, 96px);
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    margin-bottom: 40px;
+    max-width: 1000px;
   }
   h1 .accent { color: var(--accent); font-style: italic; }
   .lede {
-    font-size: 20px;
+    font-size: 22px;
+    line-height: 1.45;
     color: var(--text-2);
-    max-width: 640px;
-    line-height: 1.5;
+    max-width: 720px;
+    margin-bottom: 56px;
+    font-weight: 300;
   }
   .meta {
     display: flex;
-    gap: 32px;
-    margin-top: 48px;
-    padding-top: 32px;
-    border-top: 0.5px solid var(--border);
+    gap: 48px;
+    flex-wrap: wrap;
     font-size: 13px;
     color: var(--text-3);
+    padding-top: 32px;
+    border-top: 0.5px solid var(--border);
   }
-  .meta strong { color: var(--text); font-weight: 500; }
+  .meta strong { color: var(--text-2); font-weight: 500; }
 
-  section { padding: 96px 0; border-bottom: 0.5px solid var(--border); }
+  /* SECTIONS */
+  section {
+    padding: 96px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
   .section-label {
+    font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.18em;
     color: var(--text-3);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .section-label::before {
-    content: '';
-    width: 24px;
-    height: 1px;
-    background: var(--accent);
+    margin-bottom: 24px;
   }
   h2 {
     font-family: 'Instrument Serif', serif;
     font-weight: 400;
-    font-size: clamp(36px, 4vw, 52px);
+    font-size: clamp(40px, 4.5vw, 60px);
     line-height: 1.05;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.02em;
     margin-bottom: 32px;
-    max-width: 800px;
+    max-width: 900px;
   }
   h2 .accent { color: var(--accent); font-style: italic; }
-  .prose {
-    font-size: 17px;
-    color: var(--text-2);
-    max-width: 680px;
-    line-height: 1.65;
+  h3 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
   }
-  .prose p + p { margin-top: 20px; }
-  .prose strong { color: var(--text); font-weight: 500; }
+  h4 {
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .prose { max-width: 720px; }
+  .prose p { font-size: 16px; line-height: 1.65; color: var(--text-2); margin-bottom: 20px; }
+  .prose p strong { color: var(--text); font-weight: 500; }
+  .prose p:last-child { margin-bottom: 0; }
 
+  /* NAV MOCK */
   .nav-showcase {
     display: grid;
     grid-template-columns: 320px 1fr;
-    gap: 64px;
-    align-items: start;
+    gap: 80px;
     margin-top: 64px;
+    align-items: start;
   }
-
   .nav-mock {
     background: var(--surface);
-    border: 0.5px solid var(--border);
+    border: 0.5px solid var(--border-strong);
     border-radius: 16px;
-    padding: 24px 16px;
+    padding: 20px 12px;
     position: sticky;
-    top: 32px;
+    top: 96px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.4);
   }
   .nav-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 4px 12px 24px;
+    padding: 8px 12px 24px;
   }
   .nav-logo {
     font-family: 'Instrument Serif', serif;
-    font-size: 26px;
+    font-size: 24px;
     color: var(--accent);
     letter-spacing: -0.02em;
+  }
+  .nav-section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-3);
+    padding: 16px 12px 8px;
   }
   .nav-item {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 12px;
+    padding: 9px 12px;
     border-radius: 8px;
-    color: var(--text);
     font-size: 14px;
-    cursor: pointer;
+    color: var(--text);
+    cursor: default;
     transition: background 0.15s;
-    margin-bottom: 2px;
   }
   .nav-item:hover { background: var(--surface-2); }
   .nav-item.active {
     background: var(--accent-soft);
     color: var(--accent);
+  }
+  .nav-item i { font-size: 17px; }
+  .nav-item.parent { font-weight: 500; }
+  .nav-sub {
+    padding-left: 16px;
+    border-left: 0.5px solid var(--border);
+    margin: 4px 0 4px 22px;
+  }
+  .nav-sub .nav-item { font-size: 13px; color: var(--text-2); }
+  .nav-divider {
+    height: 0.5px;
+    background: var(--border);
+    margin: 12px 8px;
+  }
+
+  /* ANNOTATIONS */
+  .annotations { display: flex; flex-direction: column; gap: 28px; }
+  .anno {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 20px;
+    padding-bottom: 28px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .anno:last-child { border-bottom: none; padding-bottom: 0; }
+  .anno-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    padding-top: 4px;
     font-weight: 500;
   }
-  .nav-item i { font-size: 18px; }
-  .nav-section-label {
+  .anno-title {
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 500;
+    font-size: 17px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .anno-body { font-size: 14.5px; color: var(--text-2); line-height: 1.6; }
+  .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    background: var(--surface-2);
+    border: 0.5px solid var(--border);
+    border-radius: 999px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* DECISION BLOCKS */
+  .decisions {
+    display: grid;
+    gap: 0;
+    margin-top: 56px;
+  }
+  .decision {
+    padding: 36px 0;
+    border-top: 0.5px solid var(--border);
+    display: grid;
+    grid-template-columns: 64px 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .decision:last-child { border-bottom: 0.5px solid var(--border); }
+  .decision-num {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 36px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .decision-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .decision-tag {
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.14em;
     color: var(--text-3);
-    padding: 20px 12px 8px;
+    margin-bottom: 8px;
+  }
+  .decision-body { font-size: 15px; color: var(--text-2); line-height: 1.6; }
+  .decision-body p { margin-bottom: 12px; }
+  .decision-body p:last-child { margin-bottom: 0; }
+  .decision-before-after {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .ba-col { padding: 14px 16px; border-radius: 8px; line-height: 1.6; }
+  .ba-before { background: var(--bad-soft); color: var(--bad); }
+  .ba-after { background: var(--good-soft); color: var(--good); }
+  .ba-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    opacity: 0.7;
+    margin-bottom: 6px;
     font-weight: 500;
   }
-  .nav-context-label {
-    font-size: 11px;
-    color: var(--text-3);
-    font-style: italic;
-    padding: 6px 12px 4px;
-  }
-  .nav-context {
-    margin-left: 16px;
-    border-left: 2px solid var(--border-strong);
-    padding-left: 8px;
-  }
-  .nav-context .nav-item {
-    font-size: 13px;
-    padding: 7px 12px;
-    color: var(--text-2);
-  }
-  .nav-context .nav-item.parent { color: var(--text); font-weight: 500; }
-  .nav-sub {
-    padding-left: 16px;
-    margin-bottom: 4px;
-  }
-  .nav-sub .nav-item {
-    font-size: 12px;
-    padding: 5px 12px;
-    color: var(--text-3);
-  }
-  .nav-divider {
-    border-top: 0.5px solid var(--border);
-    margin: 16px 8px;
-  }
 
-  .annotations {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-  .anno {
-    padding: 32px 0;
-    border-bottom: 0.5px solid var(--border);
+  /* FUNC GRID */
+  .func-grid {
     display: grid;
-    grid-template-columns: 32px 1fr;
-    gap: 20px;
-    align-items: start;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 56px;
   }
-  .anno:last-child { border-bottom: none; }
-  .anno-num {
-    font-family: 'Instrument Serif', serif;
-    font-size: 28px;
-    color: var(--accent);
-    line-height: 1;
-    padding-top: 4px;
+  .func-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    transition: border-color 0.2s, transform 0.2s;
   }
-  .anno-title {
-    font-size: 22px;
-    font-family: 'Instrument Serif', serif;
-    margin-bottom: 8px;
-    color: var(--text);
-    letter-spacing: -0.01em;
-  }
-  .anno-title .tag {
-    display: inline-block;
-    font-family: 'Inter Tight', sans-serif;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+  .func-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+  .func-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
     background: var(--accent-soft);
     color: var(--accent);
-    padding: 3px 10px;
-    border-radius: 4px;
-    margin-left: 10px;
-    vertical-align: middle;
-    font-weight: 500;
-  }
-  .anno-body { color: var(--text-2); font-size: 15px; line-height: 1.6; }
-  .anno-body strong { color: var(--text); font-weight: 500; }
-
-  .logic-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-top: 48px;
-  }
-  .logic-card {
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: 12px;
-    padding: 28px;
-  }
-  .logic-card .num {
-    font-family: 'Instrument Serif', serif;
-    font-size: 32px;
-    color: var(--accent);
-    line-height: 1;
-    margin-bottom: 16px;
-  }
-  .logic-card h3 {
-    font-family: 'Instrument Serif', serif;
-    font-weight: 400;
-    font-size: 22px;
-    margin-bottom: 12px;
-    letter-spacing: -0.01em;
-  }
-  .logic-card p { font-size: 14px; color: var(--text-2); line-height: 1.6; }
-
-  .flow {
-    margin-top: 64px;
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: 16px;
-    padding: 48px;
-  }
-  .flow-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    align-items: stretch;
-    position: relative;
-  }
-  .flow-stage {
-    background: var(--surface-2);
-    border: 0.5px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    position: relative;
-  }
-  .flow-stage.accent { border-color: var(--accent-line); background: var(--accent-soft); }
-  .flow-stage h4 {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 18px;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  .func-card h3 {
     font-family: 'Instrument Serif', serif;
-    font-weight: 400;
+    font-size: 28px;
     margin-bottom: 8px;
   }
-  .flow-stage h4 i { font-size: 18px; color: var(--accent); }
-  .flow-stage .verb {
-    font-size: 12px;
-    color: var(--text-3);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 16px;
-  }
-  .flow-stage p { font-size: 13px; color: var(--text-2); line-height: 1.55; }
-  .flow-stage ul { list-style: none; margin-top: 12px; }
-  .flow-stage ul li {
-    font-size: 12px;
-    color: var(--text-2);
-    padding: 4px 0 4px 16px;
-    position: relative;
-  }
-  .flow-stage ul li::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 12px;
-    width: 6px; height: 1px;
-    background: var(--accent);
-  }
-  .flow-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--accent);
-    font-size: 20px;
-    z-index: 2;
-  }
-
-  .three-up {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-top: 48px;
-  }
-  .user-card {
-    padding: 32px;
-    border: 0.5px solid var(--border);
-    border-radius: 12px;
-    background: var(--surface);
-  }
-  .user-card .role {
+  .func-card .role {
+    font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
+    color: var(--text-3);
     text-transform: uppercase;
     letter-spacing: 0.14em;
-    color: var(--accent);
-    margin-bottom: 12px;
-    font-weight: 500;
+    margin-bottom: 20px;
   }
-  .user-card h3 {
-    font-family: 'Instrument Serif', serif;
-    font-weight: 400;
-    font-size: 24px;
-    margin-bottom: 16px;
-    letter-spacing: -0.01em;
-  }
-  .user-card .quote {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: 17px;
-    color: var(--text);
-    line-height: 1.4;
-    padding: 16px 0;
+  .func-card p { font-size: 14.5px; color: var(--text-2); line-height: 1.6; margin-bottom: 16px; }
+  .func-sub {
+    list-style: none;
+    padding: 16px 0 0;
     border-top: 0.5px solid var(--border);
-    border-bottom: 0.5px solid var(--border);
-    margin-bottom: 16px;
+    margin-top: 4px;
   }
-  .user-card p { font-size: 13px; color: var(--text-2); line-height: 1.6; }
-
-  .decisions {
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: 16px;
-    padding: 48px;
-    margin-top: 48px;
-  }
-  .decisions h3 {
-    font-family: 'Instrument Serif', serif;
-    font-weight: 400;
-    font-size: 26px;
-    margin-bottom: 8px;
-    letter-spacing: -0.01em;
-  }
-  .decisions .sub {
-    font-size: 14px;
-    color: var(--text-3);
-    margin-bottom: 32px;
-  }
-  .decision {
-    padding: 20px 0;
-    border-top: 0.5px solid var(--border);
-    display: grid;
-    grid-template-columns: 40px 1fr;
-    gap: 20px;
-  }
-  .decision i {
-    color: var(--accent);
-    font-size: 22px;
-    padding-top: 2px;
-  }
-  .decision h4 {
-    font-family: 'Inter Tight', sans-serif;
-    font-weight: 500;
-    font-size: 16px;
-    margin-bottom: 6px;
-  }
-  .decision p { font-size: 14px; color: var(--text-2); line-height: 1.55; }
-
-  footer {
-    padding: 64px 0 96px;
-    text-align: center;
-  }
-  footer .sig {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: 18px;
+  .func-sub li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+    font-size: 13.5px;
     color: var(--text-2);
   }
-  footer .who {
-    font-size: 13px;
+  .func-sub li i { color: var(--accent); font-size: 14px; padding-top: 3px; }
+  .func-sub li strong { color: var(--text); font-weight: 500; margin-right: 6px; }
+
+  /* LANG */
+  .lang-intro { max-width: 720px; margin-bottom: 48px; }
+  .lang-intro p { font-size: 16px; color: var(--text-2); line-height: 1.65; }
+  .lang-table { margin-top: 32px; border-top: 0.5px solid var(--border); }
+  .lang-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1.4fr;
+    gap: 32px;
+    padding: 24px 0;
+    border-bottom: 0.5px solid var(--border);
+    align-items: start;
+  }
+  .lang-row.header { padding: 16px 0; border-bottom: 0.5px solid var(--border-strong); }
+  .lang-row.header > div {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
     color: var(--text-3);
-    margin-top: 8px;
+    font-weight: 500;
+  }
+  .lang-concept {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    line-height: 1.3;
+    color: var(--text);
+  }
+  .lang-do {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--good);
+    background: var(--good-soft);
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-block;
+    font-weight: 500;
+  }
+  .lang-dont { display: flex; flex-wrap: wrap; gap: 6px; }
+  .lang-dont span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--bad);
+    background: var(--bad-soft);
+    padding: 5px 10px;
+    border-radius: 6px;
+    text-decoration: line-through;
+    text-decoration-color: rgba(248,113,113,0.5);
   }
 
+  /* COMPARE */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; }
+  .compare-col { background: var(--surface); border: 0.5px solid var(--border); border-radius: 14px; padding: 32px; }
+  .compare-col.after { border-color: var(--accent-line); background: linear-gradient(180deg, rgba(236,72,153,0.04), transparent 40%), var(--surface); }
+  .compare-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--text-3); margin-bottom: 12px; }
+  .compare-col.after .compare-label { color: var(--accent); }
+  .compare-num { font-family: 'Instrument Serif', serif; font-size: 64px; line-height: 1; margin-bottom: 24px; color: var(--text); }
+  .compare-col.after .compare-num { color: var(--accent); }
+  .compare-list { list-style: none; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.85; color: var(--text-2); }
+  .compare-list li::before { content: '— '; color: var(--text-3); }
+
+  /* GALLERY (TAB 2) */
+  .gallery-intro { max-width: 760px; margin-bottom: 64px; }
+  .gallery-section {
+    margin-bottom: 96px;
+  }
+  .gallery-section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 8px;
+    padding-bottom: 20px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .gallery-section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .gallery-section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 44px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .gallery-section-title .accent { color: var(--accent); font-style: italic; }
+  .gallery-section-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-left: auto;
+  }
+  .gallery-section-desc {
+    font-size: 15px;
+    color: var(--text-2);
+    max-width: 700px;
+    margin: 24px 0 40px;
+    line-height: 1.65;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+  }
+  .gallery-item {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.25s;
+  }
+  .gallery-item:hover {
+    border-color: var(--accent-line);
+    transform: translateY(-3px);
+    box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+  }
+  .gallery-img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    overflow: hidden;
+    position: relative;
+  }
+  .gallery-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+  .gallery-caption {
+    padding: 20px 24px 24px;
+  }
+  .gallery-cap-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 12px;
+  }
+  .gallery-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+  }
+  .gallery-loc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 4px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .gallery-cap-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .gallery-cap-desc {
+    font-size: 13.5px;
+    color: var(--text-2);
+    line-height: 1.55;
+  }
+
+  /* TOC */
+  .toc {
+    position: fixed;
+    top: 50%;
+    left: 24px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 100;
+  }
+  .toc a {
+    display: block;
+    width: 32px;
+    height: 2px;
+    background: var(--border-strong);
+    transition: all 0.2s;
+    text-decoration: none;
+    position: relative;
+  }
+  .toc a:hover, .toc a.active { background: var(--accent); width: 48px; }
+  .toc a::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 56px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-3);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .toc a:hover::after { opacity: 1; }
+
+  footer {
+    padding: 96px 0 120px;
+    text-align: center;
+    border-top: 0.5px solid var(--border);
+  }
+  footer h2 { text-align: center; margin: 0 auto 32px; }
+  footer .sig { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 20px; color: var(--text-2); margin-top: 48px; }
+  footer .who { font-size: 13px; color: var(--text-3); margin-top: 8px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.14em; }
+
   @media (max-width: 980px) {
-    .container { padding: 0 24px; }
+    .container, .narrow, .wide { padding: 0 24px; }
+    .tabnav-inner { padding: 0 24px; }
+    .toc { display: none; }
     .nav-showcase { grid-template-columns: 1fr; }
     .nav-mock { position: relative; top: 0; max-width: 320px; }
-    .logic-grid, .flow-row, .three-up { grid-template-columns: 1fr; }
+    .decision { grid-template-columns: 1fr; gap: 16px; }
+    .func-grid, .compare-grid, .gallery-grid { grid-template-columns: 1fr; }
+    .lang-row { grid-template-columns: 1fr; gap: 12px; }
     section { padding: 64px 0; }
     header.hero { padding: 64px 0 48px; }
+    .meta { gap: 24px; }
+    .gallery-section-header { flex-wrap: wrap; }
+    .gallery-section-title { font-size: 32px; }
   }
 </style>
 </head>
 <body>
 
+<div class="tabnav">
+  <div class="tabnav-inner">
+    <div class="tabnav-logo">GOOH</div>
+    <div class="tabnav-tabs">
+      <button class="tab active" data-tab="structure">Structure</button>
+      <button class="tab" data-tab="gallery">Gallery · 57 screens</button>
+    </div>
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.16em;">For review</div>
+  </div>
+</div>
+
+<!-- ============================ TAB 1: STRUCTURE ============================ -->
+<div class="tabpanel active" id="tab-structure">
+
+<nav class="toc" aria-label="Section navigation">
+  <a href="#argument" data-label="The argument"></a>
+  <a href="#structure" data-label="The structure"></a>
+  <a href="#functionality" data-label="Functionality"></a>
+  <a href="#decisions" data-label="Simplifications"></a>
+  <a href="#language" data-label="Language"></a>
+</nav>
+
 <header class="hero">
   <div class="container">
-    <div class="eyebrow">GOOH · Navigation proposal</div>
-    <h1>Speak the <span class="accent">industry's</span> language, not our own.</h1>
-    <p class="lede">A rethink of GOOH's information architecture, anchored in how agencies, brands and media owners actually think about DOOH work.</p>
+    <div class="eyebrow">GOOH · Navigation · Final structure</div>
+    <h1>Speak the industry's language, <span class="accent">not our own.</span></h1>
+    <p class="lede">A grown-up information architecture for GOOH, anchored in how agencies, brands and media owners actually think about DOOH work. Five top-level destinations. Thirteen sub-items. Every word chosen on purpose.</p>
     <div class="meta">
       <div><strong>Ben Leyland</strong> · Technology Director, FML</div>
       <div>For: Denis, Kiri and the GOOH team</div>
-      <div>Status: <strong>For discussion</strong></div>
+      <div>Status: <strong>Locked for review</strong></div>
     </div>
   </div>
 </header>
 
-<section>
-  <div class="container">
+<section id="argument">
+  <div class="narrow">
     <div class="section-label">The argument</div>
     <h2>Users come to GOOH with a job. <span class="accent">Meet them there.</span></h2>
     <div class="prose">
       <p>Every agency, brand and media owner in DOOH already has a mental model. They think in <strong>clients</strong>, who give them <strong>campaigns</strong>, which need <strong>creative</strong> and <strong>media</strong>. That's how briefs are written, POs are raised, and reports are filed.</p>
       <p>The current nav invents new top-level concepts (Atlas, Sites, Inventory, Formats) that don't map cleanly to that existing language. It asks the user to learn GOOH's internal model before they can do anything.</p>
-      <p>This proposal does the opposite. It uses the words the industry already uses, in the order users already think in them. The clever bits (the screen network, the AI tooling) sit where they're needed, not at the top of the page.</p>
+      <p>This proposal does the opposite. It uses the words the industry already uses, in the order users already think in them. The clever bits (the screen network, the AI tooling, the compliance database) sit where they're needed, not at the top of the page.</p>
+      <p>The result is a sidebar that reads as three layers of work: <strong>doing</strong> (Clients, Campaigns), <strong>thinking</strong> (Strategy), <strong>running</strong> (Settings). Each role has a home. Each item has one job.</p>
     </div>
   </div>
 </section>
 
-<section>
+<section id="structure">
   <div class="container">
     <div class="section-label">The structure</div>
-    <h2>One sidebar, <span class="accent">three pillars.</span></h2>
+    <h2>Five destinations. <span class="accent">No more.</span></h2>
     <div class="prose">
-      <p>Clients, Campaigns and Network. Everything else is either a tool used inside one of those, or system-level (settings, home).</p>
+      <p>Home for landing. Clients for who you serve. Campaigns for what you make. Strategy for how you think about it. Settings for how you run it.</p>
     </div>
 
     <div class="nav-showcase">
@@ -491,28 +723,38 @@
         </div>
 
         <div class="nav-item"><i class="ti ti-home"></i>Home</div>
-
-        <div class="nav-section-label">Workspace</div>
         <div class="nav-item"><i class="ti ti-users"></i>Clients</div>
         <div class="nav-item active"><i class="ti ti-rocket"></i>Campaigns</div>
-        <div class="nav-item"><i class="ti ti-world"></i>Network</div>
-
-        <div class="nav-divider"></div>
-        <div class="nav-context-label">Inside a campaign</div>
-
-        <div class="nav-context">
-          <div class="nav-item parent"><i class="ti ti-palette"></i>Creative</div>
-          <div class="nav-sub">
-            <div class="nav-item"><i class="ti ti-sparkles"></i>Generate</div>
-            <div class="nav-item"><i class="ti ti-stack-2"></i>Composite</div>
-            <div class="nav-item"><i class="ti ti-eye"></i>Preview</div>
-          </div>
-          <div class="nav-item parent"><i class="ti ti-device-tv"></i>Media</div>
-          <div class="nav-item parent"><i class="ti ti-send"></i>Deploy</div>
-        </div>
-
+        <div class="nav-item"><i class="ti ti-target-arrow"></i>Strategy</div>
         <div class="nav-divider"></div>
         <div class="nav-item" style="color: var(--text-2);"><i class="ti ti-settings"></i>Settings</div>
+
+        <div class="nav-section-label">Inside campaigns</div>
+        <div class="nav-item parent"><i class="ti ti-palette"></i>Creative</div>
+        <div class="nav-sub">
+          <div class="nav-item"><i class="ti ti-sparkles"></i>Generate</div>
+          <div class="nav-item"><i class="ti ti-stack-2"></i>Composite</div>
+          <div class="nav-item"><i class="ti ti-arrows-shuffle"></i>Adapt</div>
+          <div class="nav-item"><i class="ti ti-eye"></i>Preview</div>
+        </div>
+        <div class="nav-item parent"><i class="ti ti-device-tv"></i>Media</div>
+        <div class="nav-item parent"><i class="ti ti-send"></i>Deploy</div>
+        <div class="nav-sub">
+          <div class="nav-item"><i class="ti ti-checks"></i>Review</div>
+          <div class="nav-item"><i class="ti ti-rocket"></i>Ship</div>
+        </div>
+
+        <div class="nav-section-label">Inside strategy</div>
+        <div class="nav-item parent"><i class="ti ti-chart-line"></i>Insights</div>
+        <div class="nav-sub">
+          <div class="nav-item"><i class="ti ti-activity"></i>Performance</div>
+          <div class="nav-item"><i class="ti ti-bulb"></i>Planning</div>
+        </div>
+        <div class="nav-item parent"><i class="ti ti-shield-check"></i>Compliance</div>
+        <div class="nav-sub">
+          <div class="nav-item"><i class="ti ti-building"></i>Inventory</div>
+          <div class="nav-item"><i class="ti ti-scale"></i>Rules</div>
+        </div>
       </div>
 
       <div class="annotations">
@@ -520,49 +762,35 @@
           <div class="anno-num">01</div>
           <div>
             <div class="anno-title">Home <span class="tag">Dashboard</span></div>
-            <div class="anno-body">Recent activity, active campaigns, what needs attention. The landing pad on login.</div>
+            <div class="anno-body">The landing surface. Recent activity, active campaigns, what needs attention now. Anyone in the org can read it. No setup required.</div>
           </div>
         </div>
         <div class="anno">
           <div class="anno-num">02</div>
           <div>
-            <div class="anno-title">Clients <span class="tag">Workspace</span></div>
-            <div class="anno-body">The people GOOH works for. Each client holds their <strong>brand assets</strong> (logos, fonts, guidelines) and, for enterprise clients, an optional <strong>brand layer</strong> (Coca-Cola → Coke Zero, Fanta, Sprite). Small clients skip the brand layer entirely.</div>
+            <div class="anno-title">Clients <span class="tag">Who you serve</span></div>
+            <div class="anno-body">The container for everything client-specific. Each client opens to its brands (optional layer for enterprise accounts) and its Brand Kit underneath. Identity, training data and monitoring all live here, because they're properties of the client, not the campaign.</div>
           </div>
         </div>
         <div class="anno">
           <div class="anno-num">03</div>
           <div>
-            <div class="anno-title">Campaigns <span class="tag">Primary surface</span></div>
-            <div class="anno-body">Where 90% of work happens. Each campaign opens to reveal three stages: <strong>Creative</strong>, <strong>Media</strong>, <strong>Deploy</strong>. A producer sees campaign progress at a glance: creative made, media booked, deployed.</div>
+            <div class="anno-title">Campaigns <span class="tag">What you make</span></div>
+            <div class="anno-body">The operational core. Creative, Media, Deploy in left-to-right workflow order. 90% of the doing happens here. A producer can see at a glance: is the creative done, is the media booked, is it deployed.</div>
           </div>
         </div>
         <div class="anno">
           <div class="anno-num">04</div>
           <div>
-            <div class="anno-title">Network <span class="tag">The moat</span></div>
-            <div class="anno-body">The pre-validated, browseable database of screens worldwide. Sits separately from campaigns because it has its own users (media owners managing inventory) and its own use case (browsing, planning, dreaming).</div>
+            <div class="anno-title">Strategy <span class="tag">How you think</span></div>
+            <div class="anno-body">The senior-user surface. Insights for performance and planning. Compliance for inventory and rules. This is where planners, strategists and compliance leads live. Operational users may never open it. That's by design.</div>
           </div>
         </div>
         <div class="anno">
           <div class="anno-num">05</div>
           <div>
-            <div class="anno-title">Creative · Generate / Composite / Preview <span class="tag">Tools, not destinations</span></div>
-            <div class="anno-body">These are how creative gets made: AI generation of elements, composite into the master, preview before sign-off. They only appear inside Creative because they have no meaning outside it.</div>
-          </div>
-        </div>
-        <div class="anno">
-          <div class="anno-num">06</div>
-          <div>
-            <div class="anno-title">Media <span class="tag">Plan</span></div>
-            <div class="anno-body">Pick screens from Network, group them into a media plan for this campaign. The bridge between Creative (the master file) and Deploy (the adapted versions).</div>
-          </div>
-        </div>
-        <div class="anno">
-          <div class="anno-num">07</div>
-          <div>
-            <div class="anno-title">Deploy <span class="tag">Ship</span></div>
-            <div class="anno-body">The hard bit. One master becomes 47 versions for 47 screens. Auto-adapt, per-screen review, export or push directly to DOOH platforms. Preview shows up again here, in context per screen.</div>
+            <div class="anno-title">Settings <span class="tag">How you run it</span></div>
+            <div class="anno-body">System-level. Team, billing, API keys, integrations. Where it belongs.</div>
           </div>
         </div>
       </div>
@@ -570,149 +798,917 @@
   </div>
 </section>
 
-<section>
+<section id="functionality">
   <div class="container">
-    <div class="section-label">Inside a campaign</div>
-    <h2>Three stages, <span class="accent">one job each.</span></h2>
+    <div class="section-label">Functionality of each menu</div>
+    <h2>What each section <span class="accent">actually does.</span></h2>
     <div class="prose">
-      <p>A campaign is the unit of work. Inside it, the user moves through three stages in order. Each stage answers a single question.</p>
+      <p>The job each surface holds and the user it's built for. If a feature doesn't have an obvious home in one of these, it probably shouldn't exist yet.</p>
     </div>
 
-    <div class="flow">
-      <div class="flow-row">
-        <div class="flow-stage accent">
-          <h4><i class="ti ti-palette"></i>Creative</h4>
-          <div class="verb">Make it</div>
-          <p>Produce the master creative file. AI-generated elements, composited together, with brand assets pulled from the client library.</p>
-          <ul>
-            <li>Generate · AI elements</li>
-            <li>Composite · build the master</li>
-            <li>Preview · check before sign-off</li>
-          </ul>
-        </div>
-        <div class="flow-stage accent">
-          <h4><i class="ti ti-device-tv"></i>Media</h4>
-          <div class="verb">Place it</div>
-          <p>Select screens from the Network. Build the media plan. Define which screens this campaign runs on, where and when.</p>
-          <ul>
-            <li>Browse Network · pick screens</li>
-            <li>Group into plan</li>
-            <li>Daypart and scheduling</li>
-          </ul>
-        </div>
-        <div class="flow-stage accent">
-          <h4><i class="ti ti-send"></i>Deploy</h4>
-          <div class="verb">Ship it</div>
-          <p>Auto-adapt the master to each screen's exact specs. Review per screen. Export as video files or push directly to DOOH distribution platforms.</p>
-          <ul>
-            <li>Per-screen adaptation</li>
-            <li>Preview in context</li>
-            <li>Export or distribute</li>
-          </ul>
-        </div>
+    <div class="func-grid">
+
+      <div class="func-card">
+        <div class="func-icon"><i class="ti ti-home"></i></div>
+        <h3>Home</h3>
+        <div class="role">For: everyone, on login</div>
+        <p>The dashboard. Recent activity, what's live, what's stuck, what's overdue. A producer's morning view. Should answer "what needs me today" in three seconds.</p>
       </div>
+
+      <div class="func-card">
+        <div class="func-icon"><i class="ti ti-users"></i></div>
+        <h3>Clients</h3>
+        <div class="role">For: account leads, brand managers</div>
+        <p>The home of the client relationship. Inside each client sits an optional Brand layer (for enterprise accounts with sub-brands) and the Brand Kit below that.</p>
+        <ul class="func-sub">
+          <li><i class="ti ti-circle-dot"></i><span><strong>Identity</strong>Palette, typography, logos, guardrails, brand rules. The visual constitution.</span></li>
+          <li><i class="ti ti-circle-dot"></i><span><strong>Training</strong>LoRA data, fine-tune sets, style playground. The AI layer that makes the brand reproducible at scale.</span></li>
+          <li><i class="ti ti-circle-dot"></i><span><strong>Monitoring</strong>Consistency scoring, jurisdictional strategies, brand drift detection.</span></li>
+        </ul>
+      </div>
+
+      <div class="func-card">
+        <div class="func-icon"><i class="ti ti-rocket"></i></div>
+        <h3>Campaigns</h3>
+        <div class="role">For: producers, creatives, ops</div>
+        <p>The operational core. Three stages in left-to-right workflow order. A campaign is the unit of work that gets briefed, budgeted, made and reported on.</p>
+        <ul class="func-sub">
+          <li><i class="ti ti-palette"></i><span><strong>Creative</strong>Generate masters, Composite them together, Adapt to formats and languages, Preview before sign-off.</span></li>
+          <li><i class="ti ti-device-tv"></i><span><strong>Media</strong>Pick the screens. Map view for geographic planning, board view for grid-based selection. Toggle inside one surface.</span></li>
+          <li><i class="ti ti-send"></i><span><strong>Deploy</strong>Review per-screen with live render map as a view inside. Ship pushes to all destinations.</span></li>
+        </ul>
+      </div>
+
+      <div class="func-card">
+        <div class="func-icon"><i class="ti ti-target-arrow"></i></div>
+        <h3>Strategy</h3>
+        <div class="role">For: planners, strategists, compliance leads</div>
+        <p>The thinking layer. Two surfaces, two jobs, two different users. Operational staff may never open this. Senior users live here.</p>
+        <ul class="func-sub">
+          <li><i class="ti ti-chart-line"></i><span><strong>Insights → Performance</strong>What happened, what's happening. Cross-campaign data, reach, spend, comparative analysis.</span></li>
+          <li><i class="ti ti-bulb"></i><span><strong>Insights → Planning</strong>What could happen. Scenario modelling, opportunity mapping, forecasting.</span></li>
+          <li><i class="ti ti-building"></i><span><strong>Compliance → Inventory</strong>The screen estate. Sites and screens as the physical backbone of the network.</span></li>
+          <li><i class="ti ti-scale"></i><span><strong>Compliance → Rules</strong>The regulatory database. Compliance graph and jurisdictional map. Where you can run what, globally.</span></li>
+        </ul>
+      </div>
+
+      <div class="func-card">
+        <div class="func-icon"><i class="ti ti-settings"></i></div>
+        <h3>Settings</h3>
+        <div class="role">For: admins, billing, IT</div>
+        <p>Team, billing, API keys, integrations, audit logs. Standard system-level housekeeping. Out of the way until it's needed.</p>
+      </div>
+
     </div>
   </div>
 </section>
 
-<section>
+<section id="decisions">
   <div class="container">
-    <div class="section-label">Why this works</div>
-    <h2>The structure matches <span class="accent">three different users.</span></h2>
+    <div class="section-label">Simplifications made</div>
+    <h2>From 24 sub-items <span class="accent">to 13.</span></h2>
     <div class="prose">
-      <p>Same platform. Same nav. Three different entry points into the work, depending on who you are and what you came to do.</p>
+      <p>Every cut was made on the same principle: a sub-nav item should be a place you go to do a different job, not a different view of the same job. View toggles (map, board, list, live render) live inside each surface, not in the nav.</p>
     </div>
 
-    <div class="three-up">
-      <div class="user-card">
-        <div class="role">Agency</div>
-        <h3>Brief in hand, media planned.</h3>
-        <div class="quote">"We've got the BBH Coca-Cola summer campaign. I need to produce versions for the screens we've already booked."</div>
-        <p>Enters via <strong>Campaigns</strong>. Creates new. Pulls in brand assets from the client library. Makes the master. The media plan is already locked, so Deploy is where they spend most of their time.</p>
+    <div class="compare-grid">
+      <div class="compare-col">
+        <div class="compare-label">Before</div>
+        <div class="compare-num">24</div>
+        <ul class="compare-list">
+          <li>Brand Identity</li><li>LoRA Training Data</li><li>Brand Rules &amp; Guardrails</li><li>Style Playground</li><li>Jurisdictional Strategies</li><li>Consistency Monitoring</li><li>Asset Upload</li><li>Generate</li><li>Composite</li><li>Formats Workshop</li><li>Language Variants</li><li>Preview</li><li>Map View</li><li>Board View</li><li>Review</li><li>Live Render Map</li><li>Ship</li><li>Campaign Overview</li><li>Strategic Planning</li><li>Performance Analytics</li><li>Sites</li><li>Screens</li><li>Compliance Graph</li><li>Jurisdictional Map</li>
+        </ul>
       </div>
-      <div class="user-card">
-        <div class="role">Brand</div>
-        <h3>Exploring what's possible.</h3>
-        <div class="quote">"Show me what our brand could look like on Piccadilly Lights, Times Square, and the Burj Khalifa."</div>
-        <p>Enters via <strong>Network</strong>. Browses iconic screens. Picks three. Starts a campaign from inside Network and works backwards to Creative. The screens are the constraint that defines everything.</p>
-      </div>
-      <div class="user-card">
-        <div class="role">Media owner</div>
-        <h3>Managing inventory.</h3>
-        <div class="quote">"I need to update the specs on my Dubai screens and show a client what their content could look like."</div>
-        <p>Enters via <strong>Network</strong>. Their home is their inventory. They rarely touch Campaigns. The platform is a sales and validation tool for them, not a production tool.</p>
+      <div class="compare-col after">
+        <div class="compare-label">After</div>
+        <div class="compare-num">13</div>
+        <ul class="compare-list">
+          <li>Identity</li><li>Training</li><li>Monitoring</li><li>Generate</li><li>Composite</li><li>Adapt</li><li>Preview</li><li>Media</li><li>Review</li><li>Ship</li><li>Performance</li><li>Planning</li><li>Inventory</li><li>Rules</li>
+        </ul>
       </div>
     </div>
-  </div>
-</section>
-
-<section>
-  <div class="container">
-    <div class="section-label">The logic, double-checked</div>
-    <h2>Three principles <span class="accent">we don't break.</span></h2>
-
-    <div class="logic-grid">
-      <div class="logic-card">
-        <div class="num">01</div>
-        <h3>Top-level nav is for nouns.</h3>
-        <p>Things that exist in the world. Clients exist. Campaigns exist. Networks of screens exist. Generate, Composite and Preview are verbs, they're things you <em>do</em>, not places you go. They live inside Creative because that's the only place those verbs make sense.</p>
-      </div>
-      <div class="logic-card">
-        <div class="num">02</div>
-        <h3>Sub-nav appears when context demands it.</h3>
-        <p>The Creative / Media / Deploy sub-stages only show in the sidebar when a campaign is open. This keeps the top-level nav clean and matches how the work actually flows. Open a campaign and the stages reveal themselves.</p>
-      </div>
-      <div class="logic-card">
-        <div class="num">03</div>
-        <h3>Some tools earn two homes.</h3>
-        <p>Preview appears inside Creative (review the master) and inside Deploy (review per-screen adapted versions). Same word, two contexts. That's correct, because previewing the master and previewing the deployment are genuinely different jobs.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="container">
-    <div class="section-label">Decisions for Denis and Kiri</div>
-    <h2>Three calls <span class="accent">to make.</span></h2>
 
     <div class="decisions">
-      <h3>These shape product positioning, not just UX.</h3>
-      <p class="sub">Worth a conversation before we commit to build.</p>
-
       <div class="decision">
-        <i class="ti ti-target-arrow"></i>
+        <div class="decision-num">01</div>
         <div>
-          <h4>Who is the primary buyer?</h4>
-          <p>Naming the top-level "Campaigns" commits us to speaking the language of agencies and brands. If media owners are the primary commercial target, "Inventory" or "Network" might want top billing instead. The structure works either way, but the emphasis changes.</p>
+          <div class="decision-tag">Inside Clients</div>
+          <div class="decision-title">Brand Kit collapses from eight items to three</div>
+          <div class="decision-body">
+            <p>The previous eight items clustered into three jobs: defining the brand, training the AI on it, monitoring how it's used. Naming the jobs honestly is clearer than listing every feature.</p>
+            <p>Asset Upload disappears as a nav item. It's an action, not a destination. A button inside Identity.</p>
+          </div>
+        </div>
+        <div>
+          <div class="decision-before-after">
+            <div class="ba-col ba-before"><div class="ba-label">Before · 8 items</div>Brand Identity / LoRA Training Data / Brand Rules &amp; Guardrails / Style Playground / Jurisdictional Strategies / Consistency Monitoring / Asset Upload</div>
+            <div class="ba-col ba-after"><div class="ba-label">After · 3 items</div>Identity / Training / Monitoring</div>
+          </div>
         </div>
       </div>
 
       <div class="decision">
-        <i class="ti ti-shopping-cart"></i>
+        <div class="decision-num">02</div>
         <div>
-          <h4>Is Network read-only or transactional?</h4>
-          <p>Can someone book a screen directly from Network, or does that always happen through a media owner conversation? Catalogue or marketplace. Different product, different business model, different revenue lines.</p>
+          <div class="decision-tag">Inside Creative</div>
+          <div class="decision-title">Formats Workshop and Language Variants become Adapt</div>
+          <div class="decision-body">
+            <p>Both items are the same job: take a master, make it work somewhere else. One word for it, in the industry's language.</p>
+            <p>This is the biggest call in the simplification. If users genuinely think of language as a separate workflow from format, this is the one to revisit. Worth Denis or Kiri's view.</p>
+          </div>
+        </div>
+        <div>
+          <div class="decision-before-after">
+            <div class="ba-col ba-before"><div class="ba-label">Before · 2 items</div>Formats Workshop / Language Variants</div>
+            <div class="ba-col ba-after"><div class="ba-label">After · 1 item</div>Adapt</div>
+          </div>
         </div>
       </div>
 
       <div class="decision">
-        <i class="ti ti-building-skyscraper"></i>
+        <div class="decision-num">03</div>
         <div>
-          <h4>Do enterprise clients need a brand layer?</h4>
-          <p>Coca-Cola has Coke Zero, Fanta, Sprite. Are those clients, or sub-brands inside Coca-Cola? Proposal says optional brand layer between Client and Campaign. Worth confirming this matches how the big accounts actually want to work.</p>
+          <div class="decision-tag">Inside Media</div>
+          <div class="decision-title">Map View and Board View become view toggles, not destinations</div>
+          <div class="decision-body">
+            <p>These were never separate jobs. They're two display modes for the same content. A toggle inside Media, not two items in the sidebar.</p>
+          </div>
+        </div>
+        <div>
+          <div class="decision-before-after">
+            <div class="ba-col ba-before"><div class="ba-label">Before · 2 items</div>Map View / Board View</div>
+            <div class="ba-col ba-after"><div class="ba-label">After · 0 items</div>Toggle inside Media</div>
+          </div>
         </div>
       </div>
+
+      <div class="decision">
+        <div class="decision-num">04</div>
+        <div>
+          <div class="decision-tag">Inside Deploy</div>
+          <div class="decision-title">Live Render Map folds into Review</div>
+          <div class="decision-body">
+            <p>Same logic. Live Render Map is how you visualise Review. It's a view inside the surface, not a separate stage. Two stages remain: Review and Ship.</p>
+          </div>
+        </div>
+        <div>
+          <div class="decision-before-after">
+            <div class="ba-col ba-before"><div class="ba-label">Before · 3 items</div>Review / Live Render Map / Ship</div>
+            <div class="ba-col ba-after"><div class="ba-label">After · 2 items</div>Review / Ship</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="decision">
+        <div class="decision-num">05</div>
+        <div>
+          <div class="decision-tag">Inside Insights</div>
+          <div class="decision-title">Three overlapping items become two honest ones</div>
+          <div class="decision-body">
+            <p>Campaign Overview, Strategic Planning and Performance Analytics were all "show me data about campaigns" at different time horizons. The honest split is past/present versus future.</p>
+            <p>Performance covers what happened and what's happening. Planning covers what could happen.</p>
+          </div>
+        </div>
+        <div>
+          <div class="decision-before-after">
+            <div class="ba-col ba-before"><div class="ba-label">Before · 3 items</div>Campaign Overview / Strategic Planning / Performance Analytics</div>
+            <div class="ba-col ba-after"><div class="ba-label">After · 2 items</div>Performance / Planning</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="decision">
+        <div class="decision-num">06</div>
+        <div>
+          <div class="decision-tag">Inside Compliance</div>
+          <div class="decision-title">Two pairs become two groupings</div>
+          <div class="decision-body">
+            <p>Sites and Screens are the physical inventory. Compliance Graph and Jurisdictional Map are the rules. Two pairs, two groupings, two honest names.</p>
+          </div>
+        </div>
+        <div>
+          <div class="decision-before-after">
+            <div class="ba-col ba-before"><div class="ba-label">Before · 4 items</div>Sites / Screens / Compliance Graph / Jurisdictional Map</div>
+            <div class="ba-col ba-after"><div class="ba-label">After · 2 items</div>Inventory / Rules</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="language">
+  <div class="container">
+    <div class="section-label">The language</div>
+    <h2>Do's and don'ts. <span class="accent">One word per concept.</span></h2>
+    <div class="lang-intro">
+      <p>This is the lock. Industry language wins over invented language. One word per concept, used consistently across nav, copy, error states, docs and sales. Verbs for actions, nouns for things. If a word isn't on the left, it shouldn't be in the product.</p>
+    </div>
+
+    <div class="lang-table">
+      <div class="lang-row header"><div>Concept</div><div>Use</div><div>Never use</div></div>
+
+      <div class="lang-row"><div class="lang-concept">The unit of work</div><div><span class="lang-do">Campaign</span></div><div class="lang-dont"><span>Project</span><span>Brief</span><span>Job</span><span>Initiative</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">The brand's content rules and assets</div><div><span class="lang-do">Brand Kit</span></div><div class="lang-dont"><span>Brand Assets</span><span>Brands &amp; Assets</span><span>Brand Library</span><span>Brand Resources</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">A single screen at a site</div><div><span class="lang-do">Screen</span></div><div class="lang-dont"><span>Display</span><span>Panel</span><span>Unit</span><span>Surface</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">A physical location</div><div><span class="lang-do">Site</span></div><div class="lang-dont"><span>Location</span><span>Venue</span><span>Spot</span><span>Place</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">The full screen estate</div><div><span class="lang-do">Inventory</span></div><div class="lang-dont"><span>Network</span><span>Estate</span><span>Catalog</span><span>Database</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">An original upload</div><div><span class="lang-do">Source</span></div><div class="lang-dont"><span>Asset</span><span>Input</span><span>Original</span><span>Raw</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">A finished piece of content</div><div><span class="lang-do">Creative</span></div><div class="lang-dont"><span>Asset</span><span>Output</span><span>Ad</span><span>Spot</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">A format-specific version</div><div><span class="lang-do">Variant</span></div><div class="lang-dont"><span>Version</span><span>Format</span><span>Cut</span><span>Edit</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">The final per-screen output</div><div><span class="lang-do">Render</span></div><div class="lang-dont"><span>Output</span><span>File</span><span>Export</span><span>Build</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">The action of making versions</div><div><span class="lang-do">Adapt</span></div><div class="lang-dont"><span>Reformat</span><span>Resize</span><span>Repurpose</span><span>Translate</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">Putting creative on screen</div><div><span class="lang-do">Deploy</span></div><div class="lang-dont"><span>Publish</span><span>Distribute</span><span>Launch</span><span>Push</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">The final push live</div><div><span class="lang-do">Ship</span></div><div class="lang-dont"><span>Send</span><span>Go Live</span><span>Release</span><span>Publish</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">A legal territory</div><div><span class="lang-do">Jurisdiction</span></div><div class="lang-dont"><span>Region</span><span>Country</span><span>Zone</span><span>Market</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">Checking against rules</div><div><span class="lang-do">Compliance check</span></div><div class="lang-dont"><span>Validation</span><span>Review</span><span>Audit</span><span>Inspection</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">The map component</div><div><span class="lang-do">Map view</span></div><div class="lang-dont"><span>Atlas</span><span>World View</span><span>Globe</span><span>Geo</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">Generating new content</div><div><span class="lang-do">Generate</span></div><div class="lang-dont"><span>Create</span><span>Make</span><span>Produce</span><span>Build</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">Assembling layers together</div><div><span class="lang-do">Composite</span></div><div class="lang-dont"><span>Edit</span><span>Compose</span><span>Combine</span><span>Merge</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">Pre-flight viewing</div><div><span class="lang-do">Preview</span></div><div class="lang-dont"><span>View</span><span>Inspect</span><span>Check</span><span>Look</span></div></div>
+
+      <div class="lang-row"><div class="lang-concept">Per-screen sign-off</div><div><span class="lang-do">Review</span></div><div class="lang-dont"><span>Approve</span><span>Sign-off</span><span>QC</span><span>Check</span></div></div>
+    </div>
+
+    <div class="prose" style="margin-top: 56px;">
+      <p><strong>The principle behind every choice:</strong> If the industry already has a word for it, we use that word. If the industry uses three words for the same thing, we pick one and lock it. If we've invented a word, we drop it unless it's genuinely better than every alternative.</p>
+      <p><strong>Why this matters commercially:</strong> Every minute a procurement lead spends decoding our vocabulary is a minute they're not buying. Every demo where we have to explain what "Atlas" means is a demo where we look less serious. The product gets sold on clarity, not cleverness.</p>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="container">
-    <p class="sig">Cheers,</p>
-    <p class="who">Ben · FML</p>
+  <div class="narrow">
+    <h2 style="font-size: 48px;">Locked. <span class="accent">Ready to build against.</span></h2>
+    <div class="prose" style="margin: 0 auto; text-align: left;">
+      <p>This is the structure I'd commit to. Five top-level destinations. Thirteen sub-items. One vocabulary across the whole product. Every word and every position made on purpose.</p>
+      <p>There are two calls worth Denis or Kiri's view before we build against this. First, whether Adapt genuinely covers both format and language work for our users, or whether language is a different enough workflow to deserve its own item. Second, the order of Insights and Compliance inside Strategy. Insights first frames GOOH as a strategic intelligence tool with compliance as a feature. Compliance first frames it as compliance-led with intelligence layered on. I'd argue Insights first.</p>
+      <p>Everything else I'm confident about. Switch to the gallery tab to see how each of the 57 existing screens maps to the new structure.</p>
+    </div>
+    <div class="sig">— Cheers</div>
+    <div class="who">Ben · Technology Director · FML</div>
   </div>
 </footer>
+
+</div>
+
+<!-- ============================ TAB 2: GALLERY ============================ -->
+<div class="tabpanel" id="tab-gallery">
+
+<header class="hero">
+  <div class="container">
+    <div class="eyebrow">GOOH · Screen gallery · 57 designs mapped</div>
+    <h1>Every screen, <span class="accent">in its place.</span></h1>
+    <p class="lede">All 57 existing GOOH screen designs, ordered by where they sit in the new structure. Each carries a one-line note explaining why it lives where it does. Read top to bottom as a journey through the product.</p>
+    <div class="meta">
+      <div><strong>57 screens</strong> · mapped to 5 top-level destinations</div>
+      <div>Ordered by user journey</div>
+      <div>Status: <strong>For review</strong></div>
+    </div>
+  </div>
+</header>
+
+<div class="wide" style="padding-top: 64px;">
+
+<!-- HOME -->
+<div class="gallery-section">
+  <div class="gallery-section-header">
+    <div>
+      <div class="gallery-section-num">01 · Home</div>
+      <div class="gallery-section-title">The <span class="accent">landing surface.</span></div>
+    </div>
+    <div class="gallery-section-meta">Dashboard · 0 screens in current set</div>
+  </div>
+  <div class="gallery-section-desc">Home is the morning view, the dashboard, the "what needs me today" surface. None of the existing 57 screens are Home views, which is itself a finding: the dashboard is the single biggest gap in the current product. Worth flagging for the next design sprint.</div>
+</div>
+
+<!-- CLIENTS -->
+<div class="gallery-section">
+  <div class="gallery-section-header">
+    <div>
+      <div class="gallery-section-num">02 · Clients → Brand Kit</div>
+      <div class="gallery-section-title">The brand's <span class="accent">visual constitution.</span></div>
+    </div>
+    <div class="gallery-section-meta">7 screens · Identity, Training, Monitoring</div>
+  </div>
+  <div class="gallery-section-desc">Everything client-specific lives here. The Brand Kit is the deepest part of the product, where Identity, Training and Monitoring combine into a single living spec that every campaign draws from.</div>
+
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_015.png" alt="Heineken Brand Kit"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_015</div><div class="gallery-loc">Clients · Brand Kit · Identity</div></div>
+        <div class="gallery-cap-title">Heineken Brand Kit · full view</div>
+        <div class="gallery-cap-desc">Identity, training data and rules in a single editor. This is the canonical Brand Kit shape and the visual the whole product is anchored to.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_025.png" alt="Al Baik Brand Kit"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_025</div><div class="gallery-loc">Clients · Brand Kit · Identity</div></div>
+        <div class="gallery-cap-title">Al Baik Brand Kit · v2.4</div>
+        <div class="gallery-cap-desc">The same shape applied to a culturally specific brand. Shows how brand rules, photography style and compliance overrides all flow from a single source.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_072.png" alt="Team Falcons Brand Kit"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_072</div><div class="gallery-loc">Clients · Brand Kit · Identity</div></div>
+        <div class="gallery-cap-title">Team Falcons Brand Kit · v1.8</div>
+        <div class="gallery-cap-desc">A sports brand Brand Kit. Same architecture, different domain. Proves the Brand Kit pattern scales across product categories.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_018.png" alt="Al Baik Style Playground"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_018</div><div class="gallery-loc">Clients · Brand Kit · Training</div></div>
+        <div class="gallery-cap-title">Style Playground</div>
+        <div class="gallery-cap-desc">One source becomes eight photographic styles via the trained LoRA. This is the training layer made tangible. Cross-style consistency tracked at 96.8%.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_022.png" alt="Al Baik Asset Upload"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_022</div><div class="gallery-loc">Clients · Brand Kit · Training</div></div>
+        <div class="gallery-cap-title">Adding assets to a Brand Kit</div>
+        <div class="gallery-cap-desc">Upload with auto-tagging, palette extraction and compliance pre-check. This is an action, not a destination. It's a button inside Training, not a sidebar item.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_021.png" alt="Brand Consistency Score"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_021</div><div class="gallery-loc">Clients · Brand Kit · Monitoring</div></div>
+        <div class="gallery-cap-title">Brand Consistency Score · Al Baik</div>
+        <div class="gallery-cap-desc">97.2% across 1,247 generations. Visual identity, content rules and cultural fit scored independently. This is what Monitoring looks like at scale.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_023.png" alt="Jurisdictional Strategies"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_023</div><div class="gallery-loc">Clients · Brand Kit · Monitoring</div></div>
+        <div class="gallery-cap-title">Jurisdictional Strategy Map</div>
+        <div class="gallery-cap-desc">Per-region rules and auto-substitutions. Brand-specific compliance overrides live here, because they're properties of the brand, not the campaign.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CAMPAIGNS → CREATIVE -->
+<div class="gallery-section">
+  <div class="gallery-section-header">
+    <div>
+      <div class="gallery-section-num">03 · Campaigns → Creative</div>
+      <div class="gallery-section-title">Make the <span class="accent">master.</span></div>
+    </div>
+    <div class="gallery-section-meta">3 screens · Generate, Composite, Adapt, Preview</div>
+  </div>
+  <div class="gallery-section-desc">The first stage of campaign work. Generate creates, Composite assembles, Adapt makes versions, Preview lets you check before sign-off. Adapt is where the old "Formats Workshop" and "Language Variants" merge into one job.</div>
+
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_008.png" alt="Nike Formats Workshop"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_008</div><div class="gallery-loc">Campaigns · Creative · Adapt</div></div>
+        <div class="gallery-cap-title">Nike Trail Series · Format adaptation</div>
+        <div class="gallery-cap-desc">One source becomes 18 formats. Standard ratios, OOH screen variants, digital banners. This is Adapt at its purest: take one master, make it work everywhere.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_020.png" alt="Al Baik Language Variants"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_020</div><div class="gallery-loc">Campaigns · Creative · Adapt</div></div>
+        <div class="gallery-cap-title">Language Variant Manager · Al Baik</div>
+        <div class="gallery-cap-desc">One source becomes 3 language treatments and 24 final outputs. With jurisdiction auto-assignment. This is the same Adapt surface, language axis instead of format axis.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_069.png" alt="PIF Language Variants"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_069</div><div class="gallery-loc">Campaigns · Creative · Adapt</div></div>
+        <div class="gallery-cap-title">PIF · 7 language treatments</div>
+        <div class="gallery-cap-desc">English-priority, Arabic-priority, French, German, Japanese. Routed by jurisdiction automatically. Sovereign-wealth brand going global, handled in one Adapt session.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_028.png" alt="Formats Workshop Al Baik"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_028</div><div class="gallery-loc">Campaigns · Creative · Adapt</div></div>
+        <div class="gallery-cap-title">Formats Workshop · Al Baik</div>
+        <div class="gallery-cap-desc">Standard aspect ratios, OOH screens with site context, digital banners. The Adapt surface as a producer would use it for a full national rollout.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_033.png" alt="ENC Formats Workshop"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_033</div><div class="gallery-loc">Campaigns · Creative · Adapt</div></div>
+        <div class="gallery-cap-title">Esports Nations Cup · 24 formats</div>
+        <div class="gallery-cap-desc">Sports brand at global scale. Same Adapt surface, different category. Generation status flows through the grid: ready, generating, queued.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_077.png" alt="ENC Formats Workshop alt"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_077</div><div class="gallery-loc">Campaigns · Creative · Adapt</div></div>
+        <div class="gallery-cap-title">Esports Nations Cup · Adapt alt view</div>
+        <div class="gallery-cap-desc">A variant of the Adapt surface for the same campaign. Useful for design review to see the visual range within the same vocabulary.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CAMPAIGNS → MEDIA -->
+<div class="gallery-section">
+  <div class="gallery-section-header">
+    <div>
+      <div class="gallery-section-num">04 · Campaigns → Media</div>
+      <div class="gallery-section-title">Pick the <span class="accent">screens.</span></div>
+    </div>
+    <div class="gallery-section-meta">10 screens · Map view and Board view inside one surface</div>
+  </div>
+  <div class="gallery-section-desc">Media is where the campaign gets matched to inventory. Map view for geographic planning, board view for grid-based selection. Same surface, view toggle inside. The drag-source pattern (drop creative onto the map) is the central interaction.</div>
+
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_007.png" alt="Heineken Atlas map view"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_007</div><div class="gallery-loc">Campaigns · Media · Map view</div></div>
+        <div class="gallery-cap-title">Heineken Global · Map view with compliance</div>
+        <div class="gallery-cap-desc">Drag source onto a region. Compliance rail shows where it's permitted, restricted or blocked. Saudi Arabia blocked under GAMR Art. 13. This is the map view at its most powerful.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_006.png" alt="Heineken Atlas board view"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_006</div><div class="gallery-loc">Campaigns · Media · Board view</div></div>
+        <div class="gallery-cap-title">Heineken Global · Board view by region</div>
+        <div class="gallery-cap-desc">Same campaign, board layout grouped by region. 24 placements across Europe, MENA, APAC. Status visible per placement. Toggle from map, same data.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_026.png" alt="Al Baik tablet map view"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_026</div><div class="gallery-loc">Campaigns · Media · Map view</div></div>
+        <div class="gallery-cap-title">Al Baik KSA · Tablet map view</div>
+        <div class="gallery-cap-desc">The same Media surface on tablet, showing distribution mid-flow. Touch-first interaction for in-room reviews with clients. Same data, mobile context.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_029.png" alt="Al Baik 3D Atlas"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_029</div><div class="gallery-loc">Campaigns · Media · Map view (3D)</div></div>
+        <div class="gallery-cap-title">Al Baik · 3D placement view</div>
+        <div class="gallery-cap-desc">A stylised 3D map view of KSA placements. Sensitive-zone protocols, heritage-palette overlays visible. The map view stretches to include 3D context.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_030.png" alt="Al Baik board view"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_030</div><div class="gallery-loc">Campaigns · Media · Board view</div></div>
+        <div class="gallery-cap-title">Al Baik KSA · Board view grouped by region</div>
+        <div class="gallery-cap-desc">24 placements across 5 KSA regions, Mecca approach flagged with sensitive-zone protocol. Status at a glance. The board pattern for national rollouts.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_031.png" alt="Al Baik national map"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_031</div><div class="gallery-loc">Campaigns · Media · Map view</div></div>
+        <div class="gallery-cap-title">Al Baik · National rollout map</div>
+        <div class="gallery-cap-desc">Source drag from the top, distribution flow into 24 placements across Saudi Arabia. All compliance rails green. The "all clear" state of the map view.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_032.png" alt="Team Falcons global map"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_032</div><div class="gallery-loc">Campaigns · Media · Map view</div></div>
+        <div class="gallery-cap-title">Team Falcons · Global ENC push</div>
+        <div class="gallery-cap-desc">36 placements across 12 countries for the Esports Nations Cup. Compliance rail spans Saudi to Australia. The map view at full global scale.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_068.png" alt="PIF worldwide expansion map"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_068</div><div class="gallery-loc">Campaigns · Media · Map view</div></div>
+        <div class="gallery-cap-title">PIF Worldwide Expansion · 22 placements</div>
+        <div class="gallery-cap-desc">Source distributing globally for Davos 2026. Per-jurisdiction compliance rail with all 11 regulators green. The sovereign-wealth use case in full.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_016.png" alt="Generation blocked"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_016</div><div class="gallery-loc">Campaigns · Media · Compliance gate</div></div>
+        <div class="gallery-cap-title">Generation blocked · KSA alcohol</div>
+        <div class="gallery-cap-desc">The compliance gate, surfaced from Strategy → Compliance into the Media flow. Three recovery actions: substitute, skip, or override with legal review.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_024.png" alt="Generation cleared"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_024</div><div class="gallery-loc">Campaigns · Media · Compliance gate</div></div>
+        <div class="gallery-cap-title">Generation cleared · 24 placements approved</div>
+        <div class="gallery-cap-desc">The positive case of the same gate. Compliance evidence shown inline. Three forward actions: ship now, schedule, or open per-placement detail.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_066.png" alt="PIF global cleared"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_066</div><div class="gallery-loc">Campaigns · Media · Compliance gate</div></div>
+        <div class="gallery-cap-title">PIF Global · 18 placements cleared</div>
+        <div class="gallery-cap-desc">The compliance gate scaled to a full global sovereign-brand campaign. UK ASA, US NYC DCA, EU MiFID II, Saudi GAMR all referenced. Production-grade evidence trail.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CAMPAIGNS → CREATIVE → PREVIEW (per-screen renders) -->
+<div class="gallery-section">
+  <div class="gallery-section-header">
+    <div>
+      <div class="gallery-section-num">05 · Campaigns → Creative → Preview</div>
+      <div class="gallery-section-title">See it <span class="accent">in place.</span></div>
+    </div>
+    <div class="gallery-section-meta">22 screens · Per-site renders across the network</div>
+  </div>
+  <div class="gallery-section-desc">Preview is where a producer sees the creative in its real spatial context, on each specific screen, with the jurisdiction rules and screen specs alongside. This is the most-populated surface in the existing designs, and it's the demo magic of the product. The same surface holds both the master Brand Kit content (Heineken) and the campaign-specific work (PIF, ENC, Falcons, etc).</div>
+
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_005.png" alt="Piccadilly Lights Heineken"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_005</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Piccadilly Lights · Heineken</div>
+        <div class="gallery-cap-desc">21:9 curved with source, variations and jurisdiction info. The canonical Preview layout: render in context, screen spec right rail, availability calendar.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_009.png" alt="Piccadilly POV Heineken"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_009</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Piccadilly Lights · pedestrian POV</div>
+        <div class="gallery-cap-desc">Same screen, pedestrian street-level point of view. Camera mode toggle (Aerial / POV / Sat / Cine / Cam) sits inside Preview as a control, not a destination.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_004.png" alt="Heineken ship deploy"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_004</div><div class="gallery-loc">Campaigns · Deploy · Review</div></div>
+        <div class="gallery-cap-title">Heineken Summer 2026 · final review</div>
+        <div class="gallery-cap-desc">The Deploy Review board. 16 placements grouped by status: ready to ship, needs review, changes requested. This is the per-screen approval surface.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_010.png" alt="Sphere Las Vegas Heineken"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_010</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Sphere Las Vegas · Heineken cinematic</div>
+        <div class="gallery-cap-desc">Spherical UV mapping for the Sphere geometry. Geometry notes panel for the technical detail that wraps each render. Format-specific Preview at its most extreme.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_011.png" alt="COEX K-Pop Square"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_011</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">COEX K-Pop Square Seoul · Heineken</div>
+        <div class="gallery-cap-desc">L-corner anamorphic with dual-plane UV mapping, break-out effect rendered via FMLSTMapRemap. Asia-specific format treated with the same Preview vocabulary.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_014.png" alt="Burj Khalifa Heineken"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_014</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Burj Khalifa · vertical takeover</div>
+        <div class="gallery-cap-desc">2048×10240 vertical strip, alcohol restricted with disclaimer required. Amber-alert state visible. Compliance evidence presented alongside the render.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_017.png" alt="Outernet London Heineken"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_017</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Outernet London · 5-face immersive</div>
+        <div class="gallery-cap-desc">23×16×16m immersive cube interior with cross-face UV continuity. The most technical preview in the set. Geometry notes carry the production detail.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_034.png" alt="Boulevard Riyadh ENC"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_034</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Boulevard Riyadh · ENC vertical</div>
+        <div class="gallery-cap-desc">9:22 extreme vertical for Saudi Esports Federation home venue. Riyadh Season tier confirmed. The Preview surface adapted to an esports brand context.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_035.png" alt="Piccadilly ENC"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_035</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Piccadilly Lights · ENC curved 21:9</div>
+        <div class="gallery-cap-desc">Same Piccadilly screen, different campaign. Shows how the Preview surface is fully content-agnostic. The screen is fixed, the creative changes.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_036.png" alt="TSX Times Square ENC"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_036</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">TSX Times Square · ENC curved</div>
+        <div class="gallery-cap-desc">12000×4000 curved 21:9 at Broadway. NYC DCA reviewed. Right-rail format and the US-specific compliance lineage all in one Preview.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_037.png" alt="Sphere Vegas ENC"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_037</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Sphere Vegas · ENC spherical</div>
+        <div class="gallery-cap-desc">Esports brand on spherical geometry, 14-day countdown overlay. Same screen as Heineken (GOOH_010), demonstrating the Preview surface working across categories.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_038.png" alt="Outernet London ENC"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_038</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Outernet London · ENC immersive</div>
+        <div class="gallery-cap-desc">5-face cube takeover for the Esports Nations Cup. Coordinated multi-face content with cross-face alignment. Most ambitious immersive in the set.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_039.png" alt="Champs-Élysées ENC"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_039</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Champs-Élysées · ENC landscape</div>
+        <div class="gallery-cap-desc">French-language priority enforced under Loi Toubon. Compliance lineage carries through into the Preview as right-rail context.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_040.png" alt="La Défense ENC"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_040</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">La Défense · ENC vertical</div>
+        <div class="gallery-cap-desc">Business district premium tier. 1536×6144 vertical 1:4 with Mairie de Puteaux permit attached. Second French site, same compliance vocabulary.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_041.png" alt="Alexanderplatz ENC"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_041</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Alexanderplatz Berlin · ENC ultrawide</div>
+        <div class="gallery-cap-desc">7680×2160 21:9 curved ultrawide. Berlin Senat media permit confirmed. German-language variant visible. Cross-jurisdiction Preview as a single shape.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_042.png" alt="Shibuya Crossing ENC"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_042</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Shibuya Q-Front · ENC 32:9 ultrawide</div>
+        <div class="gallery-cap-desc">10880×2160 at the scramble crossing. Japanese localisation enforced. The Preview surface handling the global scramble of placements at one of the world's busiest screens.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_043.png" alt="Hudson Yards ENC"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_043</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Hudson Yards · ENC 32:9 panoramic</div>
+        <div class="gallery-cap-desc">11520×2160 panoramic at premium NYC venue. The Preview format library showing American-scale screens alongside European and Asian formats.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_044.png" alt="Av Paulista ENC"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_044</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Avenida Paulista São Paulo · ENC vertical</div>
+        <div class="gallery-cap-desc">2160×5280 extreme vertical. Prefeitura São Paulo permit. Portuguese localisation enforced. The Preview pattern extending into LATAM context.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_045.png" alt="Darling Harbour ENC"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_045</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Darling Harbour Sydney · ENC curved 21:9</div>
+        <div class="gallery-cap-desc">7680×2160 with Sydney CBD Council permit. APAC reach completed. The full global Preview library across nine countries in a single campaign.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_046.png" alt="Manila SM Globe"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_046</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">SM Mall of Asia Globe · ENC spherical</div>
+        <div class="gallery-cap-desc">8000×4000 equirectangular on an 18m radius spherical globe. Pasay City permit. Second spherical format in the library (after Sphere Vegas).</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_047.png" alt="Hongdae Seoul ENC"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_047</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Hongdae Seoul · ENC landscape</div>
+        <div class="gallery-cap-desc">6144×3456 16:9 landscape. Youth-culture venue tier. Korean localisation in place. The full Preview library across both COEX corporate and Hongdae cultural Seoul sites.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_078.png" alt="Piccadilly PIF Red Sea"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_078</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Piccadilly Lights · PIF Red Sea variant</div>
+        <div class="gallery-cap-desc">Same Piccadilly screen rendered with a Red Sea Global creative for PIF. Demonstrates how a single Preview surface holds a brand's full creative range.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_079.png" alt="Piccadilly PIF Nujuma"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_079</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Piccadilly Lights · PIF Nujuma photoreal</div>
+        <div class="gallery-cap-desc">Photoreal Preview, same screen as the schematic above. The Preview surface scales from production wireframe to photoreal mock-up without changing shape.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_080.png" alt="Piccadilly PIF golden hour"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_080</div><div class="gallery-loc">Campaigns · Creative · Preview</div></div>
+        <div class="gallery-cap-title">Piccadilly Lights · PIF golden hour</div>
+        <div class="gallery-cap-desc">Time-of-day, weather, and prime viewing angle all surfaced as Preview controls. Curved/flat slider, date scrubber, render trigger. The Preview surface at its richest.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CAMPAIGNS → DEPLOY -->
+<div class="gallery-section">
+  <div class="gallery-section-header">
+    <div>
+      <div class="gallery-section-num">06 · Campaigns → Deploy</div>
+      <div class="gallery-section-title">Review and <span class="accent">ship.</span></div>
+    </div>
+    <div class="gallery-section-meta">5 screens · Review (per-screen sign-off) and Ship (final push live)</div>
+  </div>
+  <div class="gallery-section-desc">Deploy is the last stage of campaign work. Review handles per-screen sign-off with the live render map folded in as a view. Ship pushes everything live in a single deploy window. The campaign summary, schedule and cost breakdown sit alongside.</div>
+
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_048.png" alt="Team Falcons ship"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_048</div><div class="gallery-loc">Campaigns · Deploy · Ship</div></div>
+        <div class="gallery-cap-title">Team Falcons ENC · Ship board</div>
+        <div class="gallery-cap-desc">36 placements across 12 countries, ready to ship, needs review, pending localisation. Campaign summary, schedule and USD 2.2M cost breakdown alongside.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_067.png" alt="PIF ship board"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_067</div><div class="gallery-loc">Campaigns · Deploy · Ship</div></div>
+        <div class="gallery-cap-title">PIF Worldwide Expansion · Ship</div>
+        <div class="gallery-cap-desc">18 placements, 9 countries, Davos 2026 launch. USD 5M total. C2PA-signed delivery with per-jurisdiction audit trail. The Ship surface at its most production-grade.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_019.png" alt="Al Baik live render"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_019</div><div class="gallery-loc">Campaigns · Deploy · Review (Live Render)</div></div>
+        <div class="gallery-cap-title">Al Baik · Live render map</div>
+        <div class="gallery-cap-desc">8 of 24 rendered, 12 rendering, 4 queued. Live activity log alongside. This is the map view inside Review, not a separate destination. View toggle, not nav item.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_075.png" alt="PIF live render"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_075</div><div class="gallery-loc">Campaigns · Deploy · Review (Live Render)</div></div>
+        <div class="gallery-cap-title">PIF Worldwide · Live render global</div>
+        <div class="gallery-cap-desc">7 of 18 rendered globally. Per-screen status across continents. The Live Render Map at full PIF scale, sitting inside Review as a view toggle.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STRATEGY -->
+<div class="gallery-section">
+  <div class="gallery-section-header">
+    <div>
+      <div class="gallery-section-num">07 · Strategy</div>
+      <div class="gallery-section-title">The <span class="accent">thinking layer.</span></div>
+    </div>
+    <div class="gallery-section-meta">1 screen · Compliance · Inventory</div>
+  </div>
+  <div class="gallery-section-desc">Strategy is the senior-user surface for Insights and Compliance. In the current 57-image set this is mostly empty, which is itself the finding: the Strategy surface is underbuilt relative to the operational core. Sites and Screens (Compliance → Inventory) is the one piece that exists today.</div>
+
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_027.png" alt="Sites Saudi Arabia inventory"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_027</div><div class="gallery-loc">Strategy · Compliance · Inventory</div></div>
+        <div class="gallery-cap-title">Sites · Saudi Arabia Inventory</div>
+        <div class="gallery-cap-desc">24 screens, 7 cities, 4 owners. Filterable by region, owner, format, compliance category. The screen estate as a browseable database. The clearest existing Strategy surface.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- POSITIONING / PRODUCT MODE -->
+<div class="gallery-section">
+  <div class="gallery-section-header">
+    <div>
+      <div class="gallery-section-num">08 · Out of nav</div>
+      <div class="gallery-section-title">Different <span class="accent">product modes.</span></div>
+    </div>
+    <div class="gallery-section-meta">4 screens · MCP integration and presentation deck</div>
+  </div>
+  <div class="gallery-section-desc">Two of the screens point at GOOH being operated headlessly via Claude/MCP, and two are presentation slides for sell-in. These don't sit in the user-facing nav but they matter as positioning. The MCP angle is worth a real conversation with Denis on whether it's near-term or longer-term direction.</div>
+
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_013.png" alt="Claude MCP Heineken"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_013</div><div class="gallery-loc">Out of nav · API/MCP layer</div></div>
+        <div class="gallery-cap-title">Claude × gooh · Heineken Valentine's booking</div>
+        <div class="gallery-cap-desc">Natural language booking via Claude/MCP. Book Heineken on Piccadilly, Outernet, Sphere for Feb 14. Different product mode entirely. Worth Denis's view on positioning.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_073.png" alt="Claude MCP PIF global"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_073</div><div class="gallery-loc">Out of nav · API/MCP layer</div></div>
+        <div class="gallery-cap-title">Claude × gooh · PIF global rollout</div>
+        <div class="gallery-cap-desc">18 placements, 9 countries, 7 languages, USD 5M booked via natural language. The headless mode scaled to a sovereign brand. Sales narrative or product roadmap?</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_070.png" alt="Three Saudi brands presentation"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_070</div><div class="gallery-loc">Out of nav · Sell-in deck</div></div>
+        <div class="gallery-cap-title">One platform. Three Saudi sovereign brands.</div>
+        <div class="gallery-cap-desc">Sell-in slide for the Saudi-out positioning. PIF, ENC, Team Falcons orchestrated through gooh. Sits in pitch material, not the product UI.</div>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-img"><img src="images/GOOH_076.png" alt="Saudi-out next decade"></div>
+      <div class="gallery-caption">
+        <div class="gallery-cap-top"><div class="gallery-id">GOOH_076</div><div class="gallery-loc">Out of nav · Sell-in deck</div></div>
+        <div class="gallery-cap-title">Saudi-out · the next decade of OOH</div>
+        <div class="gallery-cap-desc">The closing slide of the sell-in deck. Origin Riyadh, fanning out to 13 countries. 68 placements, 7 languages, one deploy window. Positioning, not product.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wide -->
+
+<footer>
+  <div class="narrow">
+    <h2 style="font-size: 44px;">57 screens. <span class="accent">5 destinations.</span></h2>
+    <div class="prose" style="margin: 0 auto; text-align: left;">
+      <p>Every existing GOOH design has a home in the new structure. Some surfaces (Brand Kit Preview, Media compliance gate, the per-screen Preview library) are already deep and production-ready. Others (Home dashboard, the full Strategy layer, Insights specifically) are barely sketched and represent the biggest opportunities in the next design sprint.</p>
+      <p>The fact that 22 of the 57 screens are Per-screen Preview tells us something important: this is the demo magic of GOOH, and we should keep investing in it. The fact that Strategy has one screen in the current set tells us where the gap is.</p>
+      <p>Switch back to the Structure tab to see the architecture and language lock that holds all this together.</p>
+    </div>
+    <div class="sig">— Cheers</div>
+    <div class="who">Ben · Technology Director · FML</div>
+  </div>
+</footer>
+
+</div><!-- /tabpanel gallery -->
+
+<script>
+  // Tab switching
+  const tabs = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.tabpanel');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + target).classList.add('active');
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+  });
+
+  // TOC active state (Tab 1 only)
+  const sections = document.querySelectorAll('#tab-structure section[id]');
+  const tocLinks = document.querySelectorAll('.toc a');
+  if (sections.length && tocLinks.length) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          tocLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-40% 0px -50% 0px' });
+    sections.forEach(s => observer.observe(s));
+  }
+</script>
 
 </body>
 </html>
