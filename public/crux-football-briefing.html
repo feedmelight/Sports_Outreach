@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Briefing: Crux Football, FC Rosengård & Montpellier HSC Féminines. Prepared for Kiri Haggart by Feed Me Light.">
+<title>Briefing · Crux Football · Feed Me Light</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f5f1ea;
+    --paper-2: #ebe5d9;
+    --ink: #1a1a1a;
+    --ink-2: #2d2d2d;
+    --muted: #6b6358;
+    --rule: #2d2d2d;
+    --accent: #b8341c;
+    --accent-soft: #d4a574;
+    --highlight: #fff3b0;
+    --max: 760px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Subtle paper texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(139, 115, 85, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(139, 115, 85, 0.03) 0%, transparent 50%);
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 60px 32px 120px;
+  }
+
+  /* Masthead */
+  .masthead {
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 16px 0;
+    margin-bottom: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .masthead .left { font-weight: 500; }
+  .masthead .right { color: var(--muted); }
+
+  /* Title block */
+  .title-block {
+    margin-bottom: 64px;
+  }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(38px, 6vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin: 0 0 24px;
+    font-variation-settings: "opsz" 144;
+  }
+
+  h1 em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .subtitle {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.4;
+    color: var(--muted);
+    margin: 0 0 32px;
+    max-width: 580px;
+  }
+
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px 32px;
+    padding: 20px 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .meta-item .label { color: var(--muted); display: block; margin-bottom: 4px; }
+  .meta-item .value { color: var(--ink); font-weight: 500; }
+
+  /* TL;DR */
+  .tldr {
+    background: var(--paper-2);
+    padding: 32px;
+    margin: 56px 0 64px;
+    border-left: 3px solid var(--accent);
+    position: relative;
+  }
+
+  .tldr-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  .tldr p {
+    margin: 0 0 14px;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .tldr p:last-child { margin-bottom: 0; }
+
+  .tldr strong { font-weight: 600; color: var(--ink); }
+
+  /* Section headings */
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    margin: 80px 0 8px;
+    color: var(--ink);
+    font-variation-settings: "opsz" 144;
+  }
+
+  .section-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  h2 + .section-tagline {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 18px;
+    margin: 0 0 32px;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 24px;
+  }
+
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin: 40px 0 16px;
+    color: var(--ink);
+  }
+
+  h4 {
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin: 28px 0 12px;
+  }
+
+  /* Body text */
+  p { margin: 0 0 18px; }
+
+  p strong, li strong { font-weight: 600; color: var(--ink); }
+
+  em { font-style: italic; }
+
+  /* Pull quotes */
+  blockquote {
+    margin: 24px 0;
+    padding: 8px 0 8px 24px;
+    border-left: 2px solid var(--accent-soft);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  blockquote .attr {
+    display: block;
+    margin-top: 12px;
+    font-family: 'Inter Tight', sans-serif;
+    font-style: normal;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  /* Lists */
+  ul { padding-left: 22px; margin: 0 0 20px; }
+
+  ul li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+  }
+
+  ul li::marker { color: var(--accent); }
+
+  /* Stats grid */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0;
+    margin: 32px 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .stat {
+    padding: 20px 0;
+    border-right: 1px solid rgba(45, 45, 45, 0.15);
+    padding-right: 20px;
+  }
+
+  .stat:last-child { border-right: none; }
+
+  .stat-number {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 8px;
+    font-variation-settings: "opsz" 144;
+  }
+
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  @media (max-width: 600px) {
+    .stat { border-right: none; border-bottom: 1px solid rgba(45,45,45,0.15); }
+    .stat:last-child { border-bottom: none; }
+  }
+
+  /* Cards for the two clubs */
+  .club-header {
+    border-top: 2px solid var(--ink);
+    padding-top: 24px;
+    margin-top: 32px;
+  }
+
+  .club-header .country {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  /* Recommendations */
+  .recs ol {
+    list-style: none;
+    padding: 0;
+    counter-reset: rec;
+  }
+
+  .recs ol li {
+    counter-increment: rec;
+    position: relative;
+    padding: 24px 0 24px 64px;
+    border-top: 1px solid rgba(45, 45, 45, 0.15);
+  }
+
+  .recs ol li:last-child { border-bottom: 1px solid rgba(45, 45, 45, 0.15); }
+
+  .recs ol li::before {
+    content: counter(rec, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 24px;
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .recs ol li strong {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 19px;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+
+  /* Caveats */
+  .caveats {
+    background: rgba(184, 52, 28, 0.04);
+    border: 1px solid rgba(184, 52, 28, 0.15);
+    padding: 28px 32px;
+    margin: 48px 0;
+  }
+
+  .caveats h3 {
+    margin-top: 0;
+    color: var(--accent);
+    font-size: 18px;
+  }
+
+  .caveats ul { margin-bottom: 0; }
+
+  /* Quick reference */
+  .quick-ref {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 40px 32px;
+    margin: 64px 0 0;
+  }
+
+  .quick-ref h3 {
+    color: var(--paper);
+    margin-top: 0;
+  }
+
+  .quick-ref .section-number {
+    color: var(--accent-soft);
+  }
+
+  .quick-ref ul li { color: var(--paper); }
+  .quick-ref ul li::marker { color: var(--accent-soft); }
+  .quick-ref strong { color: #fff; }
+
+  /* Footer */
+  .colophon {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 4px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* TOC */
+  .toc {
+    margin: 48px 0;
+    padding: 24px 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .toc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+
+  .toc ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: toc;
+  }
+
+  .toc ol li {
+    counter-increment: toc;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+
+  .toc ol li::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  .toc a {
+    color: var(--ink);
+    text-decoration: none;
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .toc a:hover { border-color: var(--accent); }
+
+  /* Inline emphasis */
+  mark {
+    background: linear-gradient(180deg, transparent 60%, var(--highlight) 60%);
+    padding: 0 2px;
+    color: var(--ink);
+  }
+
+  /* Print styles */
+  @media print {
+    body { background: white; }
+    .container { padding: 20px; }
+    .quick-ref { background: white; color: var(--ink); border: 2px solid var(--ink); }
+    .quick-ref h3, .quick-ref ul li, .quick-ref strong { color: var(--ink); }
+    h2 { break-after: avoid; }
+    p, li { break-inside: avoid; }
+  }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .container { padding: 32px 20px 80px; }
+    body { font-size: 16px; }
+    h1 { font-size: 36px; }
+    h2 { font-size: 26px; }
+    .tldr { padding: 24px 20px; margin-left: -20px; margin-right: -20px; }
+    .caveats, .quick-ref { padding: 24px 20px; margin-left: -20px; margin-right: -20px; }
+    .recs ol li { padding-left: 48px; }
+    .recs ol li::before { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- MASTHEAD -->
+  <div class="masthead">
+    <span class="left">Feed Me Light · Internal Briefing</span>
+    <span class="right">Confidential</span>
+  </div>
+
+  <!-- TITLE -->
+  <div class="title-block">
+    <div class="kicker">Briefing №01 · 28 May 2026</div>
+    <h1>Crux Football, Rosengård <em>&amp;</em> Montpellier.</h1>
+    <p class="subtitle">A women's-only multi-club ownership platform, two heritage European brands, and the US growth story they're betting on.</p>
+
+    <div class="meta">
+      <div class="meta-item">
+        <span class="label">Prepared for</span>
+        <span class="value">Kiri Haggart</span>
+      </div>
+      <div class="meta-item">
+        <span class="label">Meeting</span>
+        <span class="value">Crux Football · Bex Smith</span>
+      </div>
+      <div class="meta-item">
+        <span class="label">Author</span>
+        <span class="value">Ben Leyland</span>
+      </div>
+      <div class="meta-item">
+        <span class="label">Read time</span>
+        <span class="value">10 minutes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TL;DR -->
+  <div class="tldr">
+    <div class="tldr-label">The short version</div>
+    <p><strong>Crux Football is the buyer.</strong> They own 100% of Montpellier HSC Féminines (Oct 2025) and 49% of FC Rosengård's new commercial entity (Jan 2026). <strong>Bex Smith</strong>, ex-NZ captain, UWCL winner with Wolfsburg, ex-FIFA executive, is the CEO. The model is a women's-only multi-club ownership group built to fix what Smith calls the structural failure of legacy men's-club ownership of women's sides.</p>
+    <p><strong>The clubs are heritage brands in fragile sporting form but with huge IP and pipeline value.</strong> Rosengård is Sweden's most successful women's club (14 titles, Marta, Harder, Seger alumni) but finished 11th in 2025. Montpellier has 2 French titles, a celebrated academy (Karchaoui, Toletti, Lakrar) but is bottom of Première Ligue. Both are classic "buy the brand, rebuild the operation" plays.</p>
+    <p><strong>The angle Crux is selling is the global women's football boom meeting US fan demand.</strong> Fanbase forecast 500m → 800m by 2030. NWSL on a $240m media deal, clubs valued $250m+. Girls' participation in France up 150% since 2019. The play for FML: creative, content and large-format activations that translate two European heritage clubs to the US "soft fan" using player IP, character IP and cross-Atlantic content.</p>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <div class="toc-label">Contents</div>
+    <ol>
+      <li><a href="#crux">Crux Football — who you're meeting</a></li>
+      <li><a href="#rosengard">FC Rosengård — the heritage giant</a></li>
+      <li><a href="#montpellier">Montpellier HSC — the flagship rebuild</a></li>
+      <li><a href="#growth">Women's football fanbase growth</a></li>
+      <li><a href="#us">The US growth story</a></li>
+      <li><a href="#mascots">Mascots, character IP, family engagement</a></li>
+      <li><a href="#grassroots">Grassroots and the fan funnel</a></li>
+      <li><a href="#angles">Strategic angles</a></li>
+      <li><a href="#recs">Recommendations</a></li>
+      <li><a href="#caveats">Caveats</a></li>
+      <li><a href="#quick">Quick reference numbers</a></li>
+    </ol>
+  </nav>
+
+  <!-- SECTION 1: CRUX -->
+  <section id="crux">
+    <span class="section-number">Section 01</span>
+    <h2>Crux Football</h2>
+    <p class="section-tagline">Who you're actually meeting.</p>
+
+    <h3>The group</h3>
+    <p>Crux Football is a women's-only multi-club ownership platform founded by <strong>Rebecca "Bex" Smith</strong>: former New Zealand captain, Olympian, UEFA Champions League winner with VfL Wolfsburg, former FIFA Competitions Manager and Strategic Planning lead for Women's Football. It is explicitly built to acquire control positions in European women's clubs and run them as independent businesses, not appendages of men's clubs.</p>
+
+    <h4>Leadership team</h4>
+    <ul>
+      <li><strong>Bex Smith</strong> — Founder/CEO. Also runs Crux Sports consultancy. Venue Director, UEFA Women's Champions League.</li>
+      <li><strong>Ben Levin</strong> — COO. Ex-Vice Chair, Crawley Town FC.</li>
+      <li><strong>Megan Hession</strong> — Chief of Staff. Global investor-operator.</li>
+      <li><strong>Ted Knutson</strong> — Strategic Director of Football. Founder/ex-CEO StatsBomb; ex-Head of Recruitment, Brentford.</li>
+      <li><strong>Adrien Farina</strong> — Marketing/commercial. Ex-Visa global marketing.</li>
+      <li><strong>Misha Sher</strong> — Investor and dealmaker (EssenceMediacom).</li>
+      <li><strong>Lori Cashman</strong> — Investor (Victress Capital).</li>
+    </ul>
+
+    <h4>Notable investors</h4>
+    <p><strong>Cindy Holland</strong> (18-year Netflix veteran, now leading DTC at Paramount), <strong>Annie Imhoff</strong>, and <strong>Julie Foudy</strong> (former USWNT captain, ESPN analyst). All three are also Angel City FC investors. <mark>The bridge to the US market is literal.</mark></p>
+
+    <h4>The deals so far</h4>
+    <ul>
+      <li><strong>Montpellier HSC Féminines</strong> — 100% acquired on 1 October 2025 from the Nicollin family, ending 25 years of involvement. Advised by Herbert Smith Freehills Kramer. Paul Bouffard (ex-Bordeaux women's development) installed as Club President. No purchase price disclosed.</li>
+      <li><strong>FC Rosengård</strong> — 49% stake in the new FC Rosengård Elitfotboll AB (FC Rosengård Association retains 51% voting rights), announced 14 January 2026. Caroline Seger, Sweden national-team legend, appointed Head of Football. The associated men's lower-league team also corporatised, with separate investment from FC Copenhagen.</li>
+    </ul>
+
+    <blockquote>
+      In Europe, there's not the media money coming in, there's not the sponsorship coming in, the fan bases aren't necessarily big enough yet that running a club independently can be really profitable. So what we're looking to do is combine multiple clubs across Europe in different areas.
+      <span class="attr">Bex Smith, to Sportcal, October 2025</span>
+    </blockquote>
+
+    <p>Smith has examined Scandinavia, Germany, the UK, Sweden, Spain and France. <strong>A third club is targeted for summer 2026.</strong></p>
+
+    <h4>Bex Smith's media profile</h4>
+    <p>Hosted the BBC's "The Players Podcast"; co-produced Optus Sport's 2023 FIFA Women's World Cup daily show. Strategic advisor to OneFootball, Pitch International, PGMOL, and the Global E-Sports Federation Board. Represented by Independent Talent for hosting and keynotes. <strong>She is a public-facing figure used to TV-grade storytelling, not just a back-office operator.</strong> This matters for any creative-led pitch.</p>
+  </section>
+
+  <!-- SECTION 2: ROSENGARD -->
+  <section id="rosengard">
+    <span class="section-number">Section 02</span>
+    <h2>FC Rosengård</h2>
+    <p class="section-tagline">Sweden. The heritage giant.</p>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-number">14</span>
+        <span class="stat-label">Damallsvenskan titles (a record)</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">11<span style="font-size: 18px;">th</span></span>
+        <span class="stat-label">2025 finish — worst ever</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">3,200+</span>
+        <span class="stat-label">Young people through Boost community programme</span>
+      </div>
+    </div>
+
+    <h3>History and honours</h3>
+    <p>Founded 1970 as Malmö FF Dam. Renamed LdB FC Malmö, merged with FC Rosengård 1917 in 2013. Based at Malmö IP. <strong>14 Damallsvenskan titles</strong>, most recent 2024. Six Swedish Cups. UEFA Women's Champions League quarter-finals 2020/21, regular UWCL group-stage presence since.</p>
+
+    <h3>Current standing — fragile</h3>
+    <ul>
+      <li><strong>2024:</strong> Won 14th title with 4 weeks to spare. 25 wins, 1 loss, 99 goals scored, 9 conceded.</li>
+      <li><strong>2025:</strong> Worst season in club history. 11th of 14, 25 points, roughly 20 points worse than previous low.</li>
+      <li><strong>2025/26 Europe:</strong> Group stage of the new UEFA Women's Europa Cup. Knocked out by Sporting 5-2 on aggregate. Not in UWCL.</li>
+    </ul>
+
+    <h3>Players and global pull</h3>
+    <p>Alumni include <strong>Marta</strong> (the icon, 9 UWCL goals for the club), <strong>Pernille Harder, Caroline Seger, Sofia Jakobsson, Hanna Bennison, Magdalena Eriksson, Anja Mittag</strong>. 2025 transfers out: Anna Sandberg to Manchester United, Rosa Kafaji to Arsenal.</p>
+
+    <blockquote>
+      We can still compete with the best teams in Europe, but financially, we can't.
+      <span class="attr">Therese Sjögran, Sporting Director, Rosengård</span>
+    </blockquote>
+
+    <p>The Damallsvenskan is now a development-and-export league, with NWSL and WSL as the destinations.</p>
+
+    <h3>Commercial &amp; ownership</h3>
+    <p>Sponsors: Sigma, Akea, Star for Life, Svenska Spel (Swedish state lottery). Kit: Intersport. Long-running community sponsor: Novo Nordisk (Move project, type-2 diabetes prevention).</p>
+    <p>Crux Football 49% / FC Rosengård Association 51% of the new corporate vehicle (Jan 2026).</p>
+
+    <blockquote>
+      What we are contributing is long-term, targeted investments and modern performance infrastructure to support the club's existing strengths, so that more of these talents can stay in the region longer.
+      <span class="attr">Bex Smith, Inside World Football, January 2026</span>
+    </blockquote>
+
+    <h3>Community footprint — a brand asset</h3>
+    <ul>
+      <li><strong>Boost by FC Rosengård</strong> (since 2003, formalised 2011, standalone association 2018). Over 3,200 young people in Malmö moved into employment or studies. 54% completion rate. Backed by Malmö City, Arbetsförmedlingen, the European Social Fund.</li>
+      <li><strong>Move</strong> — type-2 diabetes prevention in challenged areas. Novo Nordisk + Malmö Municipality.</li>
+      <li><strong>Football for Life</strong> — South African girls' coaching/refereeing since 2008.</li>
+      <li>Reading-before-practice for ~350 children aged 5-10 in non-Swedish-speaking households in the Rosengård district.</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 3: MONTPELLIER -->
+  <section id="montpellier">
+    <span class="section-number">Section 03</span>
+    <h2>Montpellier HSC Féminines</h2>
+    <p class="section-tagline">France. The flagship rebuild.</p>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-number">2</span>
+        <span class="stat-label">Division 1 Féminine titles (2004, 2005)</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Crux ownership since Oct 2025</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">Last</span>
+        <span class="stat-label">Première Ligue position 2025/26</span>
+      </div>
+    </div>
+
+    <h3>History and honours</h3>
+    <p>Women's section founded as Montpellier-Le-Crès in 1990. Integrated into Montpellier HSC in 2001 under Louis Nicollin. <strong>2 D1 titles (2004, 2005), 3 Coupes de France (2006, 2007, 2009).</strong> UEFA Women's Cup semi-final 2005/06 (first French women's team to a UWCL semi). Last UWCL appearance 2017/18.</p>
+
+    <h3>Current standing — in crisis</h3>
+    <ul>
+      <li><strong>2024/25:</strong> 6th in Première Ligue.</li>
+      <li><strong>2025/26:</strong> Bottom, in the relegation zone. Coach replaced mid-season (Jean-Louis Saez returned). Multiple GK injuries. Thin, young squad.</li>
+    </ul>
+    <p>Footeuses.com noted the club only launched its own dedicated MHSC féminines social channels in October 2025, the same week as the Crux takeover. <mark>A startling sign of how late the club came to its own brand.</mark></p>
+
+    <h3>Academy and global pull</h3>
+    <p>Graduates include <strong>Sakina Karchaoui</strong> (PSG/France, 8 seasons from age 13), <strong>Sandie Toletti</strong> (Real Madrid/France), <strong>Maëlle Lakrar</strong> (France international). Past alumni: Louisa Necib, Camille Abily. Current captain: Sonia Ouchene.</p>
+
+    <h3>Stadium and base</h3>
+    <p>Home matches split between Stade Joseph-Blanc (1,000 capacity) and Stade de la Mosson (men's stadium). Training base at the Grammont complex — pre-academy, U19, senior squads, with dormitories, dining and medical. A meaningful talent-pipeline asset.</p>
+
+    <h3>Ownership and strategy</h3>
+    <p>Crux 100% since 1 October 2025, fully separated from the men's club. <strong>Paul Bouffard</strong> appointed President.</p>
+
+    <blockquote>
+      The arrival of Crux Football fully aligns with our ambition for growth. This model ensures Montpellier remains competitive while maintaining the excellence of its academy.
+      <span class="attr">Jean-Michel Aulas, President, Ligue Féminine de Football Professionnel</span>
+    </blockquote>
+
+    <p>Smith has explicitly named Montpellier as Crux's <strong>flagship</strong>: "a club I have admired and seen potential in for many years."</p>
+  </section>
+
+  <!-- SECTION 4: GROWTH -->
+  <section id="growth">
+    <span class="section-number">Section 04</span>
+    <h2>Women's football fanbase growth</h2>
+    <p class="section-tagline">Why this is the moment.</p>
+
+    <h3>Headline numbers</h3>
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-number">800m</span>
+        <span class="stat-label">Global fanbase by 2030 (up from 500m)</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">60%</span>
+        <span class="stat-label">Of those fans will be female</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">75%</span>
+        <span class="stat-label">Household purchasing decisions by 2028</span>
+      </div>
+    </div>
+
+    <ul>
+      <li>2023 FIFA Women's World Cup: <strong>2 billion media engagements</strong>. Sponsorship deals 3× vs 2019.</li>
+      <li>Women's elite sports global revenue: $1.28bn in 2024. Football is $555m of that. Deloitte forecasts $2.35bn in 2025.</li>
+      <li>WSL revenues up 34% in 2023/24. Forecast £100m in 2025/26 (Deloitte).</li>
+      <li>SPORTFIVE (Feb 2025): 196.2m women's football fans aged 16-64 across UK, US, Spain, France, Germany, Australia. Average 54%, UK at 62%.</li>
+      <li><strong>76% of women's football fans say they don't see enough coverage</strong> (SPORTFIVE). A demand-supply gap creative agencies can fill.</li>
+      <li>UEFA "Unstoppable" Strategy: €1bn commitment to women's football competition revenue 2024-2030.</li>
+      <li>Ampere Analysis (2026): women's soccer following across Europe's top-5 markets up 21% since late 2023.</li>
+    </ul>
+
+    <h3>Participation tailwinds since 2019</h3>
+    <ul>
+      <li><strong>France +150%, Spain +95%, China +300%, Vietnam +42%</strong></li>
+      <li>Netherlands +25%, UK +24% (plus +15% interest in two years post-Lionesses Euro 2022)</li>
+      <li>Switzerland +22% in 2024 alone</li>
+    </ul>
+
+    <h3>The "soft fan" thesis</h3>
+    <ul>
+      <li>Women now form <strong>47% of women's-sport fans and 42% of men's-sport fans</strong>, up from 45% and 40% in 2022 (Nielsen 2025).</li>
+      <li>WNBA: US fanbase +31% in two years to 46.9m. 2024 regular-season viewership +201% (Nielsen).</li>
+      <li>Women's-football fans over-index on <strong>film (79%), music (65%), video games (64%)</strong> vs the general population. Lifestyle and entertainment crossover audiences.</li>
+      <li>LGBTQ+ skew is one of the genuinely distinctive features. Women's football venues are some of the few sports cultures where queer fans are not just welcome but central. This is core to the "soft fan" pitch: women's football converts non-traditional sports fans because it has built non-traditional sports environments.</li>
+      <li>Per Parity research, women's sports still receive only <strong>1% of global sports sponsorship dollars</strong>. The largest growth-vs-spend mismatch in the industry.</li>
+    </ul>
+
+    <h3>Clubs that have grown fanbases</h3>
+    <ul>
+      <li><strong>Angel City FC</strong> — $250m valuation (Bay/Iger, July 2024). $35m revenue in 2024. Forbes-reported $280m valuation Sep 2025. Celebrity ownership: Portman, Garner, Longoria, Billie Jean King, Becky G, Christen Press, Mia Hamm. 10% of sponsorship revenue cycled back to LA community. HBO documentary. Sold $6m of merch in 2022 (league-leading).</li>
+      <li><strong>Kansas City Current</strong> — CPKC Stadium opened March 2024. First purpose-built professional women's sports stadium in the world. 11,500 seats. $117m privately financed. Sold out every home game in 2024. 2025 NWSL Shield winners. Temwa Chawinga: first NWSL player to score 20 goals in a season.</li>
+      <li><strong>NY Liberty (WNBA)</strong> — average attendance +64% YoY. In-arena merch +99%. E-commerce merch +135%. Sponsor count +60%. Driven heavily by mascot IP (see Section 06).</li>
+      <li><strong>Arsenal Women</strong> — revenue +138% YoY in 2023/24 (Deloitte).</li>
+      <li><strong>Barcelona Femení</strong> — revenue +74% YoY to €13.4m in 2022/23.</li>
+      <li><strong>Bay FC / Denver Summit</strong> — Bay FC set a single-game NWSL attendance record of 40,091 at Oracle Park (2024). Denver Summit broke it with <strong>63,004 at Empower Field on 28 March 2026</strong>. The all-time NWSL record.</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 5: US -->
+  <section id="us">
+    <span class="section-number">Section 05</span>
+    <h2>The US growth story</h2>
+    <p class="section-tagline">Deep focus.</p>
+
+    <h3>NWSL — the numbers</h3>
+    <ul>
+      <li>Total attendance crossed <strong>2 million for the first time in 2024</strong>. 89 games over 10,000 fans (vs 55 the year before). League average over 11,000.</li>
+      <li>2025: average 10,669, down 5% YoY, but four clubs (Gotham, Carolina Courage, Washington Spirit, Orlando Pride) set franchise records. Portland Thorns led at 18,173.</li>
+      <li>Total league revenue: ~$215m in 2024, up 91% YoY (Sportico).</li>
+      <li><strong>Media: $240m, 4-year (2024-27) deal</strong> with CBS, ESPN, Amazon Prime Video, Scripps Sports. $60m/year, a 40× multiple on the prior CBS-only deal. ESPN regular-season viewership +61% YoY.</li>
+      <li>Sponsorship: estimated $39.5m league-wide in 2025 (GlobalData). Team-level $66-75m. 400+ brands active.</li>
+      <li>Valuations: Angel City $250m (Bay/Iger). $280m Forbes-reported (post-Chris Paul round). San Diego Wave $113-120m. Washington Spirit valuation up <strong>4,200%</strong> since 2020.</li>
+      <li>Expansion: Boston Legacy FC and Denver Summit launched March 2026. Denver expansion fee: <strong>$110m</strong>. Commissioner Jessica Berman has said she sees the league growing to 32 teams.</li>
+    </ul>
+
+    <h3>Kansas City Current — the operational benchmark</h3>
+    <ul>
+      <li>CPKC Stadium. First ever stadium built specifically for a pro women's team.</li>
+      <li>Co-owners: Angie &amp; Chris Long, Brittany Mahomes, Patrick Mahomes.</li>
+      <li>Privately funded ($117m). 50-year lease.</li>
+      <li>Sold out every home game in 2024. CPKC Stadium app (Current Pay QR mobile commerce). KC Streetcar Riverfront extension opened 2026 to integrate matchday transport into urban infrastructure.</li>
+      <li>"Mascot of the Match" — adoptable shelter dogs from KC Pet Project. No costumed mascot.</li>
+    </ul>
+
+    <h3>Angel City FC — the brand-led benchmark</h3>
+    <p>Highest women's-sports valuation. Celebrity-led but mission-coded. 10% of sponsorship revenue back into LA community. Sarah Harden (CEO Hello Sunshine, early investor):</p>
+
+    <blockquote>
+      I know there's trapped value in women's endeavors.
+      <span class="attr">Sarah Harden, Hollywood Reporter, 2024</span>
+    </blockquote>
+
+    <p>Counterpoint: Bay FC's Leslie Osborne explicitly differentiated: <em>"We don't have 10 celebrities on our team."</em> Bay FC skipped both the celebrity-ownership and mascot routes.</p>
+
+    <h3>USL Super League</h3>
+    <p>Sanctioned as Division I by US Soccer in Feb 2024 alongside NWSL. 8 inaugural clubs. 2024/25 champion: Tampa Bay Sun FC. Title sponsor: Gainbridge. Media: NBCUniversal/Peacock. <strong>Two-tier US women's pyramid is now real.</strong></p>
+
+    <h3>College and USWNT</h3>
+    <p>The US is the only major football market with a fully integrated college-to-pro pipeline. USWNT remains a cultural property. LA 2028 Olympics and the 2027 Brazil Women's World Cup are scheduled tentpoles. Lindsey Heaps (USWNT captain, until recently at Lyon) joining Denver Summit in 2026 is the marquee return-from-Europe story.</p>
+  </section>
+
+  <!-- SECTION 6: MASCOTS -->
+  <section id="mascots">
+    <span class="section-number">Section 06</span>
+    <h2>Mascots, character IP, family engagement</h2>
+    <p class="section-tagline">A clear white space.</p>
+
+    <p><strong>The headline finding:</strong> the WNBA has built mascot IP into a major commercial engine. The NWSL and European women's football have, with one exception, not.</p>
+
+    <h3>NWSL — a near-universal absence</h3>
+    <ul>
+      <li><strong>No dedicated team mascot:</strong> Kansas City Current, Angel City FC, San Diego Wave FC, Portland Thorns FC, Bay FC, Orlando Pride, Houston Dash.</li>
+      <li><strong>Bay FC explicitly rejected the route.</strong> Co-founder Aly Wagner: "There have been a lot of mascots and silly names associated with our craft. That is not the path that we wanted to go down."</li>
+      <li><strong>Kansas City Current</strong> runs a "Mascot of the Match" programme spotlighting adoptable dogs. Community engagement without character IP.</li>
+      <li><strong>Sole NWSL exception:</strong> Washington Spirit's "PK the Eagle" (March 2019), explicitly framed as a fan-experience and community-outreach asset.</li>
+    </ul>
+
+    <h3>Europe — women's clubs share the men's mascot</h3>
+    <ul>
+      <li><strong>Arsenal Women</strong> appear with Gunnersaurus (the men's mascot since 1993).</li>
+      <li><strong>Barcelona Femení</strong> share CAT Culer (unveiled late 2024 for the club's 125th anniversary). "CAT is a wildcat, it is not defined by a specific gender, it is both feminine and masculine."</li>
+      <li><strong>OL Lyonnes</strong> (rebranded from Olympique Lyonnais Féminin by Michele Kang in May 2025): a lioness is on the crest. No costumed character.</li>
+      <li><strong>FC Rosengård and Montpellier HSC Féminines: no dedicated women's mascot identified.</strong> This is unowned territory.</li>
+    </ul>
+
+    <h3>WNBA — the contrast</h3>
+    <ul>
+      <li>WNBA has the highest average mascot satisfaction rating <strong>(4.76 / 5)</strong> of any major league surveyed (ahead of NBA 4.62, NHL 4.59).</li>
+      <li><strong>Ellie the Elephant (NY Liberty)</strong> debuted May 2021. In a single year drove in-arena merch +99% YoY, e-commerce +135%, sponsor count +60%, average attendance +64%. ~120k Instagram, 180k+ TikTok followers. Cross-promos with Xbox, Bumble, Hero Cosmetics, Fenty, Essie, Kate Spade. Named to NYT's 63 Most Stylish People of 2024. First pro sports mascot with a Macy's Thanksgiving Day Parade float (2024). 2024 CLIO Sports Gold.</li>
+    </ul>
+
+    <blockquote>
+      Ellie has evolved into much more than a mascot. She's an influencer whose personality, style and presence spark real cultural conversation and connection. She goes beyond generating brand visibility and fan engagement. She's opening new revenue streams and unlocking previously untapped partnerships.
+      <span class="attr">Shana Stephenson, Chief Brand Officer, NY Liberty</span>
+    </blockquote>
+
+    <ul>
+      <li>Family-fan data (Evolved Experience Solutions): families with children rate overall entertainment experience 96% higher and guest-services scores up to 145% higher when satisfied with mascot performance. In hockey: up to $20 difference in per-fan spending tied to mascot satisfaction.</li>
+    </ul>
+
+    <h3>Strategic implication</h3>
+    <p>No European women's top-flight club has a dedicated female-club mascot. Building one for Montpellier or Rosengård, anchored in club heritage (rose iconography, lioness, regional symbol), could be a defining first. The "soft fan" play (families, women, LGBTQ+, lifestyle) is exactly what mascot IP delivered for NY Liberty.</p>
+
+    <blockquote>
+      Rather than just copying and pasting what the men have done, looking at different ways that we can create more visibility for our women's teams. That's where we're aiming to get creative.
+      <span class="attr">Bex Smith, to Sportcal, October 2025</span>
+    </blockquote>
+  </section>
+
+  <!-- SECTION 7: GRASSROOTS -->
+  <section id="grassroots">
+    <span class="section-number">Section 07</span>
+    <h2>Grassroots</h2>
+    <p class="section-tagline">Pipeline, brand affinity, and the lifelong fan funnel.</p>
+
+    <h3>Europe</h3>
+    <ul>
+      <li><strong>France:</strong> girls' participation +150% since 2019. The Première Ligue investment thesis is partly built on this base.</li>
+      <li><strong>UK:</strong> +24% participation since 2019, plus +15% interest in two years post-Euro 2022.</li>
+      <li><strong>Switzerland:</strong> "Here to Stay" Euro 2025 legacy — doubling women/girls players from 40k to 80k.</li>
+      <li><strong>UEFA Playmakers</strong> (Disney IP-led, 5-8 year-old girls): 135,000+ girls participated across 46 of 55 national associations. 96% positive experience. Ambassador: Lotta Schelin.</li>
+      <li><strong>UEFA Football in Schools:</strong> 3+ million children, €11m renewed investment through 2028.</li>
+      <li>Sweden's BK Häcken works with 16 grassroots clubs across Gothenburg for 3,000 girls and boys (2025/26 UEFA Grassroots Awards finalist). Rosengård's own Boost programme (above).</li>
+    </ul>
+
+    <h3>USA</h3>
+    <p>US Youth Soccer, US Club Soccer, ECNL Girls form the girls' development pipeline. College (NCAA D1) sits atop. Unique globally for being a fully integrated pyramid feeding both NWSL and USL Super League.</p>
+
+    <h3>Why this matters for Crux's clubs</h3>
+    <p>Both Rosengård and Montpellier sit on academy and pipeline assets that <strong>already produce internationals at zero acquisition cost</strong>: Karchaoui/Toletti/Lakrar in France; Sandberg/Kafaji/Mittag/Eriksson historically in Sweden. The strategic question is whether they can capture the brand affinity of those academy alumni globally through content, storytelling and large-format DOOH, rather than just sell them on and reset.</p>
+  </section>
+
+  <!-- SECTION 8: ANGLES -->
+  <section id="angles">
+    <span class="section-number">Section 08</span>
+    <h2>Strategic angles</h2>
+    <p class="section-tagline">Where European clubs meet US fan growth.</p>
+
+    <h3>What's already happening cross-Atlantic</h3>
+    <ul>
+      <li>Crux's investor base is already an Angel City FC investor cluster (Holland, Imhoff, Foudy). The Crux-LA bridge is literal.</li>
+      <li>Player flow: Lindsey Heaps Lyon → Denver Summit. Casey Murphy → Boston Legacy. Alyssa Thompson (Angel City) → Chelsea in 2025, sparking debate about the NWSL's $3.3m salary cap.</li>
+      <li>Friendlies: KC Current vs Atlético Madrid (Women's Cup 2024). Angel City vs Tigres UANL.</li>
+      <li>Lifestyle crossover: Angel City HBO doc. Coach moving into the WNBA. Bumble/Fenty x NY Liberty. e.l.f., AT&amp;T, Canon into NWSL.</li>
+    </ul>
+
+    <h3>What Crux is implicitly asking for</h3>
+    <p>Two heritage European brands (Marta's club; the academy that produced Karchaoui) need:</p>
+    <ul>
+      <li><strong>Brand identity work</strong> that translates club heritage to international/US-soft-fan audiences without losing home-market authenticity.</li>
+      <li><strong>Large-format content</strong> (stadium screens, DOOH, social-first vertical video) that travels. Not match action.</li>
+      <li><strong>Character/IP/family-engagement</strong> assets. The unowned white space in European women's football.</li>
+      <li><strong>Cross-Atlantic content packages</strong> (player-led media, lifestyle, music, fashion) tied to Crux's US-resident investor base and Angel City-adjacent networks.</li>
+      <li><strong>Grassroots-to-elite storytelling.</strong> Montpellier's academy and Rosengård's Boost programme are content-rich.</li>
+    </ul>
+
+    <h3>Soft fan, lifestyle, LGBTQ+ angle</h3>
+    <p>Women's-football fans over-index on film, music, video games. Lifestyle, not pure sport. CNN (Nov 2025) documented women's football as a queer-cultural space. Emily Calder, Arsenal Women fan: <em>"Arsenal women's games are the only place you'd find as many lesbians and queer women as you would at Pride."</em> This is a competitive moat against men's football. 60% of women's-football fans will be female by 2030. 75% household-purchasing-decision control.</p>
+  </section>
+
+  <!-- RECOMMENDATIONS -->
+  <section id="recs" class="recs">
+    <span class="section-number">Section 09</span>
+    <h2>Recommendations</h2>
+    <p class="section-tagline">Talking points to put in front of Crux today.</p>
+
+    <ol>
+      <li>
+        <strong>Acknowledge the asymmetry.</strong>
+        Crux owns a 14-time Swedish champion currently 11th, and a Première Ligue founder currently bottom. Sporting form is the short-term problem. Brand IP and academy pipeline are the long-term assets. FML's creative offer should be brand- and IP-first, not match-content-first.
+      </li>
+      <li>
+        <strong>Push the mascot and character IP white space.</strong>
+        No European women's club has a dedicated female-mascot character. NY Liberty's Ellie is the single most replicable women's-sports growth model of the last 5 years. Rosengård (rose iconography) and Montpellier (Hérault region, coq tradition) both have natural visual handles. Either could be the first European women's club mascot built for global character IP, not local matchday.
+      </li>
+      <li>
+        <strong>Build the US-fan funnel directly.</strong>
+        Crux already has Angel City-adjacent investors. 2026 NWSL expansion (Boston, Denver), LA28, and the 2027 Brazil World Cup are scheduled tentpoles. Suggest FML-led friendlies, content swaps, kit drops with US-based partners. Pitch player-led documentary content (Smith already executive-produced for Optus and BBC).
+      </li>
+      <li>
+        <strong>Leverage Crux's stated "differentiated media" appetite.</strong>
+        Smith publicly wants creative ways beyond Canal+ and traditional TV. Pitch large-format DOOH packages, vertical-video formats, retail and music/fashion cross-tie-ins. This is FML's core territory.
+      </li>
+      <li>
+        <strong>Tie commercial growth to Crux's mission narrative.</strong>
+        Boost by FC Rosengård is a real-world, EU-cofunded community-impact story. Montpellier's family-culture/academy-first positioning is similar. Crux's own thesis is that women's football is "good for the world." FML can build the storytelling spine.
+      </li>
+      <li>
+        <strong>Don't pitch celebrity-ownership theatre.</strong>
+        Bay FC and Smith's own Crux philosophy explicitly differentiate from the Angel City model. The pitch should be substance, brand, community, IP. Not influencer name-dropping.
+      </li>
+      <li>
+        <strong>Be ready on grassroots integration.</strong>
+        UEFA Playmakers, France's +150% participation, FA Game Changer all sit underneath Crux's clubs. Real opportunity for Disney-style branded girls' programmes that drive lifelong fan loyalty, with FML producing the content.
+      </li>
+      <li>
+        <strong>Ask about the third club.</strong>
+        Crux has telegraphed an acquisition in summer 2026. FML should ask which markets and propose an integrated multi-club creative platform rather than two one-off engagements.
+      </li>
+    </ol>
+  </section>
+
+  <!-- CAVEATS -->
+  <section id="caveats">
+    <div class="caveats">
+      <h3>Caveats</h3>
+      <ul>
+        <li><strong>Sporting form is genuinely bad</strong> at both clubs right now. Any creative work needs to be insulated from match-by-match headlines.</li>
+        <li><strong>NWSL 2025 attendance was -5% YoY</strong> even as four clubs set franchise records. The growth story is not monotonic and has cyclical event-driven peaks. The trend is clearly up; year-to-year volatility is real.</li>
+        <li><strong>Crux's MCO model is novel.</strong> Kynisca (Michele Kang) and Mercury13 are the only direct comparables. UEFA's multi-club rules are evolving. Avoid building creative IP that is single-club-locked if multi-club portability could matter later.</li>
+        <li><strong>Several headline numbers are vendor or club-disclosed</strong>, not independently audited. Treat as directional, not contractual.</li>
+        <li><strong>Bex Smith is the principal AND the public face.</strong> Pitches that respect her player and FIFA-executive background, and avoid talking down to her on women's football fundamentals, will land better than pitches that re-present the macro growth story she already commissions.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- QUICK REF -->
+  <section id="quick">
+    <div class="quick-ref">
+      <span class="section-number">Quick reference</span>
+      <h3>Numbers to remember walking in</h3>
+      <ul>
+        <li><strong>Crux:</strong> 100% Montpellier (Oct 2025), 49% Rosengård (Jan 2026), 3rd club targeted summer 2026.</li>
+        <li><strong>Women's football fanbase:</strong> 500m → 800m by 2030. 60% female. 75% household-purchase control.</li>
+        <li><strong>NWSL:</strong> $240m media deal (2024-27). $250m+ club valuations. $110m Denver expansion fee. 63,004 attendance record (Denver, March 2026).</li>
+        <li><strong>Rosengård:</strong> 14 league titles. 11th in 2025. Alumni Marta, Harder, Seger. Boost programme 3,200+.</li>
+        <li><strong>Montpellier:</strong> 2 titles, 3 cups. Bottom of Première Ligue 2025/26. Academy made Karchaoui, Toletti, Lakrar.</li>
+        <li><strong>Mascot white space:</strong> Zero in NWSL except Washington Spirit. Zero dedicated in European women's football. NY Liberty's Ellie drove +99% in-arena merch and +60% sponsors in one year.</li>
+        <li><strong>Bex Smith's creative ask</strong> (publicly stated): "rather than just copying and pasting what the men have done."</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- COLOPHON -->
+  <div class="colophon">
+    <span>Feed Me Light · 19-23 Kingsland Road, London E2 8AA</span>
+    <span>feedmelight.com</span>
+  </div>
+
+</div>
+</body>
+</html>
