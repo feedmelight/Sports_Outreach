@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GOOH navigation proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --surface: #131316;
+    --surface-2: #1c1c20;
+    --surface-3: #26262b;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.16);
+    --text: #f5f5f4;
+    --text-2: #a8a7a3;
+    --text-3: #6b6a66;
+    --accent: #ec4899;
+    --accent-soft: rgba(236,72,153,0.12);
+    --accent-line: rgba(236,72,153,0.3);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 400;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+  .serif { font-family: 'Instrument Serif', serif; font-weight: 400; letter-spacing: -0.01em; }
+  .italic { font-style: italic; }
+
+  header.hero {
+    padding: 96px 0 64px;
+    border-bottom: 0.5px solid var(--border);
+    position: relative;
+  }
+  header.hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-line), transparent);
+  }
+  .eyebrow {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+  h1 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(48px, 6vw, 84px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+    max-width: 900px;
+  }
+  h1 .accent { color: var(--accent); font-style: italic; }
+  .lede {
+    font-size: 20px;
+    color: var(--text-2);
+    max-width: 640px;
+    line-height: 1.5;
+  }
+  .meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 0.5px solid var(--border);
+    font-size: 13px;
+    color: var(--text-3);
+  }
+  .meta strong { color: var(--text); font-weight: 500; }
+
+  section { padding: 96px 0; border-bottom: 0.5px solid var(--border); }
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-3);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+  h2 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(36px, 4vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    margin-bottom: 32px;
+    max-width: 800px;
+  }
+  h2 .accent { color: var(--accent); font-style: italic; }
+  .prose {
+    font-size: 17px;
+    color: var(--text-2);
+    max-width: 680px;
+    line-height: 1.65;
+  }
+  .prose p + p { margin-top: 20px; }
+  .prose strong { color: var(--text); font-weight: 500; }
+
+  .nav-showcase {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 64px;
+    align-items: start;
+    margin-top: 64px;
+  }
+
+  .nav-mock {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 16px;
+    position: sticky;
+    top: 32px;
+  }
+  .nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 12px 24px;
+  }
+  .nav-logo {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 2px;
+  }
+  .nav-item:hover { background: var(--surface-2); }
+  .nav-item.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .nav-item i { font-size: 18px; }
+  .nav-section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-3);
+    padding: 20px 12px 8px;
+    font-weight: 500;
+  }
+  .nav-context-label {
+    font-size: 11px;
+    color: var(--text-3);
+    font-style: italic;
+    padding: 6px 12px 4px;
+  }
+  .nav-context {
+    margin-left: 16px;
+    border-left: 2px solid var(--border-strong);
+    padding-left: 8px;
+  }
+  .nav-context .nav-item {
+    font-size: 13px;
+    padding: 7px 12px;
+    color: var(--text-2);
+  }
+  .nav-context .nav-item.parent { color: var(--text); font-weight: 500; }
+  .nav-sub {
+    padding-left: 16px;
+    margin-bottom: 4px;
+  }
+  .nav-sub .nav-item {
+    font-size: 12px;
+    padding: 5px 12px;
+    color: var(--text-3);
+  }
+  .nav-divider {
+    border-top: 0.5px solid var(--border);
+    margin: 16px 8px;
+  }
+
+  .annotations {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .anno {
+    padding: 32px 0;
+    border-bottom: 0.5px solid var(--border);
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .anno:last-child { border-bottom: none; }
+  .anno-num {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--accent);
+    line-height: 1;
+    padding-top: 4px;
+  }
+  .anno-title {
+    font-size: 22px;
+    font-family: 'Instrument Serif', serif;
+    margin-bottom: 8px;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .anno-title .tag {
+    display: inline-block;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-left: 10px;
+    vertical-align: middle;
+    font-weight: 500;
+  }
+  .anno-body { color: var(--text-2); font-size: 15px; line-height: 1.6; }
+  .anno-body strong { color: var(--text); font-weight: 500; }
+
+  .logic-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+  .logic-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .logic-card .num {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .logic-card h3 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 22px;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .logic-card p { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+
+  .flow {
+    margin-top: 64px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    padding: 48px;
+  }
+  .flow-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    align-items: stretch;
+    position: relative;
+  }
+  .flow-stage {
+    background: var(--surface-2);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+  }
+  .flow-stage.accent { border-color: var(--accent-line); background: var(--accent-soft); }
+  .flow-stage h4 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+  .flow-stage h4 i { font-size: 18px; color: var(--accent); }
+  .flow-stage .verb {
+    font-size: 12px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+  .flow-stage p { font-size: 13px; color: var(--text-2); line-height: 1.55; }
+  .flow-stage ul { list-style: none; margin-top: 12px; }
+  .flow-stage ul li {
+    font-size: 12px;
+    color: var(--text-2);
+    padding: 4px 0 4px 16px;
+    position: relative;
+  }
+  .flow-stage ul li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 12px;
+    width: 6px; height: 1px;
+    background: var(--accent);
+  }
+  .flow-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 20px;
+    z-index: 2;
+  }
+
+  .three-up {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+  .user-card {
+    padding: 32px;
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+  .user-card .role {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .user-card h3 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 24px;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .user-card .quote {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--text);
+    line-height: 1.4;
+    padding: 16px 0;
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .user-card p { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+
+  .decisions {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    padding: 48px;
+    margin-top: 48px;
+  }
+  .decisions h3 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 26px;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .decisions .sub {
+    font-size: 14px;
+    color: var(--text-3);
+    margin-bottom: 32px;
+  }
+  .decision {
+    padding: 20px 0;
+    border-top: 0.5px solid var(--border);
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 20px;
+  }
+  .decision i {
+    color: var(--accent);
+    font-size: 22px;
+    padding-top: 2px;
+  }
+  .decision h4 {
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  .decision p { font-size: 14px; color: var(--text-2); line-height: 1.55; }
+
+  footer {
+    padding: 64px 0 96px;
+    text-align: center;
+  }
+  footer .sig {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--text-2);
+  }
+  footer .who {
+    font-size: 13px;
+    color: var(--text-3);
+    margin-top: 8px;
+  }
+
+  @media (max-width: 980px) {
+    .container { padding: 0 24px; }
+    .nav-showcase { grid-template-columns: 1fr; }
+    .nav-mock { position: relative; top: 0; max-width: 320px; }
+    .logic-grid, .flow-row, .three-up { grid-template-columns: 1fr; }
+    section { padding: 64px 0; }
+    header.hero { padding: 64px 0 48px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="eyebrow">GOOH · Navigation proposal</div>
+    <h1>Speak the <span class="accent">industry's</span> language, not our own.</h1>
+    <p class="lede">A rethink of GOOH's information architecture, anchored in how agencies, brands and media owners actually think about DOOH work.</p>
+    <div class="meta">
+      <div><strong>Ben Leyland</strong> · Technology Director, FML</div>
+      <div>For: Denis, Kiri and the GOOH team</div>
+      <div>Status: <strong>For discussion</strong></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+    <div class="section-label">The argument</div>
+    <h2>Users come to GOOH with a job. <span class="accent">Meet them there.</span></h2>
+    <div class="prose">
+      <p>Every agency, brand and media owner in DOOH already has a mental model. They think in <strong>clients</strong>, who give them <strong>campaigns</strong>, which need <strong>creative</strong> and <strong>media</strong>. That's how briefs are written, POs are raised, and reports are filed.</p>
+      <p>The current nav invents new top-level concepts (Atlas, Sites, Inventory, Formats) that don't map cleanly to that existing language. It asks the user to learn GOOH's internal model before they can do anything.</p>
+      <p>This proposal does the opposite. It uses the words the industry already uses, in the order users already think in them. The clever bits (the screen network, the AI tooling) sit where they're needed, not at the top of the page.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-label">The structure</div>
+    <h2>One sidebar, <span class="accent">three pillars.</span></h2>
+    <div class="prose">
+      <p>Clients, Campaigns and Network. Everything else is either a tool used inside one of those, or system-level (settings, home).</p>
+    </div>
+
+    <div class="nav-showcase">
+      <div class="nav-mock">
+        <div class="nav-header">
+          <div class="nav-logo">GOOH</div>
+          <i class="ti ti-chevrons-left" style="color: var(--text-3); font-size: 18px;"></i>
+        </div>
+
+        <div class="nav-item"><i class="ti ti-home"></i>Home</div>
+
+        <div class="nav-section-label">Workspace</div>
+        <div class="nav-item"><i class="ti ti-users"></i>Clients</div>
+        <div class="nav-item active"><i class="ti ti-rocket"></i>Campaigns</div>
+        <div class="nav-item"><i class="ti ti-world"></i>Network</div>
+
+        <div class="nav-divider"></div>
+        <div class="nav-context-label">Inside a campaign</div>
+
+        <div class="nav-context">
+          <div class="nav-item parent"><i class="ti ti-palette"></i>Creative</div>
+          <div class="nav-sub">
+            <div class="nav-item"><i class="ti ti-sparkles"></i>Generate</div>
+            <div class="nav-item"><i class="ti ti-stack-2"></i>Composite</div>
+            <div class="nav-item"><i class="ti ti-eye"></i>Preview</div>
+          </div>
+          <div class="nav-item parent"><i class="ti ti-device-tv"></i>Media</div>
+          <div class="nav-item parent"><i class="ti ti-send"></i>Deploy</div>
+        </div>
+
+        <div class="nav-divider"></div>
+        <div class="nav-item" style="color: var(--text-2);"><i class="ti ti-settings"></i>Settings</div>
+      </div>
+
+      <div class="annotations">
+        <div class="anno">
+          <div class="anno-num">01</div>
+          <div>
+            <div class="anno-title">Home <span class="tag">Dashboard</span></div>
+            <div class="anno-body">Recent activity, active campaigns, what needs attention. The landing pad on login.</div>
+          </div>
+        </div>
+        <div class="anno">
+          <div class="anno-num">02</div>
+          <div>
+            <div class="anno-title">Clients <span class="tag">Workspace</span></div>
+            <div class="anno-body">The people GOOH works for. Each client holds their <strong>brand assets</strong> (logos, fonts, guidelines) and, for enterprise clients, an optional <strong>brand layer</strong> (Coca-Cola → Coke Zero, Fanta, Sprite). Small clients skip the brand layer entirely.</div>
+          </div>
+        </div>
+        <div class="anno">
+          <div class="anno-num">03</div>
+          <div>
+            <div class="anno-title">Campaigns <span class="tag">Primary surface</span></div>
+            <div class="anno-body">Where 90% of work happens. Each campaign opens to reveal three stages: <strong>Creative</strong>, <strong>Media</strong>, <strong>Deploy</strong>. A producer sees campaign progress at a glance: creative made, media booked, deployed.</div>
+          </div>
+        </div>
+        <div class="anno">
+          <div class="anno-num">04</div>
+          <div>
+            <div class="anno-title">Network <span class="tag">The moat</span></div>
+            <div class="anno-body">The pre-validated, browseable database of screens worldwide. Sits separately from campaigns because it has its own users (media owners managing inventory) and its own use case (browsing, planning, dreaming).</div>
+          </div>
+        </div>
+        <div class="anno">
+          <div class="anno-num">05</div>
+          <div>
+            <div class="anno-title">Creative · Generate / Composite / Preview <span class="tag">Tools, not destinations</span></div>
+            <div class="anno-body">These are how creative gets made: AI generation of elements, composite into the master, preview before sign-off. They only appear inside Creative because they have no meaning outside it.</div>
+          </div>
+        </div>
+        <div class="anno">
+          <div class="anno-num">06</div>
+          <div>
+            <div class="anno-title">Media <span class="tag">Plan</span></div>
+            <div class="anno-body">Pick screens from Network, group them into a media plan for this campaign. The bridge between Creative (the master file) and Deploy (the adapted versions).</div>
+          </div>
+        </div>
+        <div class="anno">
+          <div class="anno-num">07</div>
+          <div>
+            <div class="anno-title">Deploy <span class="tag">Ship</span></div>
+            <div class="anno-body">The hard bit. One master becomes 47 versions for 47 screens. Auto-adapt, per-screen review, export or push directly to DOOH platforms. Preview shows up again here, in context per screen.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-label">Inside a campaign</div>
+    <h2>Three stages, <span class="accent">one job each.</span></h2>
+    <div class="prose">
+      <p>A campaign is the unit of work. Inside it, the user moves through three stages in order. Each stage answers a single question.</p>
+    </div>
+
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-stage accent">
+          <h4><i class="ti ti-palette"></i>Creative</h4>
+          <div class="verb">Make it</div>
+          <p>Produce the master creative file. AI-generated elements, composited together, with brand assets pulled from the client library.</p>
+          <ul>
+            <li>Generate · AI elements</li>
+            <li>Composite · build the master</li>
+            <li>Preview · check before sign-off</li>
+          </ul>
+        </div>
+        <div class="flow-stage accent">
+          <h4><i class="ti ti-device-tv"></i>Media</h4>
+          <div class="verb">Place it</div>
+          <p>Select screens from the Network. Build the media plan. Define which screens this campaign runs on, where and when.</p>
+          <ul>
+            <li>Browse Network · pick screens</li>
+            <li>Group into plan</li>
+            <li>Daypart and scheduling</li>
+          </ul>
+        </div>
+        <div class="flow-stage accent">
+          <h4><i class="ti ti-send"></i>Deploy</h4>
+          <div class="verb">Ship it</div>
+          <p>Auto-adapt the master to each screen's exact specs. Review per screen. Export as video files or push directly to DOOH distribution platforms.</p>
+          <ul>
+            <li>Per-screen adaptation</li>
+            <li>Preview in context</li>
+            <li>Export or distribute</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-label">Why this works</div>
+    <h2>The structure matches <span class="accent">three different users.</span></h2>
+    <div class="prose">
+      <p>Same platform. Same nav. Three different entry points into the work, depending on who you are and what you came to do.</p>
+    </div>
+
+    <div class="three-up">
+      <div class="user-card">
+        <div class="role">Agency</div>
+        <h3>Brief in hand, media planned.</h3>
+        <div class="quote">"We've got the BBH Coca-Cola summer campaign. I need to produce versions for the screens we've already booked."</div>
+        <p>Enters via <strong>Campaigns</strong>. Creates new. Pulls in brand assets from the client library. Makes the master. The media plan is already locked, so Deploy is where they spend most of their time.</p>
+      </div>
+      <div class="user-card">
+        <div class="role">Brand</div>
+        <h3>Exploring what's possible.</h3>
+        <div class="quote">"Show me what our brand could look like on Piccadilly Lights, Times Square, and the Burj Khalifa."</div>
+        <p>Enters via <strong>Network</strong>. Browses iconic screens. Picks three. Starts a campaign from inside Network and works backwards to Creative. The screens are the constraint that defines everything.</p>
+      </div>
+      <div class="user-card">
+        <div class="role">Media owner</div>
+        <h3>Managing inventory.</h3>
+        <div class="quote">"I need to update the specs on my Dubai screens and show a client what their content could look like."</div>
+        <p>Enters via <strong>Network</strong>. Their home is their inventory. They rarely touch Campaigns. The platform is a sales and validation tool for them, not a production tool.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-label">The logic, double-checked</div>
+    <h2>Three principles <span class="accent">we don't break.</span></h2>
+
+    <div class="logic-grid">
+      <div class="logic-card">
+        <div class="num">01</div>
+        <h3>Top-level nav is for nouns.</h3>
+        <p>Things that exist in the world. Clients exist. Campaigns exist. Networks of screens exist. Generate, Composite and Preview are verbs, they're things you <em>do</em>, not places you go. They live inside Creative because that's the only place those verbs make sense.</p>
+      </div>
+      <div class="logic-card">
+        <div class="num">02</div>
+        <h3>Sub-nav appears when context demands it.</h3>
+        <p>The Creative / Media / Deploy sub-stages only show in the sidebar when a campaign is open. This keeps the top-level nav clean and matches how the work actually flows. Open a campaign and the stages reveal themselves.</p>
+      </div>
+      <div class="logic-card">
+        <div class="num">03</div>
+        <h3>Some tools earn two homes.</h3>
+        <p>Preview appears inside Creative (review the master) and inside Deploy (review per-screen adapted versions). Same word, two contexts. That's correct, because previewing the master and previewing the deployment are genuinely different jobs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-label">Decisions for Denis and Kiri</div>
+    <h2>Three calls <span class="accent">to make.</span></h2>
+
+    <div class="decisions">
+      <h3>These shape product positioning, not just UX.</h3>
+      <p class="sub">Worth a conversation before we commit to build.</p>
+
+      <div class="decision">
+        <i class="ti ti-target-arrow"></i>
+        <div>
+          <h4>Who is the primary buyer?</h4>
+          <p>Naming the top-level "Campaigns" commits us to speaking the language of agencies and brands. If media owners are the primary commercial target, "Inventory" or "Network" might want top billing instead. The structure works either way, but the emphasis changes.</p>
+        </div>
+      </div>
+
+      <div class="decision">
+        <i class="ti ti-shopping-cart"></i>
+        <div>
+          <h4>Is Network read-only or transactional?</h4>
+          <p>Can someone book a screen directly from Network, or does that always happen through a media owner conversation? Catalogue or marketplace. Different product, different business model, different revenue lines.</p>
+        </div>
+      </div>
+
+      <div class="decision">
+        <i class="ti ti-building-skyscraper"></i>
+        <div>
+          <h4>Do enterprise clients need a brand layer?</h4>
+          <p>Coca-Cola has Coke Zero, Fanta, Sprite. Are those clients, or sub-brands inside Coca-Cola? Proposal says optional brand layer between Client and Campaign. Worth confirming this matches how the big accounts actually want to work.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p class="sig">Cheers,</p>
+    <p class="who">Ben · FML</p>
+  </div>
+</footer>
+
+</body>
+</html>
