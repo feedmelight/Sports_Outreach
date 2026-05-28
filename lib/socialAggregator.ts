@@ -73,40 +73,80 @@ function parseRedditChildren(
 }
 
 // REDDIT
-async function fetchReddit(teamSlug: string, translations: Record<string, string[]>): Promise<ChatterPost[]> {
+async function fetchReddit(teamSlug: string, translations: Record<string, string[]>, teamName: string): Promise<ChatterPost[]> {
   const posts: ChatterPost[] = []
   const seen = new Set<string>()
 
-  // Main subreddit(s) via proxy
+  // Build keyword list for filtering generic subs
+  const keywords = [
+    teamName.toLowerCase(),
+    teamSlug.replace(/-/g, ' '),
+    ...(translations['en'] || []).map(t => t.toLowerCase()),
+    ...(translations['fr'] || []).map(t => t.toLowerCase()),
+    ...(translations['sv'] || []).map(t => t.toLowerCase()),
+  ].filter(k => k.length > 2 && !['women\'s football', 'football féminin', 'damfotboll', 'fútbol femenino'].includes(k))
+  const isRelevant = (text: string) => {
+    const lower = text.toLowerCase()
+    return keywords.some(k => lower.includes(k))
+  }
+
+  // Determine if these are generic shared subs (no team-specific sub exists)
   const subs = SUBREDDIT_MAP[teamSlug.toLowerCase()] || [teamSlug]
+  const genericSubs = new Set(['WomensSoccer', 'womensfootball', 'soccer', 'NWSL', 'WomensSoccerGifs', 'Ligue1', 'Allsvenskan', 'Damallsvenskan'])
+  const hasTeamSpecificSub = subs.some(s => !genericSubs.has(s))
+
+  // Main subreddit(s) via proxy
   const subResults = await Promise.allSettled(
     subs.map((sub) => fetchSubreddit(sub))
   )
   for (const result of subResults) {
     if (result.status !== 'fulfilled') continue
-    const children = result.value?.data?.children?.slice(0, 15) || []
+    // For generic subs, grab more posts so we can filter down
+    const limit = hasTeamSpecificSub ? 15 : 50
+    const children = result.value?.data?.children?.slice(0, limit) || []
     const parsed = await Promise.allSettled(parseRedditChildren(children, seen))
-    for (const p of parsed) if (p.status === 'fulfilled') posts.push(p.value)
+    for (const p of parsed) {
+      if (p.status !== 'fulfilled') continue
+      // Filter generic sub posts to team-relevant only
+      if (!hasTeamSpecificSub && !isRelevant(p.value.text)) continue
+      posts.push(p.value)
+    }
   }
 
   // International subreddits via proxy — pick sport-relevant subs
-  const isSoccer = subs.some((s) => ['Ligue1', 'Allsvenskan', 'WomensSoccer', 'NWSL', 'MLS'].includes(s))
+  const isSoccer = subs.some((s) => genericSubs.has(s))
   const intlSubs = isSoccer
     ? ['WomensSoccer', 'womensfootball', 'soccer', 'NWSL', 'WomensSoccerGifs']
     : ['nflespanol', 'nflalemanha', 'nfl_france', 'nflbrasil', 'nfljapan', 'nba_es']
+  // Deduplicate — don't re-fetch subs already in the main list
+  const subsSet = new Set(subs.map(s => s.toLowerCase()))
+  const dedupedIntl = intlSubs.filter(s => !subsSet.has(s.toLowerCase()))
   const intlResults = await Promise.allSettled(
-    intlSubs.map((sub) => fetchSubreddit(sub))
+    dedupedIntl.map((sub) => fetchSubreddit(sub))
   )
   for (const result of intlResults) {
     if (result.status !== 'fulfilled') continue
-    const children = result.value?.data?.children?.slice(0, 3) || []
+    const children = result.value?.data?.children?.slice(0, 25) || []
     const parsed = await Promise.allSettled(parseRedditChildren(children, seen))
-    for (const p of parsed) if (p.status === 'fulfilled') posts.push(p.value)
+    for (const p of parsed) {
+      if (p.status !== 'fulfilled') continue
+      if (!hasTeamSpecificSub && !isRelevant(p.value.text)) continue
+      posts.push(p.value)
+    }
   }
 
-  // Multilingual search terms — still use proxy for main sub, filter client-side
-  // (Reddit search is not proxied since it uses /search.json, not /r/sub)
-  // We get enough signal from subreddit posts + intl subs above
+  // Reddit search for team name across all of Reddit
+  const base = getProxyBase()
+  try {
+    const searchUrl = `${base}/api/reddit/search?q=${encodeURIComponent(teamName)}`
+    const res = await fetch(searchUrl, { signal: AbortSignal.timeout(8000) })
+    if (res.ok) {
+      const json = await res.json()
+      const children = json?.data?.children?.slice(0, 15) || []
+      const parsed = await Promise.allSettled(parseRedditChildren(children, seen))
+      for (const p of parsed) if (p.status === 'fulfilled') posts.push(p.value)
+    }
+  } catch { /* search is best-effort */ }
 
   return posts
 }
@@ -381,7 +421,7 @@ export async function fetchGlobalChatter(
 ): Promise<ChatterPost[]> {
   const translations = teamTranslations[teamSlug.toLowerCase()] || {}
   const [r, b, bil, blogs, news, espn] = await Promise.allSettled([
-    fetchReddit(teamSlug, translations),
+    fetchReddit(teamSlug, translations, teamName),
     fetchBluesky(teamName, translations),
     fetchBilibili(translations),
     fetchFanBlogs(teamSlug),
