@@ -690,7 +690,7 @@ export default async function TeamPitch({ params }: Props) {
         <GlobalChatterMap
           teamId={team.id}
           teamSlug={slug}
-          teamName={team.name}
+          teamName={fullName}
           primaryColor={primary}
           secondaryColor={accent}
           fanClubs={fanClubs}
