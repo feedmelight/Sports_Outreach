@@ -319,7 +319,7 @@ export default function GlobalChatterMap({
   }, [altitude]);
 
   // 24h cache
-  const cacheKey = `fml-chatter-${teamSlug}`;
+  const cacheKey = `fml-chatter-v2-${teamSlug}`;
   const CACHE_TTL = 24 * 60 * 60 * 1000;
 
   useEffect(() => {
