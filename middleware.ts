@@ -30,6 +30,16 @@ export function middleware(request: NextRequest) {
   // Skip www and the apex domain
   if (subdomain === 'www' || subdomain === 'feedmelight') return NextResponse.next()
 
+  // Vanity subdomain redirects
+  const VANITY: Record<string, string> = {
+    hptokyo: '/FML_Shot_Estimator.html',
+  }
+  if (VANITY[subdomain]) {
+    const url = request.nextUrl.clone()
+    url.pathname = VANITY[subdomain]
+    return NextResponse.rewrite(url)
+  }
+
   const url = request.nextUrl.clone()
   const path = url.pathname
 
